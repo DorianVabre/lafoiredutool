@@ -1,0 +1,567 @@
+<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dofus Craft — DofusDude</title><style>
+:root{font-family:system-ui,Arial;color:#eaf2e8;background:#101713}*{box-sizing:border-box}body{margin:0}header{padding:20px max(20px,calc((100vw - 1100px)/2));background:#1b2920;border-bottom:1px solid #344b38;display:flex;justify-content:space-between;align-items:center}header b{color:#b8eb72;font-size:24px}main{max-width:1100px;margin:30px auto;padding:0 20px}h1{font-size:29px;margin:0 0 8px}p,.muted,small{color:#a6b6a8}.layout{display:grid;grid-template-columns:350px 1fr;gap:20px;margin-top:25px}.panel{background:#1c2921;border:1px solid #354838;border-radius:15px;padding:20px;min-width:0}h2{font-size:18px;margin:0 0 15px}input,select{background:#101b14;border:1px solid #506551;color:#fff;border-radius:9px;padding:11px;font:inherit;max-width:100%}input:focus{outline:1px solid #b8eb72}.search{width:100%}button{border:0;border-radius:8px;padding:10px 12px;background:#354b39;color:white;cursor:pointer;font-weight:600}button:hover{background:#48634c}button.active{background:#b8eb72;color:#172214}.filters{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.results{max-height:550px;overflow:auto}.item{width:100%;display:flex;gap:12px;align-items:center;text-align:left;background:transparent;border-bottom:1px solid #344638;border-radius:0}.item img,.ingredient img{width:40px;height:40px;object-fit:contain}.item span{flex:1}.item small{display:block;margin-top:3px}.ingredient{display:grid;grid-template-columns:42px minmax(0,1fr) 105px 115px;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #354838}.ingredient input{width:100%;text-align:right}.right{text-align:right}.total{display:flex;justify-content:space-between;font-size:21px;margin:20px 0;color:#c8f18c}.sell{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #354838;padding-top:20px}.sell input{width:180px}.sell-label{display:flex;align-items:center;gap:10px;min-width:0}.selected-icon{width:42px;height:42px;object-fit:contain;flex-shrink:0}.sales-icon{width:42px;height:42px;padding:8px;flex-shrink:0;color:#d9b967}.sell-label label{display:block}.verdict{margin-top:15px;padding:15px;background:#2b4130;border-radius:10px}.negative{background:#503133}.required-missing{border:2px solid #f16e70!important;outline:1px solid #f16e70;outline-offset:1px}.optional-field{border:2px dashed #81977f!important}.optional-field:focus{outline:1px solid #b8eb72}.sell-stack{display:grid;gap:14px;margin-top:16px}.sell-stack .sell{border-top:0;padding-top:0}.sell-stack .sell:first-child{border-top:1px solid #354838;padding-top:20px}.craft-qty{display:flex;align-items:center;gap:12px;margin:16px 0;padding:13px;background:#142019;border-radius:10px}.craft-qty input{width:105px}.craft-qty label{flex:1}.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}.stat{background:#142019;border:1px solid #354838;border-radius:11px;padding:14px;min-width:0}.stat small{display:block;margin-bottom:7px}.stat strong{font-size:21px;overflow-wrap:anywhere}.green{color:#b8eb72}.red{color:#ff8e89}.neutral{color:#dce7dc}@media(max-width:550px){.summary{grid-template-columns:1fr}}.error{color:#ffaaa6}.status{font-size:13px;margin:10px 0}.empty{padding:40px 10px;text-align:center;color:#a6b6a8}.note{font-size:12px;line-height:1.5;margin-top:20px}@media(max-width:750px){.layout{grid-template-columns:1fr}.ingredient{grid-template-columns:35px 1fr 75px 95px;gap:5px}.panel{padding:13px}}
+
+.composite{border-bottom:1px solid #354838;padding-bottom:9px}.composite>.ingredient{border-bottom:0}.comp-actions{margin:0 0 8px 52px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}.comp-actions button{font-size:12px;padding:7px 9px}.comp-children{margin:8px 0 8px 22px;padding-left:12px;border-left:2px solid #526849}.comp-children[hidden]{display:none}.choice-good{outline:2px solid #86dc80!important;outline-offset:1px}.choice-bad{opacity:.4;filter:grayscale(.6)}.choice-note{font-size:12px;color:#a6b6a8}.comp-actions .cost{font-size:12px}.comp-actions button:disabled{opacity:.55;cursor:wait}.comp-children .ingredient{grid-template-columns:36px minmax(0,1fr) 90px 105px}.comp-children .ingredient img{width:34px;height:34px}.comp-children .comp-actions{margin-left:43px}@media(max-width:600px){.comp-children{margin-left:6px;padding-left:7px}.comp-children .ingredient{grid-template-columns:30px minmax(0,1fr) 75px 80px;gap:4px}.comp-actions{margin-left:35px}}
+
+.mode-tabs{display:flex;gap:9px;margin:18px 0 0}.mode-tabs button{padding:11px 19px}.mode-hidden{display:none!important}.multi-layout{display:grid;grid-template-columns:330px minmax(0,1fr);gap:18px;margin-top:20px}.multi-search-results{max-height:300px;overflow:auto}.multi-entry{border:1px solid #425945;border-radius:12px;padding:14px 15px;margin:0 0 17px;background:#1b281f;box-shadow:0 5px 14px #00000020}.multi-entry .sell{background:#24352a;border:1px solid #3b5441;border-radius:8px;padding:12px!important;margin-top:15px!important}.multi-entry-top{padding-bottom:10px;border-bottom:1px solid #425945}.multi-entry-top{display:flex;gap:10px;align-items:center}.multi-entry-top img,.multi-pick img{width:36px;height:36px;object-fit:contain}.multi-entry-top strong{flex:1}.multi-entry input{width:85px}.multi-pick{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:transparent;border-bottom:1px solid #344638}.multi-pick span{flex:1}.multi-rows{margin-top:14px}.multi-row{display:grid;grid-template-columns:36px minmax(0,1fr) 90px 105px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #354838}.multi-row img{width:34px;height:34px;object-fit:contain}.multi-row input{width:100%;text-align:right}.multi-row small{display:block}.multi-actions{margin:5px 0 7px 43px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.multi-actions button{font-size:12px;padding:6px 9px}.multi-children{margin-left:20px;padding-left:12px;border-left:2px solid #526849}.multi-children[hidden]{display:none}.multi-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:15px 0}.multi-summary .stat strong{font-size:19px}.multi-shopping{width:100%;border-collapse:collapse;margin-top:10px}.multi-shopping td,.multi-shopping th{padding:10px 7px;border-bottom:1px solid #354838;text-align:left}.multi-shopping td:last-child,.multi-shopping th:last-child{text-align:right}.multi-shopping img{width:28px;height:28px;object-fit:contain;vertical-align:middle;margin-right:8px}.multi-message{font-size:13px;color:#a6b6a8}.multi-entry .optional-field{width:88px}.multi-entry .remove{background:#49332f;color:#ffaaa6}.multi-empty{padding:24px 10px;text-align:center;color:#a6b6a8}@media(max-width:800px){.multi-layout{grid-template-columns:1fr}.multi-row{grid-template-columns:32px minmax(0,1fr) 75px 90px;gap:5px}.multi-summary{grid-template-columns:1fr}}
+
+/* Multicraft : contraste des objets et choix optimal explicite */
+.multi-entry{overflow:hidden;padding:0;background:#1b281f;border-color:#506c52}
+.multi-entry-top{background:rgba(238,255,231,.115);padding:15px 16px;border-bottom:2px solid #658366}
+.multi-entry-top strong{font-size:18px;color:#f2ffe9;letter-spacing:.1px}
+.multi-entry-top img{width:43px;height:43px}
+.multi-entry .multi-rows{padding:0 15px;margin-top:8px}
+.multi-entry .sell{margin:12px 15px 15px!important}
+.multi-choice{margin:9px 15px 14px;display:flex;gap:8px;flex-wrap:wrap}
+.multi-choice-pill{display:inline-flex;align-items:center;gap:5px;border:1px solid #52634f;border-radius:8px;padding:8px 10px;font-size:12px;font-weight:750;color:#b8c6b7;background:#18251b}
+.multi-choice-pill.winner{background:#17472a;border:2px solid #52f38b;color:#a6ffc0;box-shadow:0 0 0 2px #52f38b24,0 0 14px #38ec7840}
+.multi-choice-pill.loser{opacity:.38;filter:grayscale(.8)}
+.multi-choice-pill.pending{opacity:.65;border-style:dashed}
+.multi-row input.choice-good,.multi-actions button.choice-good{outline:2px solid #52f38b!important;outline-offset:2px;box-shadow:0 0 10px #52f38b45}
+.multi-row input.choice-bad,.multi-actions button.choice-bad{opacity:.4;filter:grayscale(.7)}
+.multi-actions .multi-best-label{color:#78ffa4;font-weight:700}
+
+/* V16 : prix HDV dans l’en-tête de chaque objet multicraft */
+.multi-entry-top .multi-qty-inline{display:flex;flex-direction:column;gap:4px;flex-shrink:0;align-items:stretch}
+.multi-entry-top .multi-qty-inline small{font-size:11px;white-space:nowrap;color:#d5e5d0}
+.multi-entry-top .multi-qty-inline input{width:75px;text-align:right;padding:8px}
+.multi-entry-top .multi-hdv-inline{display:flex;flex-direction:column;gap:4px;flex-shrink:0;align-items:stretch}
+.multi-entry-top .multi-hdv-inline small{font-size:11px;white-space:nowrap;color:#d5e5d0}
+.multi-entry-top .multi-hdv-inline input{width:125px;max-width:125px;text-align:right;padding:8px}
+.multi-entry-top>strong{min-width:0;overflow-wrap:anywhere}
+@media(max-width:650px){.multi-entry-top{flex-wrap:wrap}.multi-entry-top .multi-qty-inline{display:flex;flex-direction:column;gap:4px;flex-shrink:0;align-items:stretch}
+.multi-entry-top .multi-qty-inline small{font-size:11px;white-space:nowrap;color:#d5e5d0}
+.multi-entry-top .multi-qty-inline input{width:75px;text-align:right;padding:8px}
+.multi-entry-top .multi-hdv-inline{margin-left:auto}.multi-entry-top>strong{flex-basis:calc(100% - 65px)}}
+
+/* Historique d'achats : isolé des calculateurs */
+.ledger-layout{display:grid;grid-template-columns:330px minmax(0,1fr);gap:18px;margin-top:20px}
+.ledger-form{display:grid;gap:12px}.ledger-form label{display:grid;gap:5px;font-size:13px;color:#c8d7c6}
+.ledger-form input{width:100%}.ledger-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 18px}
+.ledger-entry{border:1px solid #4b634d;background:#18251c;border-radius:12px;padding:14px;margin-bottom:12px}
+.ledger-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ledger-head strong{font-size:17px;color:#f0ffe8}.ledger-sub{color:#a9bba8;font-size:13px;margin:7px 0}
+.ledger-sale{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-top:12px;padding-top:12px;border-top:1px solid #3a4e3d}
+.ledger-sale label{display:grid;gap:4px;color:#b8c9b6;font-size:12px}.ledger-sale input{width:120px}
+.ledger-history{font-size:12px;color:#c2d1c0;margin-top:10px}.ledger-history div{margin-top:5px}
+.ledger-remove{background:#49332f;color:#ffaaa6;padding:6px 9px}.ledger-help{font-size:12px;color:#9eb19d;line-height:1.5}
+@media(max-width:800px){.ledger-layout{grid-template-columns:1fr}.ledger-summary{grid-template-columns:1fr}}
+
+/* V21 — harmonisation visuelle uniquement : mêmes colonnes et filtres dans les deux modes */
+.multi-layout{grid-template-columns:350px minmax(0,1fr);gap:20px;margin-top:25px}
+#singleMode .filters,#multiMode .filters{gap:5px}
+#singleMode .filters button,#multiMode .filters button{font-size:12px;padding:9px 7px;white-space:nowrap}
+@media(max-width:800px){.multi-layout{grid-template-columns:1fr}}
+@media(max-width:750px){.multi-layout{grid-template-columns:1fr}}
+
+/* V23 — recherche identique entre craft unitaire et multicraft */
+#singleMode .layout,#multiMode .multi-layout{grid-template-columns:350px minmax(0,1fr);gap:20px;margin-top:25px;align-items:start}
+#singleMode .layout>.panel:first-child,#multiMode .multi-layout>.panel:first-child{width:100%;min-width:0}
+#singleMode .search,#multiMode .search{display:block;width:100%;box-sizing:border-box}
+#singleMode .filters,#multiMode .filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:12px 0}
+#singleMode .filters button,#multiMode .filters button{min-width:0;width:100%;font-size:11px;padding:9px 3px;white-space:nowrap}
+#singleMode .results,#multiMode .multi-search-results{max-height:440px;overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable;box-sizing:border-box}
+#singleMode .status,#multiMode .status{min-height:16px}
+@media(max-width:800px){#singleMode .layout,#multiMode .multi-layout{grid-template-columns:minmax(0,1fr)}}
+/* V24 — donner suffisamment d'espace au libellé Consommables dans les deux recherches */
+#singleMode .filters,#multiMode .filters{grid-template-columns:0.65fr 1.35fr 1.55fr 1.15fr}
+
+/* V26 — Alignement visuel de l'historique avec les deux modes de craft. */
+#ledgerMode .ledger-layout{grid-template-columns:350px minmax(0,1fr);gap:20px;margin-top:25px;align-items:start}
+#ledgerMode .ledger-layout>.panel:first-child{width:100%;min-width:0}
+@media(max-width:800px){#ledgerMode .ledger-layout{grid-template-columns:minmax(0,1fr)}}
+
+.custom-dropdown{margin-top:14px;border:1px solid #53664f;border-radius:10px;padding:10px;background:rgba(255,255,255,.035)}
+.custom-dropdown summary{cursor:pointer;color:#d7f4b7;font-weight:600}
+.custom-form{display:grid;gap:9px;margin-top:12px}.custom-form label{display:grid;gap:4px;font-size:12px;color:#b8c9b6}
+.custom-form input,.custom-form select{width:100%;box-sizing:border-box;background:#142118;color:#f1f7eb;border:1px solid #60715b;border-radius:7px;padding:9px}
+.custom-row{display:grid;grid-template-columns:minmax(0,1fr) 80px 30px;gap:7px;align-items:center;margin:5px 0}
+.custom-row button{padding:7px}.custom-found{max-height:180px;overflow:auto;display:grid;gap:4px}
+.custom-found button{text-align:left;font-size:12px}.custom-list{display:grid;gap:5px;margin-top:10px}
+.custom-feedback{font-size:12px;color:#b8e890}
+/* V29 : panneaux de recherche alignés, y compris quand les résultats changent. */
+#singleMode .layout,#multiMode .multi-layout,#ledgerMode .ledger-layout{grid-template-columns:350px minmax(0,1fr);gap:20px;margin-top:25px;align-items:start}
+#singleMode .layout>.panel:first-child,#multiMode .multi-layout>.panel:first-child,#ledgerMode .ledger-layout>.panel:first-child{width:100%;min-width:0}
+#singleMode .results,#multiMode .multi-search-results{height:300px;max-height:300px;overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable}
+#singleMode .custom-dropdown,#multiMode .custom-dropdown{margin-top:14px}
+@media(max-width:800px){#singleMode .layout,#multiMode .multi-layout,#ledgerMode .ledger-layout{grid-template-columns:minmax(0,1fr)}}
+
+/* Repli compact des recettes multicraft, sans masquer la décision */
+.multi-collapse{flex:0 0 auto;min-width:34px;padding:7px 9px;border:1px solid #58715a;border-radius:7px;background:#26392a;color:#d7f4d5;cursor:pointer;font-size:17px;line-height:1}
+.multi-collapse:hover{background:#36533c}
+.multi-entry.is-collapsed .multi-rows{display:none}
+.multi-entry.is-collapsed .multi-choice{margin-top:10px}
+
+#breakMode .layout{grid-template-columns:350px minmax(0,1fr);gap:20px;margin-top:25px;align-items:start}
+#breakMode .layout>.panel:first-child{min-width:0;width:100%}
+#breakSearch{width:100%;box-sizing:border-box}
+#breakResults{max-height:420px;overflow:auto}
+.break-item{display:flex;align-items:center;gap:10px;padding:9px;border-bottom:1px solid #405243;cursor:pointer}
+.break-item:hover{background:#2c4431}.break-item img{width:36px;height:36px;object-fit:contain}
+.break-grid{width:100%;border-collapse:collapse;margin:12px 0}
+.break-grid th,.break-grid td{padding:8px 5px;border-bottom:1px solid #405243;text-align:left}
+.break-grid th{font-size:12px;color:#b9cdb5}
+.break-grid input{width:100%;min-width:0;box-sizing:border-box}
+.break-grid td:first-child{font-weight:600}.break-grid .break-total{text-align:right;white-space:nowrap}
+.break-cost{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+.break-cost label{display:grid;gap:5px;font-size:12px;color:#b7c9b4}
+.break-cost input{width:100%;box-sizing:border-box}
+.break-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.break-summary>div{padding:12px;background:#243428;border:1px solid #425c44;border-radius:10px}
+.break-summary small{display:block;color:#bbceba}.break-summary strong{display:block;font-size:20px;margin-top:7px}
+.break-note{font-size:12px;color:#aebfae}
+@media(max-width:800px){#breakMode .layout{grid-template-columns:minmax(0,1fr)}.break-summary{grid-template-columns:1fr}}
+
+/* V33 — Les quatre onglets partagent la même grille, sans débordement horizontal. */
+#singleMode .layout,#multiMode .multi-layout,#breakMode .layout,#ledgerMode .ledger-layout{
+  display:grid;
+  width:100%;
+  max-width:100%;
+  grid-template-columns:350px minmax(0,1fr);
+  gap:20px;
+  margin-top:25px;
+  align-items:start;
+}
+#singleMode .layout > .panel,#multiMode .multi-layout > .panel,#breakMode .layout > .panel,#ledgerMode .ledger-layout > .panel{
+  min-width:0;
+  max-width:100%;
+}
+#ledgerMode .ledger-summary{min-width:0;grid-template-columns:repeat(3,minmax(0,1fr))}
+#ledgerMode .ledger-summary .stat{min-width:0;overflow-wrap:anywhere}
+#ledgerMode .ledger-form,#ledgerMode .ledger-entry,#ledgerMode #ledgerEntries{min-width:0;max-width:100%}
+@media(max-width:800px){
+  #singleMode .layout,#multiMode .multi-layout,#breakMode .layout,#ledgerMode .ledger-layout{
+    grid-template-columns:minmax(0,1fr);
+  }
+  #ledgerMode .ledger-summary{grid-template-columns:1fr}
+}
+/* V34 : réserve en permanence la place de la barre de défilement.
+   Les onglets longs/courts ne déplacent plus le contenu centré. */
+html { overflow-y: scroll; scrollbar-gutter: stable; }
+.break-matrix{table-layout:fixed}.break-matrix th:first-child{width:23%}.break-matrix td{vertical-align:top}.break-matrix td input{display:block;margin:4px 0;padding:6px}.break-matrix td small{display:block;text-align:right;color:#b9cdb5}.break-rune-name{font-size:12px;font-weight:600;white-space:nowrap}.break-na{text-align:center;color:#85968a}
+</style><body><header><b>◆ DOFUS CRAFT</b><small>Données : DofusDude · Dofus 3</small></header><main><h1>Calculateur de craft</h1><p>Recherche un objet, renseigne les prix de ses ingrédients et compare avec son prix en HDV.</p><div class="mode-tabs"><button id="tabSingle" class="active" type="button">Craft unitaire</button><button id="tabMulti" type="button">Multicraft</button><button id="tabBreak" type="button">Brisage</button><button id="tabLedger" type="button">Historique d’achats</button></div><div id="singleMode"><div class="layout"><section class="panel"><h2>Choisir une recette</h2><input id="search" class="search" placeholder="Rechercher une recette…" autocomplete="off"><div class="filters"><button data-cat="all" class="active">Tout</button><button data-cat="equipment">Équipements</button><button data-cat="consumables">Consommables</button><button data-cat="resources">Ressources</button></div><div id="status" class="status muted"></div><div id="results" class="results"></div><details class="custom-dropdown"><summary>＋ Créer une recette manuelle</summary><form class="custom-form"><label>Nom de la recette<input name="name" required placeholder="Nom de l'objet à fabriquer"></label><label>Catégorie<select name="category"><option value="resources">Ressource</option><option value="consumables">Consommable</option><option value="equipment">Équipement</option></select></label><strong>Ingrédients liés à DofusDude</strong><input class="custom-query" placeholder="Rechercher un ingrédient existant…" autocomplete="off"><div class="custom-found"></div><div class="custom-selected"></div><button type="submit">Enregistrer la recette</button><div class="custom-feedback"></div></form><div class="custom-list"></div></details></section><section class="panel" id="detail"><div class="empty">⚒️<h2>Choisis un objet</h2>La recette apparaîtra ici.</div></section></div></div><div id="multiMode" class="mode-hidden"><div class="multi-layout"><section class="panel"><h2>Ajouter des objets</h2><input id="multiSearch" class="search" placeholder="Rechercher une recette…" autocomplete="off"><div class="filters" id="multiFilters"><button data-mcat="all" class="active">Tout</button><button data-mcat="equipment">Équipements</button><button data-mcat="consumables">Consommables</button><button data-mcat="resources">Ressources</button></div><div id="multiStatus" class="status muted"></div><div id="multiResults" class="multi-search-results"></div><details class="custom-dropdown"><summary>＋ Créer une recette manuelle</summary><form class="custom-form"><label>Nom de la recette<input name="name" required placeholder="Nom de l'objet à fabriquer"></label><label>Catégorie<select name="category"><option value="resources">Ressource</option><option value="consumables">Consommable</option><option value="equipment">Équipement</option></select></label><strong>Ingrédients liés à DofusDude</strong><input class="custom-query" placeholder="Rechercher un ingrédient existant…" autocomplete="off"><div class="custom-found"></div><div class="custom-selected"></div><button type="submit">Enregistrer la recette</button><div class="custom-feedback"></div></form><div class="custom-list"></div></details></section><section class="panel"><h2>Recettes sélectionnées</h2><div id="multiSelected" class="multi-empty">Ajoute un ou plusieurs objets depuis la recherche.</div><div class="multi-summary"><div class="stat"><small>Coût total</small><strong id="multiCost">—</strong></div><div class="stat"><small>Valeur HDV totale</small><strong id="multiSellTotal">—</strong></div><div class="stat"><small>Gain si optimisation craft/achat</small><strong id="multiProfit">—</strong></div></div><h2>Liste d'achats fusionnée optimisée</h2><p class="multi-message">Les choix les moins chers sont retenus : achats directs ou composants nécessaires aux fabrications. Les quantités sont regroupées.</p><div id="multiShopping" class="multi-empty">Aucune recette sélectionnée.</div></section></div></div><div id="breakMode" class="mode-hidden"><div class="layout"><section class="panel"><h2>Choisir un équipement</h2><input id="breakSearch" placeholder="Rechercher un équipement…" autocomplete="off"><div id="breakStatus" class="muted"></div><div id="breakResults" class="results"></div></section><section class="panel"><h2>Rentabilité du brisage</h2><div id="breakDetail" class="empty">Sélectionne un équipement pour renseigner les runes obtenues.</div></section></div></div><div id="ledgerMode" class="mode-hidden"><div class="ledger-layout"><section class="panel"><h2>Enregistrer un achat</h2><form id="ledgerForm" class="ledger-form"><label>Nom de l'objet<input id="ledgerName" required maxlength="120" placeholder="Ex. Huile de Koode" autocomplete="off"></label><label>Quantité achetée<input id="ledgerQty" type="number" required min="1" step="1" value="1"></label><label>Prix d'achat unitaire (K)<input id="ledgerBuy" type="number" required min="0" step="1" placeholder="Ex. 1500"></label><label>Date d'achat<input id="ledgerDate" type="date" required></label><button type="submit" class="active">＋ Enregistrer l'achat</button></form><p class="ledger-help">Chaque achat constitue un lot indépendant. Tu peux enregistrer des ventes partielles au fil du temps. Tout est sauvegardé dans ce navigateur.</p></section><section class="panel"><h2>Suivi des achats et reventes</h2><div class="ledger-summary"><div class="stat"><small>Gains / pertes réalisés</small><strong id="ledgerProfit">0 K</strong></div><div class="stat"><small>Kamas en attente (coût du stock)</small><strong id="ledgerPending">0 K</strong></div><div class="stat"><small>Articles restant à vendre</small><strong id="ledgerRemaining">0</strong></div></div><div id="ledgerEntries"></div></section></div></div><p class="note">Les prix sont enregistrés localement dans ton navigateur. Les taxes HDV ne sont pas prises en compte. Les résultats dépendent des données et de l'accessibilité de l'API DofusDude.</p></main><script>
+const BASE='https://api.dofusdu.de/dofus3/v1/fr', categories=['equipment','consumables','resources'];let cat='all',timer,requestId=0,selected=null,ingredients=[],craftQty=1;const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),fmt=n=>Math.round(n||0).toLocaleString('fr-FR')+' K';let prices={},itemFields={},nodeSeq=0,rootNodes=[],detailsCache=new Map(),expandedIds=new Set();try{prices=JSON.parse(localStorage.getItem('dofusdude-prices')||'{}')||{}}catch{}try{itemFields=JSON.parse(localStorage.getItem('dofusdude-item-fields')||'{}')||{}}catch{}const saveItemFields=()=>{if(selected?.ankama_id!=null){itemFields[selected.ankama_id]={sell:$('#sell')?.value??'',monthlySales:$('#monthlySales')?.value??''};localStorage.setItem('dofusdude-item-fields',JSON.stringify(itemFields))}};const img=x=>x?.image_urls?.icon||x?.image_urls?.sd||'';
+
+const CUSTOM_KEY='dofus-craft-manual-recipes-v2';
+let customRecipes={};
+try{const v=JSON.parse(localStorage.getItem(CUSTOM_KEY)||'{}');if(v&&typeof v==='object'&&!Array.isArray(v))customRecipes=v}catch{}
+function customSave(){localStorage.setItem(CUSTOM_KEY,JSON.stringify(customRecipes))}
+function customDetail(id){const r=customRecipes[id];return r?{ankama_id:Number(id),name:r.name,item_subtype:r.category,image_urls:{},recipe:r.ingredients.map(x=>({item_ankama_id:x.id,item_subtype:x.category,quantity:x.qty}))}:null}
+function customInit(){
+ document.querySelectorAll('.custom-dropdown').forEach((panel,index)=>{
+  const form=panel.querySelector('form'),query=panel.querySelector('.custom-query'),found=panel.querySelector('.custom-found'),selected=panel.querySelector('.custom-selected'),feedback=panel.querySelector('.custom-feedback');
+  let chosen=[],results=[],timer=0,seq=0;
+  function draw(){
+   selected.innerHTML=chosen.map((x,i)=>`<div class="custom-row"><span>${img(x)?`<img src="${esc(img(x))}" width="25" height="25" style="vertical-align:middle" alt="">`:''} ${esc(x.name)}</span><input type="number" min="1" step="1" value="${x.qty}" data-cqty="${i}" aria-label="Quantité de ${esc(x.name)}"><button type="button" data-cremove="${i}">✕</button></div>`).join('');
+   selected.querySelectorAll('[data-cqty]').forEach(el=>el.oninput=()=>{chosen[Number(el.dataset.cqty)].qty=Number(el.value)});
+   selected.querySelectorAll('[data-cremove]').forEach(el=>el.onclick=()=>{chosen.splice(Number(el.dataset.cremove),1);draw()});
+  }
+  query.addEventListener('input',()=>{
+   clearTimeout(timer);const q=query.value.trim(),request=++seq;
+   if(q.length<2){found.innerHTML='';return}
+   timer=setTimeout(async()=>{
+    found.textContent='Recherche…';
+    try{
+     const data=await get('/items/search?'+new URLSearchParams({query:q,limit:'30'}));
+     if(request!==seq)return;
+     results=(Array.isArray(data)?data:data.items||data.results||[]).filter(x=>{
+      if(!Number.isSafeInteger(Number(x.ankama_id)))return false;
+      // Exclure les catégories cosmétiques de la recherche d'ingrédients manuels.
+      // Ne pas filtrer les noms d'objets : seuls les types/catégories comptent.
+      const fields=x.item_fields||{};
+      const kinds=[x.item_subtype,x.category,x.type?.name,x.type?.name_id,fields.type?.name,fields.type?.name_id,fields.item_type?.name,fields.item_type?.name_id,fields.category];
+      const normalized=kinds.filter(Boolean).map(v=>String(typeof v==='object'?(v.fr||v.name||v.name_id||''):v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase());
+      return !normalized.some(v=>/(apparat|ceremonial|cosmetic|mimibiot|mount|monture|montilier|petsmount|pets_mount|shield|bouclier|harnachement|costume|parure|ornement|aura)/.test(v));
+     });
+     found.innerHTML=results.map((x,i)=>`<button type="button" data-cfound="${i}">${img(x.item_fields||x)?`<img src="${esc(img(x.item_fields||x))}" width="25" height="25" style="vertical-align:middle" alt="">`:''} ${esc(x.name)}</button>`).join('')||'Aucun objet trouvé';
+     found.querySelectorAll('[data-cfound]').forEach(b=>b.onclick=()=>{
+      const x=results[Number(b.dataset.cfound)],id=Number(x.ankama_id);
+      if(!chosen.some(y=>y.id===id))chosen.push({id,name:x.name,category:subtype(x.item_subtype||x.item_fields?.type?.name_id),qty:1,image_urls:x.image_urls||x.item_fields?.image_urls||{}});
+      query.value='';found.innerHTML='';draw();
+     });
+    }catch(e){if(request===seq)found.textContent='Recherche indisponible : '+e.message}
+   },300);
+  });
+  form.onsubmit=e=>{
+   e.preventDefault();const name=form.elements.name.value.trim(),category=form.elements.category.value;
+   if(!name||!chosen.length||chosen.some(x=>!Number.isSafeInteger(x.qty)||x.qty<1)){feedback.textContent='Ajoute au moins un ingrédient avec une quantité entière positive.';return}
+   const id=String(Math.min(-1000000,...Object.keys(customRecipes).map(Number))-1);
+   customRecipes[id]={name,category,ingredients:chosen.map(({id,name,category,qty})=>({id,name,category,qty}))};
+   customSave();chosen=[];draw();form.reset();feedback.textContent='Recette enregistrée.';customLists();
+  };
+ });
+ customLists();
+}
+function customLists(){
+ document.querySelectorAll('.custom-dropdown').forEach((panel,index)=>{
+  const list=panel.querySelector('.custom-list');
+  list.innerHTML=Object.entries(customRecipes).map(([id,r])=>`<div style="display:flex;gap:6px"><button type="button" data-custom="${id}" style="flex:1;text-align:left">${esc(r.name)} · ${r.ingredients.length} ingrédient(s)</button><button type="button" data-delete="${id}" title="Supprimer">✕</button></div>`).join('');
+  list.querySelectorAll('[data-custom]').forEach(b=>b.onclick=()=>{const id=b.dataset.custom,r=customRecipes[id],item={...customDetail(id),_category:r.category};index===0?openItem(item):multiAdd(item)});
+  list.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{if(confirm('Supprimer cette recette personnalisée ?')){delete customRecipes[b.dataset.delete];customSave();customLists()}});
+ });
+}
+async function get(path){
+ const customMatch=path.match(/^\/items\/(equipment|consumables|resources)\/(-\d+)$/);if(customMatch){const d=customDetail(customMatch[2]);if(d)return d;throw Error('Recette personnalisée introuvable')}const controller=new AbortController(),t=setTimeout(()=>controller.abort(),12000);try{const r=await fetch(BASE+path,{signal:controller.signal,headers:{Accept:'application/json'}});if(!r.ok)throw Error('HTTP '+r.status+' : '+path);return await r.json()}finally{clearTimeout(t)}}
+function subtype(s){s=String(s||'').toLowerCase();if(s.includes('equipment')||s.includes('weapon'))return 'equipment';if(s.includes('consumable'))return 'consumables';return 'resources'}
+async function search(){const q=$('#search').value.trim(),id=++requestId;if(q.length<2){$('#status').textContent='';$('#results').innerHTML='';return}$('#status').textContent='Recherche en cours…';$('#results').innerHTML='';try{const endpoint=cat==='all'?'/items/search':'/items/'+cat+'/search';const data=await get(endpoint+'?'+new URLSearchParams({query:q,limit:'50'}));if(id!==requestId)return;const rows=Array.isArray(data)?data:Array.isArray(data.items)?data.items:Array.isArray(data.results)?data.results:[];const items=rows.map(x=>({...x,_category:cat==='all'?subtype(x.item_subtype||x.type?.name_id||x.item_fields?.type?.name_id||'resources'):cat}));$('#status').textContent=items.length+' résultat(s) · sélectionne un objet pour voir sa recette';$('#results').innerHTML=items.map((x,i)=>`<button class="item" data-index="${i}">${img(x.item_fields||x)?`<img src="${esc(img(x.item_fields||x))}" alt="">`:''}<span><strong>${esc(x.name)}</strong><small>${esc(x.item_fields?.type?.name_id||x.type?.name||'Objet')}</small></span></button>`).join('')||'<div class="empty">Aucun résultat.</div>';$('#results').querySelectorAll('button').forEach(b=>b.onclick=()=>openItem(items[+b.dataset.index]));}catch(e){if(id!==requestId)return;$('#status').innerHTML='<span class="error">Recherche impossible : '+esc(e.message)+'</span>';$('#results').innerHTML='<p class="muted">Si « Failed to fetch » apparaît, vérifie le réseau et les restrictions CORS dans F12 → Console.</p>'}}
+async function openItem(x){selected=x;craftQty=1;$('#detail').innerHTML='<div class="empty">Chargement de la recette…</div>';let errors=[];const preferred=x._category||'equipment';let detail=null;for(const type of [preferred,...categories.filter(c=>c!==preferred)]){try{detail=await get('/items/'+type+'/'+x.ankama_id);if(detail)break}catch(e){errors.push(e.message)}}if(!detail){$('#detail').innerHTML='<p class="error">Impossible de charger cet objet : '+esc(errors.join(' ; '))+'</p>';return}selected=detail;const recipe=Array.isArray(detail.recipe)?detail.recipe:[];if(!recipe.length){const saved=itemFields[detail.ankama_id]||{};$('#detail').innerHTML=`<h2>${esc(detail.name)}</h2><div class="sell" style="border-top:0;padding-top:8px"><div class="sell-label">${img(detail)?`<img class="selected-icon" src="${esc(img(detail))}" alt="">`:''}<label for="sell">Prix HDV de l'objet <small>(par unité)</small></label></div><input id="sell" class="optional-field" type="number" min="0" step="1" placeholder="Prix / objet" value="${esc(saved.sell??'')}"></div>`;$('#sell').addEventListener('input',saveItemFields);return}$('#detail').innerHTML='<h2>'+esc(detail.name)+'</h2><p class="muted">Chargement des ingrédients…</p>';ingredients=await Promise.all(recipe.map(async r=>{const type=subtype(r.item_subtype);let item=null;for(const t of [type,...categories.filter(c=>c!==type)]){try{item=await get('/items/'+t+'/'+r.item_ankama_id);if(item)break}catch{}}return{id:r.item_ankama_id,qty:Number(r.quantity)||0,name:item?.name||'Ressource #'+r.item_ankama_id,image:img(item),detail:item}}));rootNodes=ingredients.map(r=>makeNode(r));renderDetail();await hydrateSingleSaved(rootNodes,new Set([detail.ankama_id]));if(selected===detail)updateNodes()}
+function makeNode(r){return {...r,uid:++nodeSeq,children:null,loading:false,expanded:false,forced:null,error:''}}
+// Charge les sous-recettes déjà valorisées sans nécessiter un clic sur « Fabriquer ».
+async function hydrateSingleSaved(nodes,ancestors,depth=0,budget={remaining:90}){
+ if(depth>=5||budget.remaining<=0)return;
+ await Promise.all(nodes.map(async n=>{
+  const recipe=n.detail?.recipe;
+  if(!Array.isArray(recipe)||!recipe.length||ancestors.has(n.id)||budget.remaining<=0)return;
+  const next=new Set(ancestors);next.add(n.id);budget.remaining--;
+  try{
+   const children=(await Promise.all(recipe.map(async r=>{
+    if(next.has(r.item_ankama_id))return null;
+    let d=detailsCache.get(r.item_ankama_id);
+    if(!d){for(const t of [subtype(r.item_subtype),...categories]){try{d=await get('/items/'+t+'/'+r.item_ankama_id);if(d){detailsCache.set(r.item_ankama_id,d);break}}catch{}}}
+    return makeNode({id:r.item_ankama_id,qty:Number(r.quantity)||0,name:d?.name||'Ressource #'+r.item_ankama_id,image:img(d),detail:d});
+   }))).filter(Boolean);
+   await hydrateSingleSaved(children,next,depth+1,budget);
+   if(children.some(c=>isPrice(prices[c.id])||c.children?.length))n.children=children;
+  }catch{}
+ }));
+}
+
+function isPrice(v){return v!==undefined&&v!==null&&v!==''&&Number.isFinite(Number(v))&&Number(v)>=0}
+function nodeValue(node,stack=new Set()){
+ const buy=isPrice(prices[node.id])?Number(prices[node.id]):null;
+ let craft=null;
+ if(node.children&&node.children.length&&!stack.has(node.id)){
+  const next=new Set(stack);next.add(node.id);let sum=0,valid=true;
+  for(const child of node.children){const v=nodeValue(child,next).best;if(v===null){valid=false;break}sum+=child.qty*v}
+  if(valid)craft=sum;
+ }
+ let best=null,source=null;
+ if(node.forced==='buy'&&buy!==null){best=buy;source='buy'}
+ else if(node.forced==='craft'&&craft!==null){best=craft;source='craft'}
+ else if(buy!==null&&craft!==null){source=buy<=craft?'buy':'craft';best=Math.min(buy,craft)}
+ else if(buy!==null){best=buy;source='buy'}
+ else if(craft!==null){best=craft;source='craft'}
+ return {buy,craft,best,source};
+}
+function renderNode(n,depth=0){const v=nodeValue(n),hasRecipe=Array.isArray(n.detail?.recipe)&&n.detail.recipe.length>0;
+ const selectedBuy=v.buy!==null&&v.craft!==null&&v.buy<=v.craft,selectedCraft=v.buy!==null&&v.craft!==null&&v.craft<v.buy;
+ const choice=n.forced||v.source;
+ return `<div class="composite" data-node="${n.uid}"><div class="ingredient"><img src="${esc(n.image)}" alt=""><div><strong>${esc(n.name)}</strong><small class="need" style="display:block">× ${n.qty*craftQty} à acheter / fabriquer</small></div><input aria-label="Prix d'achat unitaire de ${esc(n.name)}" type="number" min="0" step="1" data-price-node="${n.uid}" placeholder="Achat/u" value="${esc(prices[n.id]??'')}" class="${v.buy===null&&v.craft===null?'required-missing':''} ${selectedBuy?'choice-good':selectedCraft?'choice-bad':''}"><strong class="right line">${v.best===null?'—':fmt(n.qty*craftQty*v.best)}</strong></div>${hasRecipe?`<div class="comp-actions"><button type="button" data-expand="${n.uid}" class="${selectedCraft?'choice-good':selectedBuy?'choice-bad':''}">${n.expanded?'▾':'▸'} Fabriquer ${v.craft!==null?'· '+fmt(v.craft)+'/u':''}</button><span class="choice-note">${v.buy!==null&&v.craft!==null?(v.buy<=v.craft?'Achat moins cher':'Craft moins cher'):''}</span></div><div class="comp-children" data-children="${n.uid}" ${n.expanded?'':'hidden'}>${n.loading?'Chargement…':n.error?`<span class="error">${esc(n.error)}</span>`:n.children?n.children.map(c=>renderNode(c,depth+1)).join(''):''}</div>`:''}</div>`;
+}
+function walk(nodes,fn){for(const n of nodes){if(fn(n))return n;if(n.children){const found=walk(n.children,fn);if(found)return found}}return null}
+async function loadNode(n){if(n.loading||n.children)return;n.loading=true;updateNodes();try{
+ const chain=new Set();function findAncestors(nodes,target,path=[]){for(const x of nodes){if(x===target)return path.map(p=>p.id);if(x.children){const a=findAncestors(x.children,target,[...path,x]);if(a)return a}}return null}
+ (findAncestors(rootNodes,n)||[]).forEach(id=>chain.add(id));chain.add(n.id);
+ const recipe=n.detail?.recipe||[];
+ const loaded=await Promise.all(recipe.map(async r=>{
+ const id=r.item_ankama_id;if(chain.has(id))return null;
+ let detail=detailsCache.get(id);
+ if(!detail){for(const t of [subtype(r.item_subtype),...categories]){try{detail=await get('/items/'+t+'/'+id);if(detail){detailsCache.set(id,detail);break}}catch{}}}
+ return makeNode({id,qty:Number(r.quantity)||0,name:detail?.name||'Ressource #'+id,image:img(detail),detail});
+ }));n.children=loaded.filter(Boolean);n.error='';
+ }catch(e){n.error=e.message}finally{n.loading=false;updateNodes()}}
+function updateNodes(){const list=$('#nodeList');if(!list)return;list.innerHTML=rootNodes.map(n=>renderNode(n)).join('');list.querySelectorAll('[data-price-node]').forEach(el=>{el.addEventListener('input',()=>{const n=walk(rootNodes,x=>x.uid===Number(el.dataset.priceNode));if(!n)return;if(el.value==='')delete prices[n.id];else if(isPrice(el.value))prices[n.id]=Number(el.value);localStorage.setItem('dofusdude-prices',JSON.stringify(prices));el.classList.toggle('required-missing',el.value===''&&!n.children);calculate()});el.addEventListener('change',updateNodes);el.addEventListener('blur',updateNodes)});list.querySelectorAll('[data-expand]').forEach(b=>b.onclick=()=>{const n=walk(rootNodes,x=>x.uid===Number(b.dataset.expand));n.expanded=!n.expanded;if(n.expanded&&!n.children)loadNode(n);else updateNodes()});calculate()}
+function renderDetail(){const saved=itemFields[selected.ankama_id]||{};
+ $('#detail').innerHTML=`<h2>2. ${esc(selected.name)}</h2><div class="craft-qty"><label for="craftQty"><strong>Quantité à crafter</strong><small style="display:block">Multiplie tous les ingrédients</small></label><input id="craftQty" class="optional-field" aria-label="Nombre d'objets à crafter" type="number" min="1" max="1000000" step="1" value="${craftQty}"></div><p class="muted">Prix d'achat ou coût de fabrication : ouvre « Fabriquer » pour les ingrédients composites. Le moins cher est choisi automatiquement.</p><div id="nodeList"></div><div class="total"><span>Coût total du craft</span><strong id="total">0 K</strong></div><div class="sell-stack"><div class="sell"><div class="sell-label">${img(selected)?`<img class="selected-icon" src="${esc(img(selected))}" alt="">`:''}<label for="sell">Prix HDV de l'objet final <small>(par unité, facultatif)</small></label></div><input id="sell" class="optional-field" type="number" min="0" step="1" placeholder="Prix / objet" value="${esc(saved.sell??'')}"></div><div class="sell"><div class="sell-label"><svg class="sales-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m6 15 5-5 4 3 5-7"/><path d="M16 6h4v4"/></svg><label for="monthlySales">Articles vendus sur 30 jours <small>(facultatif)</small></label></div><input id="monthlySales" class="optional-field" type="number" min="0" step="1" placeholder="Ventes / mois" value="${esc(saved.monthlySales??'')}"></div></div><div class="summary"><div class="stat"><small>Coût de fabrication</small><strong id="statCost">—</strong></div><div class="stat"><small>Gain si craft en kamas</small><strong id="statDiff">—</strong></div><div class="stat"><small>Gain si craft en %</small><strong id="statPercent">—</strong></div><div class="stat"><small>Marge journalière en kamas</small><strong id="statDaily">—</strong></div><div class="stat"><small>Marge journalière en %</small><strong id="statDailyPercent">—</strong></div></div><p class="note">Prix et ventes sauvegardés dans ce navigateur. Les taxes HDV ne sont pas prises en compte. La marge journalière est basée sur les ventes mensuelles / 30.</p>`;
+ $('#craftQty').addEventListener('input',()=>{craftQty=Math.min(1000000,Math.max(1,Math.floor(Number($('#craftQty').value)||1)));updateNodes()});$('#craftQty').addEventListener('change',()=>{$('#craftQty').value=craftQty;updateNodes()});$('#sell').addEventListener('input',()=>{saveItemFields();calculate()});$('#monthlySales').addEventListener('input',()=>{saveItemFields();calculate()});updateNodes()}
+function calculate(){let total=0,complete=true;for(const n of rootNodes){const v=nodeValue(n);if(v.best===null)complete=false;else total+=n.qty*craftQty*v.best}
+ $('#total').textContent=fmt(total)+(complete?'':' (partiel)');$('#statCost').textContent=complete?fmt(total):fmt(total)+' (partiel)';
+ const diffEl=$('#statDiff'),pctEl=$('#statPercent'),dailyEl=$('#statDaily'),dailyPctEl=$('#statDailyPercent');for(const el of [diffEl,pctEl,dailyEl,dailyPctEl]){el.textContent='—';el.className='neutral'}
+ const sell=$('#sell').value,monthly=$('#monthlySales').value;if(!complete||!isPrice(sell))return;
+ const diff=Number(sell)*craftQty-total,pct=total>0?diff/total*100:null;diffEl.textContent=(diff>0?'+':diff<0?'−':'')+fmt(Math.abs(diff));pctEl.textContent=pct===null?'N/A':(pct>0?'+':'')+pct.toLocaleString('fr-FR',{maximumFractionDigits:2,minimumFractionDigits:1})+' %';const color=diff>0?'green':diff<0?'red':'neutral';diffEl.className=color;pctEl.className=color;
+ if(isPrice(monthly)){const daily=Number(monthly)/30*(diff/craftQty);dailyEl.textContent=(daily>0?'+':daily<0?'−':'')+fmt(Math.abs(daily));dailyEl.className=daily>0?'green':daily<0?'red':'neutral';const dailyPct=pct===null?null:Number(monthly)/30*(pct/craftQty);dailyPctEl.textContent=dailyPct===null?'N/A':(dailyPct>0?'+':'')+dailyPct.toLocaleString('fr-FR',{maximumFractionDigits:2,minimumFractionDigits:1})+' %';dailyPctEl.className=dailyPct>0?'green':dailyPct<0?'red':'neutral'}
+}
+$('#search').addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(search,350)});document.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{cat=b.dataset.cat;document.querySelectorAll('[data-cat]').forEach(x=>x.classList.toggle('active',x===b));search()});
+
+// Multicraft : état et rendu indépendants du calculateur unitaire.
+const multi={cat:'all',items:[],timer:null,request:0,seq:0};
+const m$=s=>document.querySelector(s);
+function switchMode(mode){for(const name of ['single','multi','break','ledger']){m$('#'+name+'Mode').classList.toggle('mode-hidden',mode!==name)}for(const [name,id] of [['single','tabSingle'],['multi','tabMulti'],['break','tabBreak'],['ledger','tabLedger']])m$('#'+id).classList.toggle('active',mode===name);}
+m$('#tabSingle').onclick=()=>switchMode('single');m$('#tabMulti').onclick=()=>switchMode('multi');m$('#tabLedger').onclick=()=>switchMode('ledger');m$('#tabBreak').onclick=()=>switchMode('break');
+async function multiSearch(){const q=m$('#multiSearch').value.trim(),id=++multi.request;if(q.length<2){m$('#multiStatus').textContent='';m$('#multiResults').innerHTML='';return}m$('#multiStatus').textContent='Recherche en cours…';m$('#multiResults').innerHTML='';try{const ep=multi.cat==='all'?'/items/search':'/items/'+multi.cat+'/search';const data=await get(ep+'?'+new URLSearchParams({query:q,limit:'50'}));if(id!==multi.request)return;const rows=Array.isArray(data)?data:data.items||data.results||[];m$('#multiStatus').textContent=rows.length+' résultat(s)';m$('#multiResults').innerHTML=rows.map((x,i)=>`<button class="multi-pick" data-mpick="${i}">${img(x.item_fields||x)?`<img src="${esc(img(x.item_fields||x))}" alt="">`:''}<span>${esc(x.name)}</span><span style="flex:0;color:#b8eb72">＋</span></button>`).join('')||'<div class="multi-empty">Aucun résultat</div>';m$('#multiResults').querySelectorAll('[data-mpick]').forEach(b=>b.onclick=()=>multiAdd({...rows[+b.dataset.mpick],_category:multi.cat==='all'?subtype(rows[+b.dataset.mpick].item_subtype||rows[+b.dataset.mpick].item_fields?.type?.name_id):multi.cat}));}catch(e){if(id===multi.request)m$('#multiStatus').textContent='Recherche impossible : '+e.message}}
+m$('#multiSearch').addEventListener('input',()=>{clearTimeout(multi.timer);multi.timer=setTimeout(multiSearch,350)});document.querySelectorAll('[data-mcat]').forEach(b=>b.onclick=()=>{multi.cat=b.dataset.mcat;document.querySelectorAll('[data-mcat]').forEach(x=>x.classList.toggle('active',x===b));multiSearch()});
+async function multiDetail(id,preferred){if(detailsCache.has(id))return detailsCache.get(id);for(const t of [preferred,...categories.filter(c=>c!==preferred)]){try{const d=await get('/items/'+t+'/'+id);if(d){detailsCache.set(id,d);return d}}catch{}}return null}
+async function multiAdd(x){const id=x.ankama_id;if(multi.items.some(e=>e.id===id)){const entry=multi.items.find(e=>e.id===id);entry.qty++;multiRender();return}const entry={id,name:x.name,image:img(x.item_fields||x),qty:1,nodes:[],loading:true,error:'',detail:null};multi.items.push(entry);multiRender();try{const detail=await multiDetail(id,x._category||'equipment');if(!detail)throw Error('Fiche introuvable');entry.detail=detail;entry.noRecipe=false;entry.name=detail.name;entry.image=img(detail);if(!Array.isArray(detail.recipe)||!detail.recipe.length){entry.noRecipe=true;return;}entry.nodes=await Promise.all(detail.recipe.map(async r=>{const d=await multiDetail(r.item_ankama_id,subtype(r.item_subtype));return multiNode(r,d)}));await multiHydrateSaved(entry.nodes,new Set([entry.id]));}catch(e){entry.error=e.message}finally{entry.loading=false;multiRender()}}
+// Précharge les sous-recettes dont les composants ont déjà un prix mémorisé.
+// Le calcul est ainsi correct dès l'ajout de l'objet, sans clic sur « Fabriquer ».
+async function multiHydrateSaved(nodes,ancestors,depth=0,budget={remaining:90}){
+ if(depth>=5||budget.remaining<=0)return;
+ await Promise.all(nodes.map(async n=>{
+  const recipe=n.detail?.recipe;
+  if(!Array.isArray(recipe)||!recipe.length||ancestors.has(n.id)||budget.remaining<=0)return;
+  const next=new Set(ancestors);next.add(n.id);
+  // Précharger également les recettes imbriquées pour retrouver les prix déjà enregistrés.
+  budget.remaining--;
+  try{
+   const children=(await Promise.all(recipe.map(async r=>{
+    if(next.has(r.item_ankama_id))return null;
+    const d=await multiDetail(r.item_ankama_id,subtype(r.item_subtype));
+    return multiNode(r,d);
+   }))).filter(Boolean);
+   // On garde les composants uniquement lorsqu'un prix sauvegardé existe dans cette branche.
+   await multiHydrateSaved(children,next,depth+1,budget);
+   if(children.some(c=>isPrice(prices[c.id])||c.children?.length))n.children=children;
+  }catch(e){ /* Un sous-craft indisponible ne bloque pas la recette principale. */ }
+ }));
+}
+function multiNode(r,d){return {uid:++multi.seq,id:r.item_ankama_id,qty:Number(r.quantity)||0,name:d?.name||'Ressource #'+r.item_ankama_id,image:img(d),detail:d,children:null,expanded:false,loading:false,error:''}}
+function multiValue(n,seen=new Set()){const buy=isPrice(prices[n.id])?Number(prices[n.id]):null;let craft=null;if(n.children?.length&&!seen.has(n.id)){let sum=0,ok=true;const next=new Set(seen);next.add(n.id);for(const c of n.children){const v=multiValue(c,next).best;if(v===null){ok=false;break}sum+=c.qty*v}if(ok)craft=sum}let source=null,best=null;if(buy!==null&&(craft===null||buy<=craft)){source='buy';best=buy}else if(craft!==null){source='craft';best=craft}return {buy,craft,best,source}}
+function multiNodeHTML(n,amount,depth=0){const v=multiValue(n),hasRecipe=!!n.detail?.recipe?.length;const buyGood=v.buy!==null&&v.craft!==null&&v.buy<=v.craft,craftGood=v.buy!==null&&v.craft!==null&&v.craft<v.buy;return `<div data-mnode="${n.uid}"><div class="multi-row"><img src="${esc(n.image)}" alt=""><div><strong>${esc(n.name)}</strong><small>× ${fmtNum(amount*n.qty)}</small></div><input type="number" min="0" step="1" placeholder="Achat/u" aria-label="Prix de ${esc(n.name)}" data-mprice="${n.uid}" class="${v.best===null?'required-missing':''} ${buyGood?'choice-good':craftGood?'choice-bad':''}" value="${esc(prices[n.id]??'')}"><strong class="right">${v.best===null?'—':fmt(amount*n.qty*v.best)}</strong></div>${hasRecipe?`<div class="multi-actions"><button data-mexpand="${n.uid}" class="${craftGood?'choice-good':buyGood?'choice-bad':''}">${n.expanded?'▾':'▸'} Fabriquer${v.craft!==null?' · '+fmt(v.craft)+'/u':''}</button>${v.buy!==null&&v.craft!==null?`<small>${v.source==='buy'?'Achat moins cher':'Craft moins cher'}</small>`:''}</div><div class="multi-children" ${n.expanded?'':'hidden'}>${n.loading?'Chargement…':n.error?`<span class="error">${esc(n.error)}</span>`:n.children?.map(c=>multiNodeHTML(c,amount*n.qty,depth+1)).join('')||''}</div>`:''}</div>`}
+function fmtNum(n){return n.toLocaleString('fr-FR')}
+function multiWalk(uid){for(const e of multi.items){const found=walk(e.nodes,n=>n.uid===uid);if(found)return {node:found,entry:e}}return null}
+async function multiExpand(uid){const found=multiWalk(uid);if(!found)return;const {node:n,entry}=found;n.expanded=!n.expanded;if(!n.expanded||n.children||n.loading){multiRender();return}n.loading=true;multiRender();try{const ancestors=new Set([entry.id]);function visit(nodes,path){for(const x of nodes){if(x===n)return path;const result=x.children&&visit(x.children,[...path,x.id]);if(result)return result}return null}for(const a of visit(entry.nodes,[])||[])ancestors.add(a);ancestors.add(n.id);n.children=(await Promise.all((n.detail?.recipe||[]).map(async r=>{if(ancestors.has(r.item_ankama_id))return null;const d=await multiDetail(r.item_ankama_id,subtype(r.item_subtype));return multiNode(r,d)}))).filter(Boolean)}catch(e){n.error=e.message}finally{n.loading=false;multiRender()}}
+function multiCollect(n,qty,shopping){
+ const v=multiValue(n);
+ if(v.source==='craft'&&n.children?.length){
+  for(const c of n.children)multiCollect(c,qty*n.qty,shopping);
+ }else{
+  const key=String(n.id),old=shopping.get(key)||{id:n.id,name:n.name,image:n.image,qty:0,unit:null};
+  old.qty+=qty*n.qty;
+  old.unit=v.source==='buy'?v.buy:null;
+  shopping.set(key,old);
+ }
+}
+function multiEntryDecision(e){
+ if(e.loading||e.error||(!e.nodes.length&&!e.noRecipe))return {craft:null,buy:null,source:null};
+ let craft=e.noRecipe?null:0;
+ for(const n of e.nodes){const v=multiValue(n);if(v.best===null){craft=null;break}craft+=n.qty*v.best}
+ const sell=itemFields[e.id]?.sell;
+ const buy=isPrice(sell)?Number(sell):null;
+ const source=craft!==null&&buy!==null?(craft<=buy?'craft':'buy'):craft!==null?'craft':buy!==null?'buy':null;
+ return {craft,buy,source};
+}
+function multiDecisionHTML(e){
+ const d=multiEntryDecision(e),both=d.craft!==null&&d.buy!==null;
+ const cls=(which)=>both?(d.source===which?'winner':'loser'):(d.source===which?'winner':'pending');
+ return `<div class="multi-choice" data-mdecision="${e.id}"><span class="multi-choice-pill ${cls('craft')}">⚒ Craft ${d.craft===null?'—':fmt(d.craft)+'/u'}</span><span class="multi-choice-pill ${cls('buy')}">🪙 Achat HDV ${d.buy===null?'—':fmt(d.buy)+'/u'}</span></div>`;
+}
+function multiToggleCollapse(id){const e=multi.items.find(x=>String(x.id)===String(id));if(!e||e.loading||e.error||e.noRecipe)return;e.collapsed=!e.collapsed;multiRender()}
+function multiRender(){const area=m$('#multiSelected');area.className='';area.innerHTML=multi.items.length?multi.items.map(e=>`<div class="multi-entry ${e.collapsed?'is-collapsed':''}" data-mentry="${e.id}"><div class="multi-entry-top"><img src="${esc(e.image)}" alt=""><strong>${esc(e.name)}</strong><label class="multi-qty-inline"><small>Quantité</small><input class="optional-field" data-mqty="${e.id}" type="number" min="1" step="1" value="${e.qty}" aria-label="Quantité de ${esc(e.name)}"></label><label class="multi-hdv-inline"><small>Prix HDV / objet</small><input class="optional-field" data-msell="${e.id}" type="number" min="0" step="1" placeholder="Facultatif" aria-label="Prix HDV de ${esc(e.name)}" value="${esc(itemFields[e.id]?.sell??'')}"></label>${!e.loading&&!e.error&&!e.noRecipe?`<button type="button" class="multi-collapse" data-mcollapse="${e.id}" aria-expanded="${!e.collapsed}" aria-label="${e.collapsed?'Déplier':'Replier'} la recette de ${esc(e.name)}" title="${e.collapsed?'Afficher':'Masquer'} les composants">${e.collapsed?'▸':'▾'}</button>`:''}<button class="remove" data-mremove="${e.id}" title="Retirer">✕</button></div>${e.loading?'<p class="multi-message">Chargement…</p>':e.error?`<p class="error">${esc(e.error)}</p>`:e.noRecipe?'':`<div class="multi-rows">${e.nodes.map(n=>multiNodeHTML(n,e.qty)).join('')}</div>${multiDecisionHTML(e)}`}</div>`).join(''):'<div class="multi-empty">Ajoute un ou plusieurs objets depuis la recherche.</div>';
+area.querySelectorAll('[data-mcollapse]').forEach(b=>b.onclick=()=>multiToggleCollapse(b.dataset.mcollapse));area.querySelectorAll('[data-mqty]').forEach(el=>{el.oninput=()=>{const e=multi.items.find(x=>x.id===+el.dataset.mqty);if(e&&Number(el.value)>=1&&Number.isInteger(Number(el.value))){e.qty=Number(el.value);multiCalculate()}};el.onchange=multiRender});area.querySelectorAll('[data-mremove]').forEach(b=>b.onclick=()=>{multi.items=multi.items.filter(e=>e.id!==+b.dataset.mremove);multiRender()});area.querySelectorAll('[data-msell]').forEach(el=>el.oninput=()=>{const id=el.dataset.msell;itemFields[id]={...(itemFields[id]||{}),sell:el.value};localStorage.setItem('dofusdude-item-fields',JSON.stringify(itemFields));multiCalculate()});area.querySelectorAll('[data-mprice]').forEach(el=>{el.oninput=()=>{const found=multiWalk(+el.dataset.mprice);if(!found)return;const id=found.node.id;if(el.value==='')delete prices[id];else if(isPrice(el.value))prices[id]=Number(el.value);localStorage.setItem('dofusdude-prices',JSON.stringify(prices));multiCalculate()};el.onblur=multiRender;el.onchange=multiRender});area.querySelectorAll('[data-mexpand]').forEach(b=>b.onclick=()=>multiExpand(+b.dataset.mexpand));multiCalculate()}
+function multiCalculate(){
+ let cost=0,complete=true,sell=0,sellComplete=true,optimization=0;
+ const shopping=new Map();
+ for(const e of multi.items){
+  if(e.loading||e.error||(!e.nodes.length&&!e.noRecipe)){complete=false;sellComplete=false;continue}
+  const d=multiEntryDecision(e);
+  if(d.craft===null&&!e.noRecipe)complete=false;
+  else if(d.craft!==null)cost+=d.craft*e.qty;
+  else if(d.buy!==null)cost+=d.buy*e.qty;
+  else complete=false;
+  if(d.buy===null)sellComplete=false;
+  else sell+=d.buy*e.qty;
+  if(d.craft!==null&&d.buy!==null)optimization+=Math.abs(d.craft-d.buy)*e.qty;
+  // Ne pas acheter les composants d'un objet final si l'achat HDV est moins cher.
+  if(d.source==='buy'){
+   const key=String(e.id),old=shopping.get(key)||{id:e.id,name:e.name,image:e.image,qty:0,unit:d.buy};
+   old.qty+=e.qty;old.unit=d.buy;shopping.set(key,old);
+  }else if(d.source==='craft'){
+   for(const n of e.nodes)multiCollect(n,e.qty,shopping);
+  }else{
+   // Afficher les ressources encore sans prix, sans prétendre que le choix est optimisé.
+   for(const n of e.nodes)multiCollect(n,e.qty,shopping);
+  }
+  const block=m$(`[data-mdecision="${e.id}"]`);
+  if(block){const next=multiDecisionHTML(e);const tmp=document.createElement('div');tmp.innerHTML=next;block.replaceWith(tmp.firstElementChild)}
+ }
+ m$('#multiCost').textContent=multi.items.length?fmt(cost)+(complete?'':' (partiel)'):'—';
+ m$('#multiSellTotal').textContent=multi.items.length&&sellComplete?fmt(sell):'—';
+ const profit=m$('#multiProfit');profit.className='';
+ if(complete&&sellComplete&&multi.items.length){profit.textContent='+'+fmt(optimization);profit.className=optimization>0?'green':'neutral'}else profit.textContent='—';
+ // Actualiser les contours des composites sans recréer les inputs en cours de saisie.
+ for(const e of multi.items)for(const n of e.nodes){
+  const update=(node)=>{const v=multiValue(node),both=v.buy!==null&&v.craft!==null;
+   const inp=m$(`[data-mprice="${node.uid}"]`),btn=m$(`[data-mexpand="${node.uid}"]`);
+   if(inp){inp.classList.toggle('choice-good',both&&v.source==='buy');inp.classList.toggle('choice-bad',both&&v.source==='craft');inp.classList.toggle('required-missing',v.best===null)}
+   if(btn){btn.classList.toggle('choice-good',both&&v.source==='craft');btn.classList.toggle('choice-bad',both&&v.source==='buy')}
+   for(const c of node.children||[])update(c)
+  };update(n);
+ }
+ const rows=[...shopping.values()].sort((a,b)=>a.name.localeCompare(b.name,'fr'));
+ m$('#multiShopping').className='';
+ m$('#multiShopping').innerHTML=rows.length?`<table class="multi-shopping"><thead><tr><th>Ressource / objet</th><th>Quantité</th><th>Coût</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.image?`<img src="${esc(r.image)}" alt="">`:''}${esc(r.name)}</td><td>${fmtNum(r.qty)}</td><td>${r.unit===null?'À renseigner':fmt(r.qty*r.unit)}</td></tr>`).join('')}</tbody></table>`:'<div class="multi-empty">Aucune ressource à afficher.</div>';
+}
+
+
+// Historique : les lots et leurs ventes sont indépendants des recettes.
+const LEDGER_KEY='dofusdude-purchase-ledger-v1';
+let ledger=[];
+try{const saved=JSON.parse(localStorage.getItem(LEDGER_KEY)||'[]');if(Array.isArray(saved))ledger=saved}catch{}
+const ledgerSave=()=>localStorage.setItem(LEDGER_KEY,JSON.stringify(ledger));
+const ledgerSold=lot=>(lot.sales||[]).reduce((n,s)=>n+Number(s.qty),0);
+function ledgerTotals(lots){
+ let profit=0,pending=0,remaining=0;
+ for(const lot of lots){
+  const sold=ledgerSold(lot),left=Math.max(0,Number(lot.qty)-sold);
+  remaining+=left;pending+=left*Number(lot.buy);
+  for(const sale of lot.sales||[])profit+=Number(sale.qty)*(Number(sale.price)-Number(lot.buy));
+ }
+ return {profit,pending,remaining};
+}
+const ledgerSigned=n=>(n>0?'+':n<0?'−':'')+fmt(Math.abs(n));
+const ledgerId=()=>String(Date.now())+'-'+Math.random().toString(36).slice(2);
+function ledgerRender(){
+ const t=ledgerTotals(ledger);
+ const profit=$('#ledgerProfit');profit.textContent=ledgerSigned(t.profit);profit.className=t.profit>0?'green':t.profit<0?'red':'neutral';
+ $('#ledgerPending').textContent=fmt(t.pending);$('#ledgerRemaining').textContent=fmtNum(t.remaining);
+ const area=$('#ledgerEntries');
+ area.innerHTML=ledger.length?ledger.slice().reverse().map(lot=>{
+  const sold=ledgerSold(lot),left=Math.max(0,lot.qty-sold),p=ledgerTotals([lot]).profit;
+  return `<article class="ledger-entry" data-lot="${esc(lot.id)}"><div class="ledger-head"><strong>${esc(lot.name)}</strong><button class="ledger-remove" type="button" data-ldel="${esc(lot.id)}" title="Supprimer ce lot et ses ventes">✕</button></div><div class="ledger-sub">Acheté le ${esc(lot.date)} · ${fmtNum(lot.qty)} × ${fmt(lot.buy)} · Coût ${fmt(lot.qty*lot.buy)}</div><div class="ledger-sub">Restant : <b>${fmtNum(left)}</b> · Kamas en attente : <b>${fmt(left*lot.buy)}</b> · Gain réalisé : <b class="${p>0?'green':p<0?'red':''}">${ledgerSigned(p)}</b></div>${left?`<form class="ledger-sale" data-lsale="${esc(lot.id)}"><label>Quantité vendue<input name="qty" type="number" required min="1" max="${left}" step="1" value="${left}"></label><label>Prix de vente unitaire (K)<input name="price" type="number" required min="0" step="1" placeholder="Prix HDV"></label><button type="submit">Enregistrer la vente</button></form>`:'<div class="green" style="margin-top:10px">✓ Lot entièrement vendu</div>'}${lot.sales?.length?`<div class="ledger-history">${lot.sales.map(s=>`<div>↳ ${esc(s.date)} · ${fmtNum(s.qty)} vendu(s) à ${fmt(s.price)}/u · <span class="${s.price>=lot.buy?'green':'red'}">${ledgerSigned(s.qty*(s.price-lot.buy))}</span></div>`).join('')}</div>`:''}</article>`
+ }).join(''):'<div class="multi-empty">Aucun achat enregistré pour le moment.</div>';
+ area.querySelectorAll('[data-ldel]').forEach(b=>b.onclick=()=>{if(confirm('Supprimer cet achat et tout son historique de ventes ?')){ledger=ledger.filter(x=>x.id!==b.dataset.ldel);ledgerSave();ledgerRender()}});
+ area.querySelectorAll('[data-lsale]').forEach(f=>f.onsubmit=e=>{e.preventDefault();const lot=ledger.find(x=>x.id===f.dataset.lsale);if(!lot)return;const qty=Number(f.elements.qty.value),price=Number(f.elements.price.value);if(!Number.isSafeInteger(qty)||qty<1||qty>lot.qty-ledgerSold(lot)||!Number.isFinite(price)||price<0){alert('Vérifie la quantité disponible et le prix de vente.');return}lot.sales.push({qty,price,date:new Date().toISOString().slice(0,10)});ledgerSave();ledgerRender()});
+}
+$('#ledgerDate').value=new Date().toLocaleDateString('en-CA');
+$('#ledgerForm').onsubmit=e=>{e.preventDefault();const name=$('#ledgerName').value.trim(),qty=Number($('#ledgerQty').value),buy=Number($('#ledgerBuy').value),date=$('#ledgerDate').value;if(!name||!Number.isSafeInteger(qty)||qty<1||!Number.isFinite(buy)||buy<0||!date)return;ledger.push({id:ledgerId(),name,qty,buy,date,sales:[]});ledgerSave();$('#ledgerForm').reset();$('#ledgerQty').value='1';$('#ledgerDate').value=new Date().toLocaleDateString('en-CA');ledgerRender()};
+ledgerRender();
+customInit();
+
+// Brisage : les quantités et les prix sont mémorisés par équipement et par rune.
+const BREAK_KEY='dofus-craft-breaking-v1';
+let breaking={};try{breaking=JSON.parse(localStorage.getItem(BREAK_KEY)||'{}')||{}}catch{}
+const breakSave=()=>localStorage.setItem(BREAK_KEY,JSON.stringify(breaking));
+// Correspondances explicites : une ligne par statistique, jusqu'à trois puissances.
+const BREAK_RUNES=[
+ [/^(?:vitalit|vitality)/i,['Vi','Pa Vi','Ra Vi']],
+ [/^(?:sagesse|wisdom)/i,['Sa','Pa Sa','Ra Sa']],
+ [/^(?:force|strength)/i,['Fo','Pa Fo','Ra Fo']],
+ [/^(?:intelligence)/i,['Ine','Pa Ine','Ra Ine']],
+ [/^(?:chance)/i,['Cha','Pa Cha','Ra Cha']],
+ [/^(?:agilit|agility)/i,['Age','Pa Age','Ra Age']],
+ [/^(?:puissance pieges?|trap power)/i,['Per Pi','Pa Per Pi','Ra Per Pi']],
+ [/^(?:puissance|power)/i,['Pui','Pa Pui','Ra Pui']],
+ [/^(?:pa$|points? d.action|action points?|ap$)/i,['Ga Pa']],
+ [/^(?:pm$|points? de mouvement|movement points?|mp$)/i,['Ga Pme']],
+ [/^(?:portee|range)/i,['Po']],
+ [/^(?:coups? critiques?|critical hits?)/i,['Cri']],
+ [/^(?:initiative)/i,['Ini','Pa Ini','Ra Ini']],
+ [/^(?:prospection|prospecting)/i,['Prospe','Pa Prospe']],
+ [/^(?:invocations?|summons?)/i,['Invo']],
+ [/^(?:soins?|heals?)/i,['So','Pa So']],
+ [/^(?:tacle|lock)/i,['Tac','Pa Tac']],
+ [/^(?:fuite|dodge)/i,['Fui','Pa Fui']],
+ [/^(?:retrait pa|ap reduction)/i,['Ret Pa','Pa Ret Pa']],
+ [/^(?:retrait pm|mp reduction)/i,['Ret Pme','Pa Ret Pme']],
+ [/^(?:esquive pa|ap dodge)/i,['Ré Pa','Pa Ré Pa']],
+ [/^(?:esquive pm|mp dodge)/i,['Ré Pme','Pa Ré Pme']],
+ [/^(?:pods?)/i,['Pod','Pa Pod','Ra Pod']],
+ [/^(?:dommages? pieges?|trap damage)/i,['Do Pi','Pa Do Pi']],
+ [/^(?:dommages? renvoyes?|reflected damage)/i,['Do Ren','Pa Do Ren']],
+ [/^(?:dommages? critiques?|critical damage)/i,['Do Cri','Pa Do Cri']],
+ [/^(?:dommages? poussee|pushback damage)/i,['Do Pou','Pa Do Pou','Ra Do Pou']],
+ [/^(?:dommages? neutre|neutral damage)/i,['Do Neutre','Pa Do Neutre']],
+ [/^(?:dommages? terre|earth damage)/i,['Do Terre','Pa Do Terre']],
+ [/^(?:dommages? feu|fire damage)/i,['Do Feu','Pa Do Feu']],
+ [/^(?:dommages? eau|water damage)/i,['Do Eau','Pa Do Eau']],
+ [/^(?:dommages? air|air damage)/i,['Do Air','Pa Do Air']],
+ [/^(?:dommages?|damage)/i,['Do']],
+ [/^(?:resistances? critiques?|critical resistance)/i,['Ré Cri','Pa Ré Cri','Ra Ré Cri']],
+ [/^(?:resistances? poussee|pushback resistance)/i,['Ré Pou','Pa Ré Pou','Ra Ré Pou']],
+ [/^(?:resistances? neutre|neutral resistance)/i,['Ré Neutre','Pa Ré Neutre','Ra Ré Neutre']],
+ [/^(?:resistances? terre|earth resistance)/i,['Ré Terre','Pa Ré Terre','Ra Ré Terre']],
+ [/^(?:resistances? feu|fire resistance)/i,['Ré Feu','Pa Ré Feu','Ra Ré Feu']],
+ [/^(?:resistances? eau|water resistance)/i,['Ré Eau','Pa Ré Eau','Ra Ré Eau']],
+ [/^(?:resistances? air|air resistance)/i,['Ré Air','Pa Ré Air','Ra Ré Air']]
+];
+const BREAK_PERCENT_DAMAGE=[
+ [/sorts?|spells?/i,'Do Per So'],[/armes?|weapons?/i,'Do Per Ar'],
+ [/distance|ranged/i,'Do Per Di'],[/melee|close combat/i,'Do Per Mé']
+];
+const BREAK_PERCENT_RESIST=[
+ [/neutre|neutral/i,'Ré Per Neutre'],[/terre|earth/i,'Ré Per Terre'],
+ [/feu|fire/i,'Ré Per Feu'],[/eau|water/i,'Ré Per Eau'],[/air/i,'Ré Per Air'],
+ [/distance|ranged/i,'Ré Per Di'],[/melee|close combat/i,'Ré Per Mé']
+];
+function breakText(v){
+ if(typeof v==='string')return v;
+ if(v&&typeof v==='object')return v.fr||v.name||v.name_id||v.en||'';
+ return '';
+}
+function breakEffects(d){
+ const sources=[d.effects,d.possible_effects,d.characteristics,d.stats,d.item_fields?.effects,d.item_fields?.possible_effects];
+ const raw=sources.flatMap(v=>Array.isArray(v)?v:[]);
+ return raw.flatMap(e=>{
+  if(typeof e==='string')return [e];
+  const candidates=[e.type?.name,e.type?.name_id,e.effect?.name,e.effect?.name_id,e.name,e.description,e.formatted,e.effect_type?.name,e.effect_type?.name_id];
+  return candidates.map(breakText).filter(Boolean);
+ });
+}
+function breakNormalize(v){
+ return String(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim().replace(/^[+-]?\d+(?:[.,]\d+)?\s*(?:a|à|-)\s*\d+\s*/i,'').replace(/^[+-]?\d+(?:[.,]\d+)?\s*/,'').replace(/^% ?/,'');
+}
+function breakRuneGroups(d){
+ const groups=new Map();
+ for(const raw of breakEffects(d)){
+  const effect=breakNormalize(raw);
+  const percent=/%|pourcent|percent/i.test(raw);
+  if(percent){
+   const patterns=/resistan/i.test(effect)?BREAK_PERCENT_RESIST:/dommage|damage/i.test(effect)?BREAK_PERCENT_DAMAGE:null;
+   if(patterns){
+    const match=patterns.find(([re])=>re.test(effect));
+    if(match)groups.set(match[1],[match[1]]);
+   }
+   continue;
+  }
+  for(const [re,names] of BREAK_RUNES)if(re.test(effect)){
+   groups.set(names[0],names);
+   break;
+  }
+ }
+ return [...groups.values()];
+}
+function breakRuneNames(d){return breakRuneGroups(d).flat()}
+function breakMath(cost,quantity,rows){
+ const revenue=rows.reduce((n,r)=>n+Number(r.qty||0)*Number(r.price||0),0);
+ const expense=Number(cost||0)*Number(quantity||1),profit=revenue-expense;
+ return {revenue,expense,profit,percent:expense>0?profit/expense*100:null};
+}
+let breakRequest=0,breakTimer,breakSelected=null;
+$('#breakSearch').addEventListener('input',()=>{
+ clearTimeout(breakTimer);const q=$('#breakSearch').value.trim(),seq=++breakRequest;
+ if(q.length<2){$('#breakStatus').textContent='';$('#breakResults').innerHTML='';return}
+ breakTimer=setTimeout(async()=>{
+  $('#breakStatus').textContent='Recherche…';
+  try{
+   const data=await get('/items/equipment/search?'+new URLSearchParams({query:q,limit:'40'}));
+   if(seq!==breakRequest)return;
+   const rows=Array.isArray(data)?data:data.items||data.results||[];
+   $('#breakStatus').textContent=rows.length?'':'Aucun équipement trouvé';
+   $('#breakResults').innerHTML=rows.map((x,i)=>`<div class="break-item" data-break="${i}">${img(x)?`<img src="${esc(img(x))}" alt="">`:''}<span>${esc(x.name)}</span></div>`).join('');
+   $('#breakResults').querySelectorAll('[data-break]').forEach(el=>el.onclick=()=>breakOpen(rows[Number(el.dataset.break)]));
+  }catch(e){if(seq===breakRequest)$('#breakStatus').textContent='Erreur de recherche : '+e.message}
+ },300);
+});
+async function breakOpen(item){
+ $('#breakDetail').innerHTML='Chargement des caractéristiques…';
+ let detail=null;
+ try{detail=await get('/items/equipment/'+item.ankama_id)}
+ catch(e){$('#breakDetail').textContent='Impossible de charger les caractéristiques : '+e.message;return}
+ const id=String(detail.ankama_id||item.ankama_id);
+ const groups=breakRuneGroups(detail),names=groups.flat(),old=breaking[id]||{};
+ breakSelected={id,detail,name:detail.name||item.name,groups,runes:names.map(name=>({name,qty:old.runes?.[name]?.qty??'',price:old.runes?.[name]?.price??''})),cost:old.cost??'',quantity:old.quantity??1};
+ breakDraw();
+}
+function breakDraw(){
+ const b=breakSelected;if(!b)return;
+ $('#breakDetail').innerHTML=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">${img(b.detail)?`<img src="${esc(img(b.detail))}" width="50" height="50" alt="">`:''}<strong style="font-size:20px">${esc(b.name)}</strong></div>
+ <div class="break-cost"><label>Prix d'achat unitaire de l'équipement (K)<input id="breakCost" type="number" min="0" step="1" value="${esc(b.cost)}" placeholder="Prix HDV"></label><label>Nombre d'équipements brisés<input id="breakQty" type="number" min="1" step="1" value="${esc(b.quantity)}"></label></div>
+ ${b.groups.length?`<table class="break-grid break-matrix"><thead><tr><th>Stat</th><th>Mineure</th><th>Moyenne</th><th>Majeure</th></tr></thead><tbody>${b.groups.map(group=>`<tr><td>${esc(group[0].replace(/^(?:Ra |Pa )/,''))}</td>${[0,1,2].map(pos=>{const name=group[pos];if(!name)return '<td class="break-na">—</td>';const i=b.runes.findIndex(r=>r.name===name),r=b.runes[i];return `<td><div class="break-rune-name">${esc(name)}</div><input aria-label="Quantité ${esc(name)}" data-bqty="${i}" type="number" min="0" step="1" value="${esc(r.qty)}" placeholder="Qté"><input aria-label="Prix ${esc(name)}" data-bprice="${i}" type="number" min="0" step="1" value="${esc(r.price)}" placeholder="Prix K"><small data-btotal="${i}">—</small></td>`}).join('')}</tr>`).join('')}</tbody></table>`:'<p class="break-note">Aucune caractéristique compatible reconnue pour cet équipement.</p>'}
+
+ <div class="break-summary"><div><small>Valeur des runes</small><strong id="breakRevenue">—</strong></div><div><small>Gain / perte</small><strong id="breakProfit">—</strong></div><div><small>Rentabilité</small><strong id="breakPercent">—</strong></div></div><p class="break-note">Les quantités obtenues sont à renseigner après brisage. Le calcul n'inclut pas les taxes HDV.</p>`;
+ const update=()=>{
+  b.cost=$('#breakCost').value;b.quantity=$('#breakQty').value;
+  b.runes.forEach((r,i)=>{r.qty=$(`[data-bqty="${i}"]`).value;r.price=$(`[data-bprice="${i}"]`).value});
+  breaking[b.id]={cost:b.cost,quantity:b.quantity,runes:Object.fromEntries(b.runes.map(r=>[r.name,{qty:r.qty,price:r.price}]))};breakSave();
+  const valid=b.cost!==''&&Number(b.quantity)>0&&b.runes.some(r=>r.qty!==''&&Number(r.qty)>0)&&b.runes.every(r=>r.qty===''||Number(r.qty)===0||r.price!=='');
+  b.runes.forEach((r,i)=>{$(`[data-btotal="${i}"]`).textContent=r.qty!==''&&r.price!==''?fmt(Number(r.qty)*Number(r.price)):'—'});
+  if(!valid){$('#breakRevenue').textContent='—';$('#breakProfit').textContent='—';$('#breakPercent').textContent='—';return}
+  const v=breakMath(b.cost,b.quantity,b.runes);
+  $('#breakRevenue').textContent=fmt(v.revenue);$('#breakProfit').textContent=(v.profit>0?'+':'')+fmt(v.profit);
+  $('#breakProfit').style.color=v.profit>0?'#5dff91':v.profit<0?'#ff7777':'';
+  $('#breakPercent').textContent=v.percent===null?'—':(v.percent>0?'+':'')+v.percent.toLocaleString('fr-FR',{maximumFractionDigits:1})+' %';
+  $('#breakPercent').style.color=v.profit>0?'#5dff91':v.profit<0?'#ff7777':'';
+ };
+ $('#breakDetail').querySelectorAll('input').forEach(x=>x.addEventListener('input',update));update();
+}
+</script></body></html>
