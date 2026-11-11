@@ -1,9 +1,9 @@
-<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dofus Craft — DofusDude</title><style>
+<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>La Foire du Tool — Dofus</title><style>
 :root{font-family:system-ui,Arial;color:#eaf2e8;background:#101713}*{box-sizing:border-box}body{margin:0}header{padding:20px max(20px,calc((100vw - 1100px)/2));background:#1b2920;border-bottom:1px solid #344b38;display:flex;justify-content:space-between;align-items:center}header b{color:#b8eb72;font-size:24px}main{max-width:1100px;margin:30px auto;padding:0 20px}h1{font-size:29px;margin:0 0 8px}p,.muted,small{color:#a6b6a8}.layout{display:grid;grid-template-columns:350px 1fr;gap:20px;margin-top:25px}.panel{background:#1c2921;border:1px solid #354838;border-radius:15px;padding:20px;min-width:0}h2{font-size:18px;margin:0 0 15px}input,select{background:#101b14;border:1px solid #506551;color:#fff;border-radius:9px;padding:11px;font:inherit;max-width:100%}input:focus{outline:1px solid #b8eb72}.search{width:100%}button{border:0;border-radius:8px;padding:10px 12px;background:#354b39;color:white;cursor:pointer;font-weight:600}button:hover{background:#48634c}button.active{background:#b8eb72;color:#172214}.filters{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.results{max-height:550px;overflow:auto}.item{width:100%;display:flex;gap:12px;align-items:center;text-align:left;background:transparent;border-bottom:1px solid #344638;border-radius:0}.item img,.ingredient img{width:40px;height:40px;object-fit:contain}.item span{flex:1}.item small{display:block;margin-top:3px}.ingredient{display:grid;grid-template-columns:42px minmax(0,1fr) 105px 115px;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #354838}.ingredient input{width:100%;text-align:right}.right{text-align:right}.total{display:flex;justify-content:space-between;font-size:21px;margin:20px 0;color:#c8f18c}.sell{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #354838;padding-top:20px}.sell input{width:180px}.sell-label{display:flex;align-items:center;gap:10px;min-width:0}.selected-icon{width:42px;height:42px;object-fit:contain;flex-shrink:0}.sales-icon{width:42px;height:42px;padding:8px;flex-shrink:0;color:#d9b967}.sell-label label{display:block}.verdict{margin-top:15px;padding:15px;background:#2b4130;border-radius:10px}.negative{background:#503133}.required-missing{border:2px solid #f16e70!important;outline:1px solid #f16e70;outline-offset:1px}.optional-field{border:2px dashed #81977f!important}.optional-field:focus{outline:1px solid #b8eb72}.sell-stack{display:grid;gap:14px;margin-top:16px}.sell-stack .sell{border-top:0;padding-top:0}.sell-stack .sell:first-child{border-top:1px solid #354838;padding-top:20px}.craft-qty{display:flex;align-items:center;gap:12px;margin:16px 0;padding:13px;background:#142019;border-radius:10px}.craft-qty input{width:105px}.craft-qty label{flex:1}.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}.stat{background:#142019;border:1px solid #354838;border-radius:11px;padding:14px;min-width:0}.stat small{display:block;margin-bottom:7px}.stat strong{font-size:21px;overflow-wrap:anywhere}.green{color:#b8eb72}.red{color:#ff8e89}.neutral{color:#dce7dc}@media(max-width:550px){.summary{grid-template-columns:1fr}}.error{color:#ffaaa6}.status{font-size:13px;margin:10px 0}.empty{padding:40px 10px;text-align:center;color:#a6b6a8}.note{font-size:12px;line-height:1.5;margin-top:20px}@media(max-width:750px){.layout{grid-template-columns:1fr}.ingredient{grid-template-columns:35px 1fr 75px 95px;gap:5px}.panel{padding:13px}}
 
 .composite{border-bottom:1px solid #354838;padding-bottom:9px}.composite>.ingredient{border-bottom:0}.comp-actions{margin:0 0 8px 52px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}.comp-actions button{font-size:12px;padding:7px 9px}.comp-children{margin:8px 0 8px 22px;padding-left:12px;border-left:2px solid #526849}.comp-children[hidden]{display:none}.choice-good{outline:2px solid #86dc80!important;outline-offset:1px}.choice-bad{opacity:.4;filter:grayscale(.6)}.choice-note{font-size:12px;color:#a6b6a8}.comp-actions .cost{font-size:12px}.comp-actions button:disabled{opacity:.55;cursor:wait}.comp-children .ingredient{grid-template-columns:36px minmax(0,1fr) 90px 105px}.comp-children .ingredient img{width:34px;height:34px}.comp-children .comp-actions{margin-left:43px}@media(max-width:600px){.comp-children{margin-left:6px;padding-left:7px}.comp-children .ingredient{grid-template-columns:30px minmax(0,1fr) 75px 80px;gap:4px}.comp-actions{margin-left:35px}}
 
-.mode-tabs{display:flex;gap:9px;margin:18px 0 0}.mode-tabs button{padding:11px 19px}.mode-hidden{display:none!important}.multi-layout{display:grid;grid-template-columns:330px minmax(0,1fr);gap:18px;margin-top:20px}.multi-search-results{max-height:300px;overflow:auto}.multi-entry{border:1px solid #425945;border-radius:12px;padding:14px 15px;margin:0 0 17px;background:#1b281f;box-shadow:0 5px 14px #00000020}.multi-entry .sell{background:#24352a;border:1px solid #3b5441;border-radius:8px;padding:12px!important;margin-top:15px!important}.multi-entry-top{padding-bottom:10px;border-bottom:1px solid #425945}.multi-entry-top{display:flex;gap:10px;align-items:center}.multi-entry-top img,.multi-pick img{width:36px;height:36px;object-fit:contain}.multi-entry-top strong{flex:1}.multi-entry input{width:85px}.multi-pick{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:transparent;border-bottom:1px solid #344638}.multi-pick span{flex:1}.multi-rows{margin-top:14px}.multi-row{display:grid;grid-template-columns:36px minmax(0,1fr) 90px 105px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #354838}.multi-row img{width:34px;height:34px;object-fit:contain}.multi-row input{width:100%;text-align:right}.multi-row small{display:block}.multi-actions{margin:5px 0 7px 43px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.multi-actions button{font-size:12px;padding:6px 9px}.multi-children{margin-left:20px;padding-left:12px;border-left:2px solid #526849}.multi-children[hidden]{display:none}.multi-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:15px 0}.multi-summary .stat strong{font-size:19px}.multi-shopping{width:100%;border-collapse:collapse;margin-top:10px}.multi-shopping td,.multi-shopping th{padding:10px 7px;border-bottom:1px solid #354838;text-align:left}.multi-shopping td:last-child,.multi-shopping th:last-child{text-align:right}.multi-shopping img{width:28px;height:28px;object-fit:contain;vertical-align:middle;margin-right:8px}.multi-message{font-size:13px;color:#a6b6a8}.multi-entry .optional-field{width:88px}.multi-entry .remove{background:#49332f;color:#ffaaa6}.multi-empty{padding:24px 10px;text-align:center;color:#a6b6a8}@media(max-width:800px){.multi-layout{grid-template-columns:1fr}.multi-row{grid-template-columns:32px minmax(0,1fr) 75px 90px;gap:5px}.multi-summary{grid-template-columns:1fr}}
+.mode-tabs{display:flex;gap:9px;margin:18px 0 0}.mode-tabs button{padding:11px 19px}.mode-hidden{display:none!important}.multi-layout{display:grid;grid-template-columns:330px minmax(0,1fr);gap:18px;margin-top:20px}.multi-search-results{max-height:300px;overflow:auto}.multi-entry{border:1px solid #425945;border-radius:12px;padding:14px 15px;margin:0 0 17px;background:#1b281f;box-shadow:0 5px 14px #00000020}.multi-entry .sell{background:#24352a;border:1px solid #3b5441;border-radius:8px;padding:12px!important;margin-top:15px!important}.multi-entry-top{padding-bottom:10px;border-bottom:1px solid #425945}.multi-entry-top{display:flex;gap:10px;align-items:center}.multi-entry-top img,.multi-pick img{width:36px;height:36px;object-fit:contain}.multi-entry-top strong{flex:1}.multi-entry input{width:85px}.multi-pick{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:transparent;border-bottom:1px solid #344638}.multi-pick span{flex:1}.multi-rows{margin-top:14px}.multi-row{display:grid;grid-template-columns:36px minmax(0,1fr) 90px 105px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #354838}.multi-row img{width:34px;height:34px;object-fit:contain}.multi-row input{width:100%;text-align:right}.multi-row small{display:block}.multi-actions{margin:5px 0 7px 43px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.multi-actions button{font-size:12px;padding:6px 9px}.multi-children{margin-left:20px;padding-left:12px;border-left:2px solid #526849}.multi-children[hidden]{display:none}.multi-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0}.multi-summary .stat strong{font-size:19px}.multi-shopping{width:100%;border-collapse:collapse;margin-top:10px}.multi-shopping td,.multi-shopping th{padding:10px 7px;border-bottom:1px solid #354838;text-align:left}.multi-shopping td:last-child,.multi-shopping th:last-child{text-align:right}.multi-shopping img{width:28px;height:28px;object-fit:contain;vertical-align:middle;margin-right:8px}.multi-message{font-size:13px;color:#a6b6a8}.multi-entry .optional-field{width:88px}.multi-entry .remove{background:#49332f;color:#ffaaa6}.multi-empty{padding:24px 10px;text-align:center;color:#a6b6a8}@media(max-width:800px){.multi-layout{grid-template-columns:1fr}.multi-row{grid-template-columns:32px minmax(0,1fr) 75px 90px;gap:5px}.multi-summary{grid-template-columns:1fr}}
 
 /* Multicraft : contraste des objets et choix optimal explicite */
 .multi-entry{overflow:hidden;padding:0;background:#1b281f;border-color:#506c52}
@@ -16,6 +16,7 @@
 .multi-choice-pill{display:inline-flex;align-items:center;gap:5px;border:1px solid #52634f;border-radius:8px;padding:8px 10px;font-size:12px;font-weight:750;color:#b8c6b7;background:#18251b}
 .multi-choice-pill.winner{background:#17472a;border:2px solid #52f38b;color:#a6ffc0;box-shadow:0 0 0 2px #52f38b24,0 0 14px #38ec7840}
 .multi-choice-pill.loser{opacity:.38;filter:grayscale(.8)}
+.multi-choice-pill.selected-loss{opacity:1;filter:none;background:#421d25;border:2px solid #f06a70;color:#ffc1c1;box-shadow:0 0 0 2px #f06a7024,0 0 14px #ed515b45}
 .multi-choice-pill.pending{opacity:.65;border-style:dashed}
 .multi-row input.choice-good,.multi-actions button.choice-good{outline:2px solid #52f38b!important;outline-offset:2px;box-shadow:0 0 10px #52f38b45}
 .multi-row input.choice-bad,.multi-actions button.choice-bad{opacity:.4;filter:grayscale(.7)}
@@ -34,6 +35,16 @@
 .multi-entry-top .multi-qty-inline input{width:75px;text-align:right;padding:8px}
 .multi-entry-top .multi-hdv-inline{margin-left:auto}.multi-entry-top>strong{flex-basis:calc(100% - 65px)}}
 
+/* Historique : sélection d'objet et lots terminés */
+.ledger-matches{max-height:230px;overflow:auto;display:grid;gap:4px}
+.ledger-match{display:flex;align-items:center;gap:9px;text-align:left;width:100%;background:#26382b}
+.ledger-match img,.ledger-item-icon{width:34px;height:34px;object-fit:contain}
+.ledger-item-title{display:flex;align-items:center;gap:9px}
+.ledger-comment{margin:7px 0;color:#d7e4ce;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}
+.ledger-archive{margin-top:18px;border:1px solid #53664f;border-radius:11px;padding:13px;background:#142019}
+.ledger-archive summary{cursor:pointer;color:#c7eea3;font-weight:700}
+.ledger-archive #ledgerArchivedEntries{margin-top:14px}
+.ledger-archive .ledger-entry{opacity:.85}
 /* Historique d'achats : isolé des calculateurs */
 .ledger-layout{display:grid;grid-template-columns:330px minmax(0,1fr);gap:18px;margin-top:20px}
 .ledger-form{display:grid;gap:12px}.ledger-form label{display:grid;gap:5px;font-size:13px;color:#c8d7c6}
@@ -159,7 +170,78 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 .stock-field.price-field small{color:#f3d998}
 .stock-field input{width:100%;min-width:0;padding:9px 6px;text-align:right}
 @media(max-width:760px){.ingredient,.comp-children .ingredient,.multi-row{grid-template-columns:30px minmax(70px,1fr) 75px 98px 80px;gap:4px}.stock-field small{font-size:10px}.stock-field input{padding:8px 3px}}
-</style><body><header><b>◆ DOFUS CRAFT</b><small>Données : DofusDude · Dofus 3</small></header><main><h1>Calculateur de craft</h1><p>Recherche un objet, renseigne les prix de ses ingrédients et compare avec son prix en HDV.</p><div class="mode-tabs"><button id="tabSingle" class="active" type="button">Craft unitaire</button><button id="tabMulti" type="button">Multicraft</button><button id="tabBreak" type="button">Brisage</button><button id="tabLedger" type="button">Historique d’achats</button></div><div id="singleMode"><div class="layout"><section class="panel"><h2>Choisir une recette</h2><input id="search" class="search" placeholder="Rechercher une recette…" autocomplete="off"><div class="filters"><button data-cat="all" class="active">Tout</button><button data-cat="equipment">Équipements</button><button data-cat="consumables">Consommables</button><button data-cat="resources">Ressources</button></div><div id="status" class="status muted"></div><div id="results" class="results"></div><details class="custom-dropdown"><summary>＋ Créer une recette manuelle</summary><form class="custom-form"><label>Nom de la recette<input name="name" required placeholder="Nom de l'objet à fabriquer"></label><label>Catégorie<select name="category"><option value="resources">Ressource</option><option value="consumables">Consommable</option><option value="equipment">Équipement</option></select></label><strong>Ingrédients liés à DofusDude</strong><input class="custom-query" placeholder="Rechercher un ingrédient existant…" autocomplete="off"><div class="custom-found"></div><div class="custom-selected"></div><button type="submit">Enregistrer la recette</button><div class="custom-feedback"></div></form><div class="custom-list"></div></details></section><section class="panel" id="detail"><div class="empty">⚒️<h2>Choisis un objet</h2>La recette apparaîtra ici.</div></section></div></div><div id="multiMode" class="mode-hidden"><div class="multi-layout"><section class="panel"><h2>Ajouter des objets</h2><input id="multiSearch" class="search" placeholder="Rechercher une recette…" autocomplete="off"><div class="filters" id="multiFilters"><button data-mcat="all" class="active">Tout</button><button data-mcat="equipment">Équipements</button><button data-mcat="consumables">Consommables</button><button data-mcat="resources">Ressources</button></div><div id="multiStatus" class="status muted"></div><div id="multiResults" class="multi-search-results"></div><details class="custom-dropdown"><summary>＋ Créer une recette manuelle</summary><form class="custom-form"><label>Nom de la recette<input name="name" required placeholder="Nom de l'objet à fabriquer"></label><label>Catégorie<select name="category"><option value="resources">Ressource</option><option value="consumables">Consommable</option><option value="equipment">Équipement</option></select></label><strong>Ingrédients liés à DofusDude</strong><input class="custom-query" placeholder="Rechercher un ingrédient existant…" autocomplete="off"><div class="custom-found"></div><div class="custom-selected"></div><button type="submit">Enregistrer la recette</button><div class="custom-feedback"></div></form><div class="custom-list"></div></details></section><section class="panel"><h2>Recettes sélectionnées</h2><div id="multiSelected" class="multi-empty">Ajoute un ou plusieurs objets depuis la recherche.</div><div class="multi-summary"><div class="stat"><small>Coût total</small><strong id="multiCost">—</strong></div><div class="stat"><small>Valeur HDV totale</small><strong id="multiSellTotal">—</strong></div><div class="stat"><small>Gain si optimisation craft/achat</small><strong id="multiProfit">—</strong></div></div><h2>Liste d'achats fusionnée optimisée</h2><p class="multi-message">Les choix les moins chers sont retenus : achats directs ou composants nécessaires aux fabrications. Les quantités sont regroupées.</p><div id="multiShopping" class="multi-empty">Aucune recette sélectionnée.</div></section></div></div><div id="breakMode" class="mode-hidden"><div class="layout"><section class="panel"><h2>Choisir un équipement</h2><input id="breakSearch" placeholder="Rechercher un équipement…" autocomplete="off"><div id="breakStatus" class="muted"></div><div id="breakResults" class="results"></div></section><section class="panel"><h2>Rentabilité du brisage</h2><div id="breakDetail" class="empty">Sélectionne un équipement pour renseigner les runes obtenues.</div></section></div></div><div id="ledgerMode" class="mode-hidden"><div class="ledger-layout"><section class="panel"><h2>Enregistrer un achat</h2><form id="ledgerForm" class="ledger-form"><label>Nom de l'objet<input id="ledgerName" required maxlength="120" placeholder="Ex. Huile de Koode" autocomplete="off"></label><label>Quantité achetée<input id="ledgerQty" type="number" required min="1" step="1" value="1"></label><label>Prix d'achat unitaire (K)<input id="ledgerBuy" type="number" required min="0" step="1" placeholder="Ex. 1500"></label><label>Date d'achat<input id="ledgerDate" type="date" required></label><button type="submit" class="active">＋ Enregistrer l'achat</button></form><p class="ledger-help">Chaque achat constitue un lot indépendant. Tu peux enregistrer des ventes partielles au fil du temps. Tout est sauvegardé dans ce navigateur.</p></section><section class="panel"><h2>Suivi des achats et reventes</h2><div class="ledger-summary"><div class="stat"><small>Gains / pertes réalisés</small><strong id="ledgerProfit">0 K</strong></div><div class="stat"><small>Kamas en attente (coût du stock)</small><strong id="ledgerPending">0 K</strong></div><div class="stat"><small>Articles restant à vendre</small><strong id="ledgerRemaining">0</strong></div></div><div id="ledgerEntries"></div></section></div></div><p class="note">Les prix sont enregistrés localement dans ton navigateur. Les taxes HDV ne sont pas prises en compte. Les résultats dépendent des données et de l'accessibilité de l'API DofusDude.</p><section class="legal-credits" aria-labelledby="legal-title"><h2 id="legal-title">Mentions légales et crédits</h2><p>Ce site est un outil communautaire indépendant et non officiel dédié à DOFUS.</p><p>DOFUS et les éléments graphiques du jeu sont la propriété d’Ankama.</p><p>Les données des objets et des recettes sont fournies par <a href="https://docs.dofusdu.de/dofus3/v1/" target="_blank" rel="noopener noreferrer">DofusDude</a>.</p><p>Ce site n’est ni affilié, ni approuvé, ni sponsorisé par Ankama.</p></section></main><script>
+.break-compact{table-layout:fixed}.break-compact th:first-child{width:31%}.break-compact th:nth-child(2){width:19%}.break-compact th:nth-child(3){width:27%}.break-compact th:nth-child(4){width:23%}.break-compact input{width:100%;min-width:0;box-sizing:border-box;padding:7px 5px}.break-compact td{vertical-align:middle}.break-rune-label{display:flex;align-items:center;gap:7px;min-width:0}.break-rune-icon{width:30px;height:30px;object-fit:contain;flex:none}.break-rune-icon[hidden]{display:none}.break-total{font-size:12px}
+ .multi-strategy{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 20px}.multi-strategy label{display:flex;gap:5px;align-items:center;font-size:13px;background:#243428;padding:9px;border-radius:8px}.multi-shopping input[data-inventory]{width:90px;max-width:100%;box-sizing:border-box}.multi-force-label{display:inline-flex;align-items:center;gap:6px;font-size:12px}.multi-force-label select{max-width:110px;padding:5px}
+.multi-choice-pill.multi-difference.loss{color:#ffb0b0;border-color:#ad4141;background:#421d25}
+.multi-shopping input[data-mowned-final]{width:80px;max-width:100%;box-sizing:border-box;padding:6px}.multi-shopping td{vertical-align:middle}
+.multi-shopping-total{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:12px;padding:14px 16px;border:1px solid #425945;border-radius:10px;background:#24352a;font-weight:700}.multi-shopping-total strong{font-size:20px;text-align:right}
+.multi-workspace{display:flex;flex-direction:column;gap:18px;min-width:0}.multi-workspace>.panel{min-width:0}.multi-strategy-panel .multi-summary{margin-bottom:0}.multi-items-panel .multi-entry:last-child{margin-bottom:0}
+
+/* Historique V57 : sections séparées, recherche et cartes */
+#ledgerMode .ledger-workspace{display:grid;gap:18px;min-width:0}
+#ledgerMode .ledger-section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+#ledgerMode .ledger-section-heading h2{margin:0 0 5px}
+#ledgerMode .ledger-section-heading p{margin:0;font-size:12px}
+#ledgerMode .ledger-count{display:inline-flex;vertical-align:middle;align-items:center;justify-content:center;min-width:25px;padding:3px 8px;border-radius:30px;background:#304b35;color:#c5f2a1;font-size:12px}
+#ledgerMode .ledger-complete-tag{font-size:12px;color:#bceca9;white-space:nowrap;background:#28422e;padding:7px 10px;border-radius:20px}
+#ledgerMode .ledger-search-wrap{display:flex;align-items:center;gap:10px;background:#101b14;border:1px solid #506551;border-radius:10px;padding:0 12px;margin:12px 0 6px;color:#b8eb72}
+#ledgerMode .ledger-search-wrap:focus-within{border-color:#b8eb72;box-shadow:0 0 0 2px #b8eb7220}
+#ledgerMode .ledger-search-wrap input{border:0;outline:none;background:transparent;flex:1;min-width:0;width:100%;padding:12px 0;box-shadow:none}
+#ledgerMode .ledger-match-count{font-size:12px;color:#9db39f;margin:0 0 14px}
+#ledgerMode .ledger-entry{background:linear-gradient(135deg,#1b2b20,#18241c);border-color:#456349;box-shadow:0 3px 14px #0002;transition:border-color .15s}
+#ledgerMode .ledger-entry:hover{border-color:#709471}
+#ledgerMode .ledger-head{padding-bottom:10px;border-bottom:1px solid #364a3a}
+#ledgerMode .ledger-sub{line-height:1.6}
+#ledgerMode .ledger-archive{margin:0;background:transparent;border:0;padding:0}
+#ledgerMode .ledger-archive summary{padding:12px 14px;background:#26392b;border:1px solid #456349;border-radius:10px;margin-bottom:12px}
+#ledgerMode .ledger-archive[open] summary{margin-bottom:14px}
+#ledgerMode .ledger-archived-panel{border-color:#506452}
+#ledgerMode .ledger-archived-panel .ledger-entry{opacity:1}
+@media(max-width:550px){#ledgerMode .ledger-section-heading{align-items:flex-start;flex-direction:column}}
+
+/* V58 — trois panneaux d'historique sur une seule rangée */
+#ledgerMode .ledger-layout{grid-template-columns:minmax(260px,0.85fr) minmax(350px,1.35fr) minmax(310px,1.15fr);gap:16px}
+#ledgerMode .ledger-workspace{display:contents}
+#ledgerMode .ledger-layout>.panel,#ledgerMode .ledger-workspace>.panel{min-width:0;max-width:100%}
+#ledgerMode .ledger-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+#ledgerMode .ledger-summary .stat{min-width:0}
+@media(max-width:1150px){
+ #ledgerMode .ledger-layout{grid-template-columns:minmax(260px,1fr) minmax(330px,1.4fr)}
+ #ledgerMode .ledger-archived-panel{grid-column:1/-1}
+}
+@media(max-width:700px){
+ #ledgerMode .ledger-layout{grid-template-columns:minmax(0,1fr)}
+ #ledgerMode .ledger-archived-panel{grid-column:auto}
+ #ledgerMode .ledger-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* V59 : galerie compacte des lots et fiche modale */
+#ledgerMode .ledger-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:10px;align-content:start}
+#ledgerMode .ledger-tile{position:relative;min-width:0;aspect-ratio:1;background:linear-gradient(145deg,#263c2b,#15241b);border:1px solid #537054;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px;cursor:pointer;color:#f1f7ee;transition:transform .15s,border-color .15s,box-shadow .15s}
+#ledgerMode .ledger-tile:hover,#ledgerMode .ledger-tile:focus-visible{transform:translateY(-2px);border-color:#b3ee87;box-shadow:0 0 0 2px #b3ee8730;outline:0}
+#ledgerMode .ledger-tile img{width:45px;height:45px;object-fit:contain}
+#ledgerMode .ledger-tile .ledger-tile-fallback{font-size:30px;line-height:1}
+#ledgerMode .ledger-tile .ledger-tile-qty{position:absolute;bottom:4px;right:5px;font-size:11px;font-weight:700;background:#101b14d9;border-radius:6px;padding:2px 5px}
+#ledgerMode .ledger-tile .ledger-tile-name{font-size:10px;line-height:1.15;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#ledgerMode .ledger-tile .ledger-tile-tip{display:none;position:absolute;z-index:6;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);width:max-content;max-width:min(260px,75vw);white-space:normal;overflow-wrap:anywhere;background:#0d1911;border:1px solid #92bb80;border-radius:9px;padding:8px 10px;color:#f4f8f1;font-size:12px;box-shadow:0 7px 22px #0008;pointer-events:none}
+#ledgerMode .ledger-tile:hover .ledger-tile-tip,#ledgerMode .ledger-tile:focus-visible .ledger-tile-tip{display:block}
+#ledgerMode .ledger-archived-panel .ledger-tile{border-color:#5d6a5c}
+#ledgerLotDialog{width:min(580px,calc(100vw - 30px));max-height:min(88vh,900px);overflow:auto;border:1px solid #729573;border-radius:16px;padding:22px;background:#18271d;color:#f1f7ee;box-shadow:0 24px 80px #000b}
+#ledgerLotDialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
+#ledgerLotDialog .ledger-modal-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+#ledgerLotDialog .ledger-modal-bar h2{margin:0;font-size:19px}
+#ledgerLotDialog .ledger-modal-close{position:absolute;top:12px;right:12px;width:36px;height:36px;padding:4px;z-index:2}
+#ledgerLotDialog .ledger-entry{margin:0;border:0;background:transparent;box-shadow:none;padding:0}
+#ledgerLotDialog .ledger-head{padding-right:44px}
+#ledgerLotDialog .ledger-entry:hover{border-color:#456349}
+@media(max-width:700px){#ledgerMode .ledger-tiles{grid-template-columns:repeat(auto-fill,minmax(70px,1fr))}}
+
+/* V61 — actions explicites de suppression dans la fiche du lot */
+#ledgerLotDialog .ledger-sale-actions{display:flex;flex-wrap:wrap;align-items:center;gap:9px}
+#ledgerLotDialog .ledger-finished-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px}
+#ledgerLotDialog .ledger-delete-button{background:#54272a;color:#ffd4d4;border:1px solid #ad5056;border-radius:8px;padding:10px 13px;font-weight:600}
+#ledgerLotDialog .ledger-delete-button:hover{background:#743039;border-color:#e57b82}
+</style><body><header><b>◆ La Foire du Tool</b><small>Données : DofusDude · Dofus 3</small></header><main><h1>Calculateur de craft</h1><p>Recherche un objet, renseigne les prix de ses ingrédients et compare avec son prix en HDV.</p><div class="mode-tabs"><button id="tabSingle" class="active" type="button">Craft unitaire</button><button id="tabMulti" type="button">Multicraft</button><button id="tabBreak" type="button">Brisage</button><button id="tabLedger" type="button">Historique d’achats</button></div><div id="singleMode"><div class="layout"><section class="panel"><h2>Choisir une recette</h2><input id="search" class="search" placeholder="Rechercher une recette…" autocomplete="off"><div class="filters"><button data-cat="all" class="active">Tout</button><button data-cat="equipment">Équipements</button><button data-cat="consumables">Consommables</button><button data-cat="resources">Ressources</button></div><div id="status" class="status muted"></div><div id="results" class="results"></div><details class="custom-dropdown"><summary>＋ Créer une recette manuelle</summary><form class="custom-form"><label>Nom de la recette<input name="name" required placeholder="Nom de l'objet à fabriquer"></label><label>Catégorie<select name="category"><option value="resources">Ressource</option><option value="consumables">Consommable</option><option value="equipment">Équipement</option></select></label><strong>Ingrédients liés à DofusDude</strong><input class="custom-query" placeholder="Rechercher un ingrédient existant…" autocomplete="off"><div class="custom-found"></div><div class="custom-selected"></div><button type="submit">Enregistrer la recette</button><div class="custom-feedback"></div></form><div class="custom-list"></div></details></section><section class="panel" id="detail"><div class="empty">⚒️<h2>Choisis un objet</h2>La recette apparaîtra ici.</div></section></div></div><div id="multiMode" class="mode-hidden"><div class="multi-layout"><section class="panel"><h2>Ajouter des objets</h2><input id="multiSearch" class="search" placeholder="Rechercher une recette…" autocomplete="off"><div class="filters" id="multiFilters"><button data-mcat="all" class="active">Tout</button><button data-mcat="equipment">Équipements</button><button data-mcat="consumables">Consommables</button><button data-mcat="resources">Ressources</button></div><div id="multiStatus" class="status muted"></div><div id="multiResults" class="multi-search-results"></div><details class="custom-dropdown"><summary>＋ Créer une recette manuelle</summary><form class="custom-form"><label>Nom de la recette<input name="name" required placeholder="Nom de l'objet à fabriquer"></label><label>Catégorie<select name="category"><option value="resources">Ressource</option><option value="consumables">Consommable</option><option value="equipment">Équipement</option></select></label><strong>Ingrédients liés à DofusDude</strong><input class="custom-query" placeholder="Rechercher un ingrédient existant…" autocomplete="off"><div class="custom-found"></div><div class="custom-selected"></div><button type="submit">Enregistrer la recette</button><div class="custom-feedback"></div></form><div class="custom-list"></div></details></section><div class="multi-workspace"><section class="panel multi-strategy-panel"><h2>Stratégie multicraft</h2><div class="multi-strategy"><label><input type="radio" name="multiStrategy" value="auto" checked> Optimiser automatiquement</label><label><input type="radio" name="multiStrategy" value="manual"> Manuel</label><label><input type="radio" name="multiStrategy" value="craft"> Tout crafter</label><label><input type="radio" name="multiStrategy" value="buy"> Tout acheter</label></div><div class="multi-summary"><div class="stat"><small>Gain si optimisation automatique</small><strong id="multiProfit">—</strong></div><div class="stat"><small>Gain via sélection actuelle</small><strong id="multiSelectionGain">—</strong></div></div></section><section class="panel multi-items-panel"><h2>Recettes sélectionnées</h2><div id="multiSelected" class="multi-empty">Ajoute un ou plusieurs objets depuis la recherche.</div></section><section class="panel multi-shopping-panel"><h2>Liste d'achats et possessions</h2><div id="multiShopping" class="multi-empty">Aucune recette sélectionnée.</div><div class="multi-shopping-total"><span>Total achat</span><strong id="multiPurchaseTotal">—</strong></div></section></div></div></div><div id="breakMode" class="mode-hidden"><div class="layout"><section class="panel"><h2>Choisir un équipement</h2><input id="breakSearch" placeholder="Rechercher un équipement…" autocomplete="off"><div id="breakStatus" class="muted"></div><div id="breakResults" class="results"></div></section><section class="panel"><h2>Rentabilité du brisage</h2><div id="breakDetail" class="empty">Sélectionne un équipement pour renseigner les runes obtenues.</div></section></div></div><div id="ledgerMode" class="mode-hidden"><div class="ledger-layout"><section class="panel"><h2>Enregistrer un achat</h2><form id="ledgerForm" class="ledger-form"><label>Objet Dofus<input id="ledgerName" required maxlength="120" placeholder="Rechercher un objet…" autocomplete="off"><input id="ledgerItemId" type="hidden"><input id="ledgerItemImage" type="hidden"><div id="ledgerMatches" class="ledger-matches"></div></label><label>Commentaire (facultatif)<input id="ledgerComment" maxlength="300" placeholder="Ex. Achat pour revente"></label><label>Quantité achetée<input id="ledgerQty" type="number" required min="1" step="1" value="1"></label><label>Prix d'achat unitaire (K)<input id="ledgerBuy" type="number" required min="0" step="1" placeholder="Ex. 1500"></label><label>Date d'achat<input id="ledgerDate" type="date" required></label><button type="submit" class="active">＋ Enregistrer l'achat</button></form><p class="ledger-help">Chaque achat constitue un lot indépendant. Tu peux enregistrer des ventes partielles au fil du temps. Tout est sauvegardé dans ce navigateur.</p></section><div class="ledger-workspace"><section class="panel ledger-current-panel"><div class="ledger-section-heading"><div><h2>Achats en cours <span id="ledgerActiveCount" class="ledger-count">0</span></h2><p>Retrouve tes lots et enregistre les ventes.</p></div></div><div class="ledger-summary"><div class="stat"><small>Gains / pertes réalisés</small><strong id="ledgerProfit">0 K</strong></div><div class="stat"><small>Kamas en attente (coût du stock)</small><strong id="ledgerPending">0 K</strong></div></div><div class="ledger-search-wrap"><span aria-hidden="true">⌕</span><input id="ledgerActiveSearch" type="search" placeholder="Rechercher un achat, un commentaire, une date…" aria-label="Rechercher parmi les achats en cours" autocomplete="off"></div><div id="ledgerActiveMatches" class="ledger-match-count"></div><div id="ledgerEntries"></div></section><section class="panel ledger-archived-panel"><div class="ledger-section-heading"><div><h2>Historique terminé <span id="ledgerArchivedCount" class="ledger-count">0</span></h2><p>Lots entièrement vendus, conservés pour consultation.</p></div><span class="ledger-complete-tag">✓ Terminés</span></div><div class="ledger-search-wrap"><span aria-hidden="true">⌕</span><input id="ledgerArchivedSearch" type="search" placeholder="Rechercher dans l'historique terminé…" aria-label="Rechercher parmi les achats terminés" autocomplete="off"></div><div id="ledgerArchivedMatches" class="ledger-match-count"></div><details id="ledgerArchive" class="ledger-archive"><summary>Afficher les lots terminés</summary><div id="ledgerArchivedEntries"></div></details></section></div></div></div><p class="note">Les prix sont enregistrés localement dans ton navigateur. Les taxes HDV ne sont pas prises en compte. Les résultats dépendent des données et de l'accessibilité de l'API DofusDude.</p><section class="legal-credits" aria-labelledby="legal-title"><h2 id="legal-title">Mentions légales et crédits</h2><p>Ce site est un outil communautaire indépendant et non officiel dédié à DOFUS.</p><p>DOFUS et les éléments graphiques du jeu sont la propriété d’Ankama.</p><p>Les données des objets et des recettes sont fournies par <a href="https://docs.dofusdu.de/dofus3/v1/" target="_blank" rel="noopener noreferrer">DofusDude</a>.</p><p>Ce site n’est ni affilié, ni approuvé, ni sponsorisé par Ankama.</p></section></main><dialog id="ledgerLotDialog" aria-label="Détails du lot"><button type="button" class="ledger-modal-close" aria-label="Fermer les détails">✕</button><div id="ledgerModalContent"></div></dialog><script>
 const BASE='https://api.dofusdu.de/dofus3/v1/fr', categories=['equipment','consumables','resources'];let cat='all',timer,requestId=0,selected=null,ingredients=[],craftQty=1;const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),fmt=n=>Math.round(n||0).toLocaleString('fr-FR')+' K';let prices={},itemFields={},nodeSeq=0,rootNodes=[],detailsCache=new Map(),expandedIds=new Set();try{prices=JSON.parse(localStorage.getItem('dofusdude-prices')||'{}')||{}}catch{}try{itemFields=JSON.parse(localStorage.getItem('dofusdude-item-fields')||'{}')||{}}catch{}const saveItemFields=()=>{if(selected?.ankama_id!=null){itemFields[selected.ankama_id]={sell:$('#sell')?.value??'',monthlySales:$('#monthlySales')?.value??''};localStorage.setItem('dofusdude-item-fields',JSON.stringify(itemFields))}};const img=x=>x?.image_urls?.icon||x?.image_urls?.sd||'';
 
 const CUSTOM_KEY='dofus-craft-manual-recipes-v2';
@@ -302,7 +384,7 @@ async function loadNode(n){if(n.loading||n.children)return;n.loading=true;update
  return makeNode({id,qty:Number(r.quantity)||0,name:detail?.name||'Ressource #'+id,image:img(detail),detail});
  }));n.children=loaded.filter(Boolean);n.error='';
  }catch(e){n.error=e.message}finally{n.loading=false;updateNodes()}}
-function updateNodes(){const list=$('#nodeList');if(!list)return;list.innerHTML=rootNodes.map(n=>renderNode(n)).join('');list.querySelectorAll('[data-price-node]').forEach(el=>{el.addEventListener('input',()=>{const n=walk(rootNodes,x=>x.uid===Number(el.dataset.priceNode));if(!n)return;if(el.value==='')delete prices[n.id];else if(isPrice(el.value))prices[n.id]=Number(el.value);localStorage.setItem('dofusdude-prices',JSON.stringify(prices));el.classList.toggle('required-missing',el.value===''&&!n.children);calculate()});el.addEventListener('change',updateNodes);el.addEventListener('blur',updateNodes)});list.querySelectorAll('[data-owned-node]').forEach(el=>{el.oninput=()=>{ownedSingle.set(Number(el.dataset.ownedNode),Math.max(0,Math.floor(Number(el.value)||0)));calculate()};el.onchange=updateNodes});list.querySelectorAll('[data-expand]').forEach(b=>b.onclick=()=>{const n=walk(rootNodes,x=>x.uid===Number(b.dataset.expand));n.expanded=!n.expanded;if(n.expanded&&!n.children)loadNode(n);else updateNodes()});calculate()}
+function updateNodes(){const list=$('#nodeList');if(!list)return;list.innerHTML=rootNodes.map(n=>renderNode(n)).join('');list.querySelectorAll('[data-price-node]').forEach(el=>{el.addEventListener('input',()=>{const n=walk(rootNodes,x=>x.uid===Number(el.dataset.priceNode));if(!n)return;if(el.value==='')delete prices[n.id];else if(isPrice(el.value))prices[n.id]=Number(el.value);localStorage.setItem('dofusdude-prices',JSON.stringify(prices));el.classList.toggle('required-missing',el.value===''&&!n.children);calculate()});el.addEventListener('blur',ev=>{if(!ev.relatedTarget?.matches?.('#nodeList input'))updateNodes()})});list.querySelectorAll('[data-owned-node]').forEach(el=>{el.oninput=()=>{ownedSingle.set(Number(el.dataset.ownedNode),Math.max(0,Math.floor(Number(el.value)||0)));calculate()};el.onblur=ev=>{if(!ev.relatedTarget?.matches?.('#nodeList input'))updateNodes()}});list.querySelectorAll('[data-expand]').forEach(b=>b.onclick=()=>{const n=walk(rootNodes,x=>x.uid===Number(b.dataset.expand));n.expanded=!n.expanded;if(n.expanded&&!n.children)loadNode(n);else updateNodes()});calculate()}
 function renderDetail(){const saved=itemFields[selected.ankama_id]||{};
  $('#detail').innerHTML=`<h2>2. ${esc(selected.name)}</h2><div class="craft-qty"><label for="craftQty"><strong>Quantité à crafter</strong><small style="display:block">Multiplie tous les ingrédients</small></label><input id="craftQty" class="optional-field" aria-label="Nombre d'objets à crafter" type="number" min="1" max="1000000" step="1" value="${craftQty}"></div><p class="muted">Prix d'achat ou coût de fabrication : ouvre « Fabriquer » pour les ingrédients composites. Le moins cher est choisi automatiquement.</p><div id="nodeList"></div><div class="total"><span>Coût total du craft</span><strong id="total">0 K</strong></div><div class="sell-stack"><div class="sell"><div class="sell-label">${img(selected)?`<img class="selected-icon" src="${esc(img(selected))}" alt="">`:''}<label for="sell">Prix HDV de l'objet final <small>(par unité, facultatif)</small></label></div><input id="sell" class="optional-field" type="number" min="0" step="1" placeholder="Prix / objet" value="${esc(saved.sell??'')}"></div><div class="sell"><div class="sell-label"><svg class="sales-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m6 15 5-5 4 3 5-7"/><path d="M16 6h4v4"/></svg><label for="monthlySales">Articles vendus sur 30 jours <small>(facultatif)</small></label></div><input id="monthlySales" class="optional-field" type="number" min="0" step="1" placeholder="Ventes / mois" value="${esc(saved.monthlySales??'')}"></div></div><div class="summary"><div class="stat"><small>Coût de fabrication</small><strong id="statCost">—</strong></div><div class="stat"><small>Gain si craft en kamas</small><strong id="statDiff">—</strong></div><div class="stat"><small>Gain si craft en %</small><strong id="statPercent">—</strong></div><div class="stat"><small>Marge journalière en kamas</small><strong id="statDaily">—</strong></div><div class="stat"><small>Marge journalière en %</small><strong id="statDailyPercent">—</strong></div></div><p class="note">Prix et ventes sauvegardés dans ce navigateur. Les taxes HDV ne sont pas prises en compte. La marge journalière est basée sur les ventes mensuelles / 30.</p>`;
  $('#craftQty').addEventListener('input',()=>{craftQty=Math.min(1000000,Math.max(1,Math.floor(Number($('#craftQty').value)||1)));updateNodes()});$('#craftQty').addEventListener('change',()=>{$('#craftQty').value=craftQty;updateNodes()});$('#sell').addEventListener('input',()=>{saveItemFields();calculate()});$('#monthlySales').addEventListener('input',()=>{saveItemFields();calculate()});updateNodes()}
@@ -316,7 +398,9 @@ function calculate(){let total=0,complete=true;for(const n of rootNodes){const v
 $('#search').addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(search,350)});document.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{cat=b.dataset.cat;document.querySelectorAll('[data-cat]').forEach(x=>x.classList.toggle('active',x===b));search()});
 
 // Multicraft : état et rendu indépendants du calculateur unitaire.
-const multi={cat:'all',items:[],timer:null,request:0,seq:0};
+const multi={cat:'all',items:[],timer:null,request:0,seq:0,strategy:'auto',inventory:{},overrides:{}};
+try{multi.inventory=JSON.parse(localStorage.getItem('dofus-craft-multi-inventory-v1')||'{}')||{}}catch{}
+const multiSaveInventory=()=>localStorage.setItem('dofus-craft-multi-inventory-v1',JSON.stringify(multi.inventory));
 const m$=s=>document.querySelector(s);
 function switchMode(mode){for(const name of ['single','multi','break','ledger']){m$('#'+name+'Mode').classList.toggle('mode-hidden',mode!==name)}for(const [name,id] of [['single','tabSingle'],['multi','tabMulti'],['break','tabBreak'],['ledger','tabLedger']])m$('#'+id).classList.toggle('active',mode===name);}
 m$('#tabSingle').onclick=()=>switchMode('single');m$('#tabMulti').onclick=()=>switchMode('multi');m$('#tabLedger').onclick=()=>switchMode('ledger');m$('#tabBreak').onclick=()=>switchMode('break');
@@ -348,7 +432,7 @@ async function multiHydrateSaved(nodes,ancestors,depth=0,budget={remaining:90}){
 }
 function multiNode(r,d){return {uid:++multi.seq,id:r.item_ankama_id,qty:Number(r.quantity)||0,name:d?.name||'Ressource #'+r.item_ankama_id,image:img(d),detail:d,children:null,expanded:false,loading:false,error:''}}
 function multiValue(n,seen=new Set()){const buy=isPrice(prices[n.id])?Number(prices[n.id]):null;let craft=null;if(n.children?.length&&!seen.has(n.id)){let sum=0,ok=true;const next=new Set(seen);next.add(n.id);for(const c of n.children){const v=multiValue(c,next).best;if(v===null){ok=false;break}sum+=c.qty*v}if(ok)craft=sum}let source=null,best=null;if(buy!==null&&(craft===null||buy<=craft)){source='buy';best=buy}else if(craft!==null){source='craft';best=craft}return {buy,craft,best,source}}
-function multiNodeHTML(n,amount,depth=0){const v=multiValue(n),hasRecipe=!!n.detail?.recipe?.length;const buyGood=v.buy!==null&&v.craft!==null&&v.buy<=v.craft,craftGood=v.buy!==null&&v.craft!==null&&v.craft<v.buy;return `<div data-mnode="${n.uid}"><div class="multi-row"><img src="${esc(n.image)}" alt=""><div><strong>${esc(n.name)}</strong><small>× ${fmtNum(amount*n.qty)}</small></div><label class="stock-field"><small>Possédés</small><input type="number" min="0" step="1" data-mowned="${n.uid}" aria-label="Quantité possédée de ${esc(n.name)}" value="${ownedMulti.get(n.uid)??0}"></label><label class="stock-field price-field"><small>Prix unitaire (K)</small><input type="number" min="0" step="1" placeholder="Prix/u" aria-label="Prix de ${esc(n.name)}" data-mprice="${n.uid}" class="${v.best===null?'required-missing':''} ${buyGood?'choice-good':craftGood?'choice-bad':''}" value="${esc(prices[n.id]??'')}"></label><strong class="right">${stockCost(n,amount*n.qty,ownedMulti).complete?fmt(stockCost(n,amount*n.qty,ownedMulti).cost):'—'}</strong></div>${hasRecipe?`<div class="multi-actions"><button data-mexpand="${n.uid}" class="${craftGood?'choice-good':buyGood?'choice-bad':''}">${n.expanded?'▾':'▸'} Fabriquer${v.craft!==null?' · '+fmt(v.craft)+'/u':''}</button>${v.buy!==null&&v.craft!==null?`<small>${v.source==='buy'?'Achat moins cher':'Craft moins cher'}</small>`:''}</div><div class="multi-children" ${n.expanded?'':'hidden'}>${n.loading?'Chargement…':n.error?`<span class="error">${esc(n.error)}</span>`:n.children?.map(c=>multiNodeHTML(c,amount*n.qty,depth+1)).join('')||''}</div>`:''}</div>`}
+function multiNodeHTML(n,amount,depth=0){const v=multiValue(n),hasRecipe=!!n.detail?.recipe?.length;const buyGood=v.buy!==null&&v.craft!==null&&v.buy<=v.craft,craftGood=v.buy!==null&&v.craft!==null&&v.craft<v.buy;return `<div data-mnode="${n.uid}"><div class="multi-row"><img src="${esc(n.image)}" alt=""><div><strong>${esc(n.name)}</strong><small>× ${fmtNum(amount*n.qty)}</small></div><label class="stock-field price-field"><small>Prix unitaire (K)</small><input type="number" min="0" step="1" placeholder="Prix/u" aria-label="Prix de ${esc(n.name)}" data-mprice="${n.uid}" class="${v.best===null?'required-missing':''} ${buyGood?'choice-good':craftGood?'choice-bad':''}" value="${esc(prices[n.id]??'')}"></label><strong class="right">${isPrice(prices[n.id])?fmt(Number(prices[n.id])*amount*n.qty):'—'}</strong></div>${hasRecipe?`<div class="multi-actions"><button data-mexpand="${n.uid}" class="${craftGood?'choice-good':buyGood?'choice-bad':''}">${n.expanded?'▾':'▸'} Fabriquer${v.craft!==null?' · '+fmt(v.craft)+'/u':''}</button>${v.buy!==null&&v.craft!==null?`<small>${v.source==='buy'?'Achat moins cher':'Craft moins cher'}</small>`:''}</div><div class="multi-children" ${n.expanded?'':'hidden'}>${n.loading?'Chargement…':n.error?`<span class="error">${esc(n.error)}</span>`:n.children?.map(c=>multiNodeHTML(c,amount*n.qty,depth+1)).join('')||''}</div>`:''}</div>`}
 function fmtNum(n){return n.toLocaleString('fr-FR')}
 function multiWalk(uid){for(const e of multi.items){const found=walk(e.nodes,n=>n.uid===uid);if(found)return {node:found,entry:e}}return null}
 async function multiExpand(uid){const found=multiWalk(uid);if(!found)return;const {node:n,entry}=found;n.expanded=!n.expanded;if(!n.expanded||n.children||n.loading){multiRender();return}n.loading=true;multiRender();try{const ancestors=new Set([entry.id]);function visit(nodes,path){for(const x of nodes){if(x===n)return path;const result=x.children&&visit(x.children,[...path,x.id]);if(result)return result}return null}for(const a of visit(entry.nodes,[])||[])ancestors.add(a);ancestors.add(n.id);n.children=(await Promise.all((n.detail?.recipe||[]).map(async r=>{if(ancestors.has(r.item_ankama_id))return null;const d=await multiDetail(r.item_ankama_id,subtype(r.item_subtype));return multiNode(r,d)}))).filter(Boolean)}catch(e){n.error=e.message}finally{n.loading=false;multiRender()}}
@@ -366,7 +450,7 @@ function multiCollect(n,qty,shopping){
 function multiEntryDecision(e){
  if(e.loading||e.error||(!e.nodes.length&&!e.noRecipe))return {craft:null,buy:null,source:null};
  let craft=e.noRecipe?null:0;
- for(const n of e.nodes){const v=stockCost(n,n.qty*e.qty,ownedMulti);if(!v.complete){craft=null;break}craft+=v.cost/e.qty}
+ for(const n of e.nodes){const v=multiValue(n);if(v.best===null){craft=null;break}craft+=v.best*n.qty}
  const sell=itemFields[e.id]?.sell;
  const buy=isPrice(sell)?Number(sell):null;
  const source=craft!==null&&buy!==null?(craft<=buy?'craft':'buy'):craft!==null?'craft':buy!==null?'buy':null;
@@ -376,60 +460,199 @@ function multiDecisionDifference(d,quantity=1){
  if(d.craft===null||d.buy===null)return null;
  return Math.abs(d.buy-d.craft)*quantity;
 }
+function multiChoiceFor(id){
+ return multi.strategy==='craft'||multi.strategy==='buy' ? multi.strategy : (multi.strategy==='manual' ? (multi.overrides[id]||'auto') : 'auto');
+}
+function multiSetStrategy(strategy){
+ // Manuel est un mode passif : conserver exactement les choix visibles.
+ if(strategy==='manual'){
+  const currentChoices={};
+  for(const item of multi.items)currentChoices[item.id]=multiChoiceFor(item.id);
+  multi.overrides=currentChoices;
+ }else if(strategy==='craft'||strategy==='buy'||strategy==='auto'){
+  multi.overrides={};
+ }
+ multi.strategy=strategy;
+ document.querySelectorAll('[name="multiStrategy"]').forEach(r=>{r.checked=r.value===strategy});
+ multiCalculate();
+}
+function multiSetItemChoice(id,choice){
+ // Une modification individuelle active le mode manuel, sans écraser les autres choix.
+ if(multi.strategy!=='manual'){
+  const previous=multi.strategy;
+  multi.overrides={};
+  if(previous==='craft'||previous==='buy')for(const item of multi.items)multi.overrides[item.id]=previous;
+  multi.strategy='manual';
+  document.querySelectorAll('[name="multiStrategy"]').forEach(r=>{r.checked=r.value==='manual'});
+ }
+ multi.overrides[id]=choice;
+ multiCalculate();
+}
+function multiDecisionDisplay(d,choice,quantity=1){
+ const selected=choice==='craft'||choice==='buy'?choice:d.source;
+ if(d.craft===null||d.buy===null)return {label:'Gain',value:null,css:'pending'};
+ const difference=Math.abs(d.craft-d.buy)*quantity;
+ if(difference===0)return {label:'Gain',value:0,css:'even'};
+ const cheaper=d.craft<d.buy?'craft':'buy';
+ return selected===cheaper?{label:'Gain',value:difference,css:'craft-saving'}:{label:'Perte',value:difference,css:'loss'};
+}
+// Somme des gains/pertes affichés pour les choix réellement retenus.
+// Une comparaison impossible rend le bilan indisponible plutôt que trompeur.
+function multiSelectionGain(entries,decisions){
+ let total=0;
+ for(const e of entries){
+  const d=multiEntryDecision(e);
+  const choice=decisions.get(String(e.id));
+  if((choice!=='craft'&&choice!=='buy')||d.craft===null||d.buy===null)return null;
+  const diff=multiDecisionDisplay(d,choice,e.qty);
+  if(diff.value===null)return null;
+  total+=(diff.label==='Perte'?-1:1)*diff.value;
+ }
+ return total;
+}
+// Gain théorique fixe : somme des écarts entre craft et achat HDV,
+// indépendamment des choix manuels, de l'inventaire et de la liste d'achats.
+function multiOptimalGain(entries){
+ let total=0;
+ for(const e of entries){
+  const d=multiEntryDecision(e);
+  const diff=multiDecisionDifference(d,e.qty);
+  if(diff===null)return null;
+  total+=diff;
+ }
+ return total;
+}
 function multiDecisionHTML(e){
  const d=multiEntryDecision(e),both=d.craft!==null&&d.buy!==null;
- const cls=(which)=>both?(d.source===which?'winner':'loser'):(d.source===which?'winner':'pending');
- const gain=multiDecisionDifference(d,e.qty);
- const diffText=gain===null?'—':fmt(gain);
- const diffClass=gain===null?'pending':gain===0?'even':'craft-saving';
- return `<div class="multi-choice" data-mdecision="${e.id}"><span class="multi-choice-pill ${cls('craft')}">⚒ Craft ${d.craft===null?'—':fmt(d.craft)+'/u'}</span><span class="multi-choice-pill ${cls('buy')}">🪙 Achat HDV ${d.buy===null?'—':fmt(d.buy)+'/u'}</span><span class="multi-choice-pill multi-difference ${diffClass}" title="Économie totale sur ${e.qty} objet(s), par rapport à l’option la plus chère">Gain - ${diffText}</span></div>`;
+ const chosen=multiChoiceFor(e.id),selected=chosen==='auto'?d.source:chosen;
+ const cls=which=>both?(selected===which?(multiDecisionDisplay(d,selected,e.qty).label==='Perte'?'selected-loss':'winner'):'loser'):(selected===which?'winner':'pending');
+ const diff=multiDecisionDisplay(d,selected,e.qty);
+ const diffText=diff.value===null?'—':fmt(diff.value);
+ return `<div class="multi-choice" data-mdecision="${e.id}"><span class="multi-choice-pill ${cls('craft')}">⚒ Craft ${d.craft===null?'—':fmt(d.craft)+'/u'}</span><span class="multi-choice-pill ${cls('buy')}">🪙 Achat HDV ${d.buy===null?'—':fmt(d.buy)+'/u'}</span><span class="multi-choice-pill multi-difference ${diff.css}" title="Écart total sur ${e.qty} objet(s) par rapport à l’option la moins chère">${diff.label} - ${diffText}</span><label class="multi-force-label">Choix <select data-mforce="${e.id}"><option value="auto" ${chosen==='auto'?'selected':''}>Auto</option><option value="craft" ${chosen==='craft'?'selected':''}>Craft</option><option value="buy" ${chosen==='buy'?'selected':''}>Achat HDV</option></select></label></div>`;
 }
 function multiToggleCollapse(id){const e=multi.items.find(x=>String(x.id)===String(id));if(!e||e.loading||e.error||e.noRecipe)return;e.collapsed=!e.collapsed;multiRender()}
 function multiRender(){const area=m$('#multiSelected');area.className='';area.innerHTML=multi.items.length?multi.items.map(e=>`<div class="multi-entry ${e.collapsed?'is-collapsed':''}" data-mentry="${e.id}"><div class="multi-entry-top"><img src="${esc(e.image)}" alt=""><strong>${esc(e.name)}</strong><label class="multi-qty-inline"><small>Quantité</small><input class="optional-field" data-mqty="${e.id}" type="number" min="1" step="1" value="${e.qty}" aria-label="Quantité de ${esc(e.name)}"></label><label class="multi-hdv-inline"><small>Prix HDV / objet</small><input class="optional-field" data-msell="${e.id}" type="number" min="0" step="1" placeholder="Facultatif" aria-label="Prix HDV de ${esc(e.name)}" value="${esc(itemFields[e.id]?.sell??'')}"></label>${!e.loading&&!e.error&&!e.noRecipe?`<button type="button" class="multi-collapse" data-mcollapse="${e.id}" aria-expanded="${!e.collapsed}" aria-label="${e.collapsed?'Déplier':'Replier'} la recette de ${esc(e.name)}" title="${e.collapsed?'Afficher':'Masquer'} les composants">${e.collapsed?'▸':'▾'}</button>`:''}<button class="remove" data-mremove="${e.id}" title="Retirer">✕</button></div>${e.loading?'<p class="multi-message">Chargement…</p>':e.error?`<p class="error">${esc(e.error)}</p>`:e.noRecipe?'':`<div class="multi-rows">${e.nodes.map(n=>multiNodeHTML(n,e.qty)).join('')}</div>${multiDecisionHTML(e)}`}</div>`).join(''):'<div class="multi-empty">Ajoute un ou plusieurs objets depuis la recherche.</div>';
-area.querySelectorAll('[data-mcollapse]').forEach(b=>b.onclick=()=>multiToggleCollapse(b.dataset.mcollapse));area.querySelectorAll('[data-mqty]').forEach(el=>{el.oninput=()=>{const e=multi.items.find(x=>x.id===+el.dataset.mqty);if(e&&Number(el.value)>=1&&Number.isInteger(Number(el.value))){e.qty=Number(el.value);multiCalculate()}};el.onchange=multiRender});area.querySelectorAll('[data-mremove]').forEach(b=>b.onclick=()=>{multi.items=multi.items.filter(e=>e.id!==+b.dataset.mremove);multiRender()});area.querySelectorAll('[data-msell]').forEach(el=>el.oninput=()=>{const id=el.dataset.msell;itemFields[id]={...(itemFields[id]||{}),sell:el.value};localStorage.setItem('dofusdude-item-fields',JSON.stringify(itemFields));multiCalculate()});area.querySelectorAll('[data-mowned]').forEach(el=>{el.oninput=()=>{ownedMulti.set(Number(el.dataset.mowned),Math.max(0,Math.floor(Number(el.value)||0)));multiCalculate()};el.onchange=multiRender});area.querySelectorAll('[data-mprice]').forEach(el=>{el.oninput=()=>{const found=multiWalk(+el.dataset.mprice);if(!found)return;const id=found.node.id;if(el.value==='')delete prices[id];else if(isPrice(el.value))prices[id]=Number(el.value);localStorage.setItem('dofusdude-prices',JSON.stringify(prices));multiCalculate()};el.onblur=multiRender;el.onchange=multiRender});area.querySelectorAll('[data-mexpand]').forEach(b=>b.onclick=()=>multiExpand(+b.dataset.mexpand));multiCalculate()}
-function multiCalculate(){
- let cost=0,complete=true,sell=0,sellComplete=true,optimization=0;
- const shopping=new Map();
- for(const e of multi.items){
-  if(e.loading||e.error||(!e.nodes.length&&!e.noRecipe)){complete=false;sellComplete=false;continue}
-  const d=multiEntryDecision(e);
-  if(d.craft===null&&!e.noRecipe)complete=false;
-  else if(d.craft!==null)cost+=d.craft*e.qty;
-  else if(d.buy!==null)cost+=d.buy*e.qty;
-  else complete=false;
-  if(d.buy===null)sellComplete=false;
-  else sell+=d.buy*e.qty;
-  if(d.craft!==null&&d.buy!==null)optimization+=Math.abs(d.craft-d.buy)*e.qty;
-  // Ne pas acheter les composants d'un objet final si l'achat HDV est moins cher.
-  if(d.source==='buy'){
-   const key=String(e.id),old=shopping.get(key)||{id:e.id,name:e.name,image:e.image,qty:0,unit:d.buy};
-   old.qty+=e.qty;old.unit=d.buy;shopping.set(key,old);
-  }else if(d.source==='craft'){
-   for(const n of e.nodes)multiCollect(n,e.qty,shopping);
-  }else{
-   // Afficher les ressources encore sans prix, sans prétendre que le choix est optimisé.
-   for(const n of e.nodes)multiCollect(n,e.qty,shopping);
-  }
-  const block=m$(`[data-mdecision="${e.id}"]`);
-  if(block){const next=multiDecisionHTML(e);const tmp=document.createElement('div');tmp.innerHTML=next;block.replaceWith(tmp.firstElementChild)}
- }
- m$('#multiCost').textContent=multi.items.length?fmt(cost)+(complete?'':' (partiel)'):'—';
- m$('#multiSellTotal').textContent=multi.items.length&&sellComplete?fmt(sell):'—';
- const profit=m$('#multiProfit');profit.className='';
- if(complete&&sellComplete&&multi.items.length){profit.textContent='+'+fmt(optimization);profit.className=optimization>0?'green':'neutral'}else profit.textContent='—';
- // Actualiser les contours des composites sans recréer les inputs en cours de saisie.
- for(const e of multi.items)for(const n of e.nodes){
-  const update=(node)=>{const v=multiValue(node),both=v.buy!==null&&v.craft!==null;
-   const inp=m$(`[data-mprice="${node.uid}"]`),btn=m$(`[data-mexpand="${node.uid}"]`);
-   if(inp){inp.classList.toggle('choice-good',both&&v.source==='buy');inp.classList.toggle('choice-bad',both&&v.source==='craft');inp.classList.toggle('required-missing',v.best===null)}
-   if(btn){btn.classList.toggle('choice-good',both&&v.source==='craft');btn.classList.toggle('choice-bad',both&&v.source==='buy')}
-   for(const c of node.children||[])update(c)
-  };update(n);
- }
- const rows=[...shopping.values()].sort((a,b)=>a.name.localeCompare(b.name,'fr'));
- m$('#multiShopping').className='';
- m$('#multiShopping').innerHTML=rows.length?`<table class="multi-shopping"><thead><tr><th>Ressource / objet</th><th>Quantité</th><th>Coût</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.image?`<img src="${esc(r.image)}" alt="">`:''}${esc(r.name)}</td><td>${fmtNum(r.qty)}</td><td>${r.unit===null?'À renseigner':fmt(r.qty*r.unit)}</td></tr>`).join('')}</tbody></table>`:'<div class="multi-empty">Aucune ressource à afficher.</div>';
+area.querySelectorAll('[data-mcollapse]').forEach(b=>b.onclick=()=>multiToggleCollapse(b.dataset.mcollapse));area.querySelectorAll('[data-mqty]').forEach(el=>{el.oninput=()=>{const e=multi.items.find(x=>x.id===+el.dataset.mqty);if(e&&Number(el.value)>=1&&Number.isInteger(Number(el.value))){e.qty=Number(el.value);multiCalculate()}};el.onchange=multiRender});area.querySelectorAll('[data-mremove]').forEach(b=>b.onclick=()=>{multi.items=multi.items.filter(e=>e.id!==+b.dataset.mremove);multiRender()});area.querySelectorAll('[data-msell]').forEach(el=>el.oninput=()=>{const id=el.dataset.msell;itemFields[id]={...(itemFields[id]||{}),sell:el.value};localStorage.setItem('dofusdude-item-fields',JSON.stringify(itemFields));multiCalculate()});area.querySelectorAll('[data-mprice]').forEach(el=>{el.oninput=()=>{const found=multiWalk(+el.dataset.mprice);if(!found)return;const id=found.node.id;if(el.value==='')delete prices[id];else if(isPrice(el.value))prices[id]=Number(el.value);localStorage.setItem('dofusdude-prices',JSON.stringify(prices));multiCalculate()};el.onblur=ev=>{if(!ev.relatedTarget?.matches?.('#multiSelected input'))multiRender()}});area.querySelectorAll('[data-mexpand]').forEach(b=>b.onclick=()=>multiExpand(+b.dataset.mexpand));multiCalculate()}
+
+
+// Le plan craft/achat est calculé uniquement à partir des prix.
+// Les possessions ne sont appliquées qu'après la fusion de la liste.
+function multiCatalog(){
+ const map=new Map();
+ const visit=n=>{map.set(String(n.id),{id:n.id,name:n.name,image:n.image});for(const c of n.children||[])visit(c)};
+ for(const e of multi.items){map.set(String(e.id),{id:e.id,name:e.name,image:e.image});for(const n of e.nodes)visit(n)}
+ return map;
 }
+function multiPlanNode(n,quantity,shopping,ancestors=new Set(),depth=0){
+ if(depth>12||ancestors.has(String(n.id)))return false;
+ const next=new Set(ancestors);next.add(String(n.id));
+ const decision=multiValue(n);
+ if(decision.source==='craft'&&n.children?.length){
+  for(const c of n.children)if(!multiPlanNode(c,quantity*c.qty,shopping,next,depth+1))return false;
+  return true;
+ }
+ // Même sans prix, la ressource doit figurer dans la liste d'achat.
+ const id=String(n.id);shopping.set(id,(shopping.get(id)||0)+quantity);
+ return true;
+}
+function multiPlan(){
+ const shopping=new Map(),decisions=new Map();
+ let unresolved=false;
+ for(const e of multi.items){
+  if(e.loading||e.error){unresolved=true;continue}
+  const d=multiEntryDecision(e),mode=multiChoiceFor(e.id);
+  const decision=mode==='auto'?d.source:mode;
+  if(!decision){unresolved=true;continue}
+  decisions.set(String(e.id),decision);
+  if(decision==='buy'){
+   const id=String(e.id);shopping.set(id,(shopping.get(id)||0)+e.qty);
+  }else if(e.noRecipe||!e.nodes.length){unresolved=true}
+  else for(const n of e.nodes)if(!multiPlanNode(n,n.qty*e.qty,shopping,new Set([String(e.id)])))unresolved=true;
+ }
+ return {shopping,decisions,unresolved};
+}
+function multiShoppingRows(shopping,catalog){
+ return [...shopping].map(([id,need])=>{
+  const entry=multi.items.find(e=>String(e.id)===id);
+  const info=catalog.get(id)||{id,name:'Objet #'+id,image:''};
+  const owned=Math.max(0,Math.floor(Number(multi.inventory[id])||0));
+  const remaining=Math.max(0,need-owned);
+  const unit=entry?itemFields[id]?.sell:prices[id];
+  return {...info,id,need,owned,remaining,unit,cost:isPrice(unit)?remaining*Number(unit):null};
+ }).sort((a,b)=>a.name.localeCompare(b.name,'fr'));
+}
+function multiShoppingRender(rows,preserveFocus=false){
+ const el=m$('#multiShopping');
+ const active=document.activeElement;
+ if(preserveFocus&&el.contains(active)&&active.matches('[data-mowned-final]')){
+  for(const row of rows){
+   const tr=[...el.querySelectorAll('tr[data-shopping-id]')].find(x=>x.dataset.shoppingId===String(row.id));
+   if(!tr)continue;
+   const remain=tr.querySelector('[data-shopping-remaining]');
+   const cost=tr.querySelector('[data-shopping-cost]');
+   if(remain)remain.textContent=fmtNum(row.remaining);
+   if(cost)cost.textContent=row.cost===null?'Prix manquant':fmt(row.cost);
+  }
+  return;
+ }
+ el.className='';
+ el.innerHTML=rows.length?`<table class="multi-shopping"><thead><tr><th>Ressource / objet</th><th>Besoin</th><th>Possédés</th><th>À acheter</th><th>Coût restant</th></tr></thead><tbody>${rows.map(r=>`<tr data-shopping-id="${esc(r.id)}"><td>${r.image?`<img src="${esc(r.image)}" alt="">`:''}${esc(r.name)}</td><td>${fmtNum(r.need)}</td><td><input data-mowned-final="${esc(r.id)}" type="number" min="0" step="1" value="${r.owned}" aria-label="Quantité possédée de ${esc(r.name)}"></td><td data-shopping-remaining>${fmtNum(r.remaining)}</td><td data-shopping-cost>${r.cost===null?'Prix manquant':fmt(r.cost)}</td></tr>`).join('')}</tbody></table>`:'<div class="multi-empty">Aucun achat à prévoir ou aucune recette sélectionnée.</div>';
+ el.querySelectorAll('[data-mowned-final]').forEach(input=>input.oninput=()=>{
+  multi.inventory[input.dataset.mownedFinal]=Math.max(0,Math.floor(Number(input.value)||0));
+  multiSaveInventory();
+  multiCalculate(true);
+ });
+}
+function multiCalculate(preserveShoppingFocus=false){
+ const catalog=multiCatalog(),plan=multiPlan(),rows=multiShoppingRows(plan.shopping,catalog);
+ for(const e of multi.items){
+  const d=multiEntryDecision(e);
+  const block=m$(`[data-mdecision="${e.id}"]`);
+  if(block&&document.activeElement!==block.querySelector('[data-mforce]')){
+   const tmp=document.createElement('div');tmp.innerHTML=multiDecisionHTML(e);
+   block.replaceWith(tmp.firstElementChild);
+  }
+  const choice=plan.decisions.get(String(e.id)),choiceEl=m$(`[data-mdecision="${e.id}"]`);
+  if(choiceEl&&choice){
+   choiceEl.dataset.optimizedChoice=choice;
+   const select=choiceEl.querySelector('[data-mforce]');
+   // Le menu reste sur Auto ; seules les pastilles indiquent le choix calculé.
+   const diff=multiDecisionDisplay(d,choice,e.qty);
+   const diffEl=choiceEl.querySelector('.multi-difference');
+   if(diffEl){diffEl.classList.remove('pending','even','craft-saving','buy-saving','loss');diffEl.classList.add(diff.css);diffEl.textContent=diff.label+' - '+(diff.value===null?'—':fmt(diff.value));}
+   const pills=choiceEl.querySelectorAll('.multi-choice-pill:not(.multi-difference)');
+   if(pills.length===2){
+    const isLoss=diff.label==='Perte';
+    pills[0].classList.toggle('winner',choice==='craft'&&!isLoss);
+    pills[0].classList.toggle('selected-loss',choice==='craft'&&isLoss);
+    pills[0].classList.toggle('loser',choice==='buy');
+    pills[1].classList.toggle('winner',choice==='buy'&&!isLoss);
+    pills[1].classList.toggle('selected-loss',choice==='buy'&&isLoss);
+    pills[1].classList.toggle('loser',choice==='craft');
+   }
+  }
+ }
+ const selectionEl=m$('#multiSelectionGain');
+ const selectionGain=multi.items.length&&!plan.unresolved?multiSelectionGain(multi.items,plan.decisions):null;
+ selectionEl.className='';
+ if(selectionGain===null)selectionEl.textContent='—';
+ else{
+  selectionEl.textContent=(selectionGain>0?'+':'')+fmt(selectionGain);
+  selectionEl.className=selectionGain>0?'green':selectionGain<0?'red':'neutral';
+ }
+ const complete=rows.every(r=>r.cost!==null)&&!plan.unresolved;
+ const total=rows.reduce((sum,r)=>sum+(r.cost||0),0);
+ m$('#multiPurchaseTotal').textContent=multi.items.length&&complete?fmt(total):'—';
+ const profit=m$('#multiProfit');profit.className='';
+ const optimalGain=multi.items.length?multiOptimalGain(multi.items):null;
+ if(optimalGain!==null){
+  profit.textContent=(optimalGain>0?'+':'')+fmt(optimalGain);
+  profit.className=optimalGain>0?'green':optimalGain<0?'red':'neutral';
+ }else profit.textContent='—';
+ multiShoppingRender(rows,preserveShoppingFocus);
+ m$('#multiSelected').querySelectorAll('[data-mforce]').forEach(el=>el.onchange=()=>multiSetItemChoice(el.dataset.mforce,el.value));
+}
+document.querySelectorAll('[name="multiStrategy"]').forEach(el=>el.onchange=()=>{if(el.checked)multiSetStrategy(el.value)});
 
 
 // Historique : les lots et leurs ventes sont indépendants des recettes.
@@ -449,20 +672,87 @@ function ledgerTotals(lots){
 }
 const ledgerSigned=n=>(n>0?'+':n<0?'−':'')+fmt(Math.abs(n));
 const ledgerId=()=>String(Date.now())+'-'+Math.random().toString(36).slice(2);
+function ledgerEntryHTML(lot){
+ const sold=ledgerSold(lot),left=Math.max(0,Number(lot.qty)-sold),p=ledgerTotals([lot]).profit;
+ const title=lot.itemId?`<span class="ledger-item-title">${lot.image?`<img class="ledger-item-icon" src="${esc(lot.image)}" alt="">`:''}<strong>${esc(lot.name)}</strong></span>`:`<strong>${esc(lot.name)}</strong>`;
+ return `<article class="ledger-entry" data-lot="${esc(lot.id)}"><div class="ledger-head">${title}</div>${lot.comment?`<div class="ledger-comment">💬 ${esc(lot.comment)}</div>`:''}<div class="ledger-sub">Acheté le ${esc(lot.date)} · ${fmtNum(lot.qty)} × ${fmt(lot.buy)} · Coût ${fmt(lot.qty*lot.buy)}</div><div class="ledger-sub">Restant : <b>${fmtNum(left)}</b> · Kamas en attente : <b>${fmt(left*lot.buy)}</b> · Gain réalisé : <b class="${p>0?'green':p<0?'red':''}">${ledgerSigned(p)}</b></div>${left?`<form class="ledger-sale" data-lsale="${esc(lot.id)}"><label>Quantité vendue<input name="qty" type="number" required min="1" max="${left}" step="1" value="${left}"></label><label>Prix de vente unitaire (K)<input name="price" type="number" required min="0" step="1" placeholder="Prix HDV"></label><div class="ledger-sale-actions"><button type="submit">Enregistrer la vente</button><button type="button" class="ledger-delete-button" data-ldel="${esc(lot.id)}">Supprimer le lot</button></div></form>`:`<div class="ledger-finished-actions"><span class="green">✓ Lot entièrement vendu</span><button type="button" class="ledger-delete-button" data-ldel="${esc(lot.id)}">Supprimer le lot</button></div>`}${lot.sales?.length?`<div class="ledger-history">${lot.sales.map(s=>`<div>↳ ${esc(s.date)} · ${fmtNum(s.qty)} vendu(s) à ${fmt(s.price)}/u · <span class="${s.price>=lot.buy?'green':'red'}">${ledgerSigned(s.qty*(s.price-lot.buy))}</span></div>`).join('')}</div>`:''}</article>`;
+}
+function ledgerTileHTML(lot){
+ const left=Math.max(0,Number(lot.qty)-ledgerSold(lot));
+ const title=esc(lot.name),comment=esc(lot.comment||'Aucun commentaire');
+ const icon=lot.image?`<img src="${esc(lot.image)}" alt="" loading="lazy">`:'<span class="ledger-tile-fallback" aria-hidden="true">📦</span>';
+ return `<button type="button" class="ledger-tile" data-lopen="${esc(lot.id)}" aria-label="Voir le lot : ${title}" title="${title} — ${comment}">${icon}<span class="ledger-tile-name">${title}</span><span class="ledger-tile-qty">${fmtNum(left||lot.qty)}</span><span class="ledger-tile-tip"><strong>${title}</strong><br>${comment}</span></button>`;
+}
+function ledgerOpenLot(id){
+ const lot=ledger.find(l=>l.id===id);if(!lot)return;
+ $('#ledgerModalContent').innerHTML=ledgerEntryHTML(lot);
+ const dialog=$('#ledgerLotDialog');
+ if(!dialog.open)dialog.showModal();
+ ledgerBindActions(dialog);
+}
+function ledgerBindActions(scope){
+ scope.querySelectorAll('[data-ldel]').forEach(b=>b.onclick=()=>{if(confirm('Supprimer cet achat et tout son historique de ventes ?')){ledger=ledger.filter(x=>x.id!==b.dataset.ldel);ledgerSave();$('#ledgerLotDialog').close();ledgerRender()}});
+ scope.querySelectorAll('[data-lsale]').forEach(f=>f.onsubmit=e=>{e.preventDefault();const lot=ledger.find(x=>x.id===f.dataset.lsale);if(!lot)return;const qty=Number(f.elements.qty.value),price=Number(f.elements.price.value);if(!Number.isSafeInteger(qty)||qty<1||qty>lot.qty-ledgerSold(lot)||!Number.isFinite(price)||price<0){alert('Vérifie la quantité disponible et le prix de vente.');return}lot.sales.push({qty,price,date:new Date().toISOString().slice(0,10)});ledgerSave();$('#ledgerLotDialog').close();ledgerRender()});
+}
+$('#ledgerLotDialog .ledger-modal-close').onclick=()=>$('#ledgerLotDialog').close();
+$('#ledgerLotDialog').addEventListener('click',e=>{if(e.target.id==='ledgerLotDialog')e.target.close()});
+function ledgerMatchesQuery(lot,query){
+ const normalized=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr');
+ const words=normalized(query).trim().split(/\s+/).filter(Boolean);
+ if(!words.length)return true;
+ const haystack=normalized([lot.name,lot.comment,lot.date,lot.qty,lot.buy,...(lot.sales||[]).flatMap(s=>[s.date,s.qty,s.price])].join(' '));
+ return words.every(word=>haystack.includes(word));
+}
 function ledgerRender(){
  const t=ledgerTotals(ledger);
  const profit=$('#ledgerProfit');profit.textContent=ledgerSigned(t.profit);profit.className=t.profit>0?'green':t.profit<0?'red':'neutral';
- $('#ledgerPending').textContent=fmt(t.pending);$('#ledgerRemaining').textContent=fmtNum(t.remaining);
- const area=$('#ledgerEntries');
- area.innerHTML=ledger.length?ledger.slice().reverse().map(lot=>{
-  const sold=ledgerSold(lot),left=Math.max(0,lot.qty-sold),p=ledgerTotals([lot]).profit;
-  return `<article class="ledger-entry" data-lot="${esc(lot.id)}"><div class="ledger-head"><strong>${esc(lot.name)}</strong><button class="ledger-remove" type="button" data-ldel="${esc(lot.id)}" title="Supprimer ce lot et ses ventes">✕</button></div><div class="ledger-sub">Acheté le ${esc(lot.date)} · ${fmtNum(lot.qty)} × ${fmt(lot.buy)} · Coût ${fmt(lot.qty*lot.buy)}</div><div class="ledger-sub">Restant : <b>${fmtNum(left)}</b> · Kamas en attente : <b>${fmt(left*lot.buy)}</b> · Gain réalisé : <b class="${p>0?'green':p<0?'red':''}">${ledgerSigned(p)}</b></div>${left?`<form class="ledger-sale" data-lsale="${esc(lot.id)}"><label>Quantité vendue<input name="qty" type="number" required min="1" max="${left}" step="1" value="${left}"></label><label>Prix de vente unitaire (K)<input name="price" type="number" required min="0" step="1" placeholder="Prix HDV"></label><button type="submit">Enregistrer la vente</button></form>`:'<div class="green" style="margin-top:10px">✓ Lot entièrement vendu</div>'}${lot.sales?.length?`<div class="ledger-history">${lot.sales.map(s=>`<div>↳ ${esc(s.date)} · ${fmtNum(s.qty)} vendu(s) à ${fmt(s.price)}/u · <span class="${s.price>=lot.buy?'green':'red'}">${ledgerSigned(s.qty*(s.price-lot.buy))}</span></div>`).join('')}</div>`:''}</article>`
- }).join(''):'<div class="multi-empty">Aucun achat enregistré pour le moment.</div>';
- area.querySelectorAll('[data-ldel]').forEach(b=>b.onclick=()=>{if(confirm('Supprimer cet achat et tout son historique de ventes ?')){ledger=ledger.filter(x=>x.id!==b.dataset.ldel);ledgerSave();ledgerRender()}});
- area.querySelectorAll('[data-lsale]').forEach(f=>f.onsubmit=e=>{e.preventDefault();const lot=ledger.find(x=>x.id===f.dataset.lsale);if(!lot)return;const qty=Number(f.elements.qty.value),price=Number(f.elements.price.value);if(!Number.isSafeInteger(qty)||qty<1||qty>lot.qty-ledgerSold(lot)||!Number.isFinite(price)||price<0){alert('Vérifie la quantité disponible et le prix de vente.');return}lot.sales.push({qty,price,date:new Date().toISOString().slice(0,10)});ledgerSave();ledgerRender()});
+ $('#ledgerPending').textContent=fmt(t.pending);
+ const active=ledger.filter(lot=>ledgerSold(lot)<Number(lot.qty));
+ const archived=ledger.filter(lot=>ledgerSold(lot)>=Number(lot.qty));
+ const filteredActive=active.filter(lot=>ledgerMatchesQuery(lot,$('#ledgerActiveSearch').value));
+ const filteredArchived=archived.filter(lot=>ledgerMatchesQuery(lot,$('#ledgerArchivedSearch').value));
+ $('#ledgerActiveCount').textContent=fmtNum(active.length);
+ $('#ledgerArchivedCount').textContent=fmtNum(archived.length);
+ $('#ledgerActiveMatches').textContent=active.length?`${fmtNum(filteredActive.length)} lot(s) affiché(s) sur ${fmtNum(active.length)}`:'';
+ $('#ledgerArchivedMatches').textContent=archived.length?`${fmtNum(filteredArchived.length)} lot(s) trouvé(s) sur ${fmtNum(archived.length)}`:'';
+ $('#ledgerEntries').innerHTML=filteredActive.length?`<div class="ledger-tiles">${filteredActive.slice().reverse().map(ledgerTileHTML).join('')}</div>`:`<div class="multi-empty">${active.length?'Aucun achat ne correspond à ta recherche.':'Aucun lot en cours.'}</div>`;
+ $('#ledgerArchivedEntries').innerHTML=filteredArchived.length?`<div class="ledger-tiles">${filteredArchived.slice().reverse().map(ledgerTileHTML).join('')}</div>`:`<div class="multi-empty">${archived.length?'Aucun lot terminé ne correspond à ta recherche.':'Aucun lot terminé pour le moment.'}</div>`;
+ document.querySelectorAll('[data-lopen]').forEach(b=>b.onclick=()=>ledgerOpenLot(b.dataset.lopen));
 }
+$('#ledgerActiveSearch').addEventListener('input',ledgerRender);
+$('#ledgerArchivedSearch').addEventListener('input',()=>{if($('#ledgerArchivedSearch').value.trim())$('#ledgerArchive').open=true;ledgerRender()});
+let ledgerSearchRequest=0,ledgerSearchResults=[];
+const ledgerName=$('#ledgerName'),ledgerMatches=$('#ledgerMatches');
+ledgerName.addEventListener('input',async()=>{
+ const q=ledgerName.value.trim(),request=++ledgerSearchRequest;
+ $('#ledgerItemId').value='';$('#ledgerItemImage').value='';
+ ledgerMatches.innerHTML='';
+ if(q.length<2)return;
+ ledgerMatches.textContent='Recherche…';
+ try{
+  const data=await get('/items/search?'+new URLSearchParams({query:q,limit:'30'}));
+  if(request!==ledgerSearchRequest)return;
+  ledgerSearchResults=Array.isArray(data)?data:data.items||data.results||[];
+  ledgerMatches.innerHTML=ledgerSearchResults.map((item,i)=>`<button type="button" class="ledger-match" data-ledger-pick="${i}">${img(item.item_fields||item)?`<img src="${esc(img(item.item_fields||item))}" alt="">`:''}<span>${esc(item.name)}</span></button>`).join('')||'<div class="muted">Aucun objet trouvé.</div>';
+  ledgerMatches.querySelectorAll('[data-ledger-pick]').forEach(button=>button.onclick=()=>{
+   const item=ledgerSearchResults[Number(button.dataset.ledgerPick)];
+   ledgerName.value=item.name;$('#ledgerItemId').value=String(item.ankama_id??item.id??'');
+   $('#ledgerItemImage').value=img(item.item_fields||item)||'';
+   ++ledgerSearchRequest;ledgerMatches.innerHTML='';
+  });
+ }catch(error){if(request===ledgerSearchRequest)ledgerMatches.textContent='Recherche impossible : '+error.message}
+});
 $('#ledgerDate').value=new Date().toLocaleDateString('en-CA');
-$('#ledgerForm').onsubmit=e=>{e.preventDefault();const name=$('#ledgerName').value.trim(),qty=Number($('#ledgerQty').value),buy=Number($('#ledgerBuy').value),date=$('#ledgerDate').value;if(!name||!Number.isSafeInteger(qty)||qty<1||!Number.isFinite(buy)||buy<0||!date)return;ledger.push({id:ledgerId(),name,qty,buy,date,sales:[]});ledgerSave();$('#ledgerForm').reset();$('#ledgerQty').value='1';$('#ledgerDate').value=new Date().toLocaleDateString('en-CA');ledgerRender()};
+$('#ledgerForm').onsubmit=e=>{
+ e.preventDefault();
+ const name=ledgerName.value.trim(),itemId=$('#ledgerItemId').value,image=$('#ledgerItemImage').value,comment=$('#ledgerComment').value.trim();
+ const qty=Number($('#ledgerQty').value),buy=Number($('#ledgerBuy').value),date=$('#ledgerDate').value;
+ if(!name||!itemId){alert('Sélectionne un objet dans les résultats de recherche.');return}
+ if(!Number.isSafeInteger(qty)||qty<1||!Number.isFinite(buy)||buy<0||!date)return;
+ ledger.push({id:ledgerId(),name,itemId,image,comment,qty,buy,date,sales:[]});
+ ledgerSave();$('#ledgerForm').reset();ledgerMatches.innerHTML='';++ledgerSearchRequest;
+ $('#ledgerQty').value='1';$('#ledgerDate').value=new Date().toLocaleDateString('en-CA');ledgerRender();
+};
 ledgerRender();
 customInit();
 
@@ -587,15 +877,38 @@ async function breakOpen(item){
  try{detail=await get('/items/equipment/'+item.ankama_id)}
  catch(e){$('#breakDetail').textContent='Impossible de charger les caractéristiques : '+e.message;return}
  const id=String(detail.ankama_id||item.ankama_id);
- const groups=breakRuneGroups(detail),names=groups.flat(),old=breaking[id]||{};
+ const groups=breakRuneGroups(detail).map(group=>[group[0]]),names=groups.flat(),old=breaking[id]||{};
  breakSelected={id,detail,name:detail.name||item.name,groups,runes:names.map(name=>({name,qty:old.runes?.[name]?.qty??'',price:old.runes?.[name]?.price??''})),cost:old.cost??'',quantity:old.quantity??1};
  breakDraw();
+}
+// Recherche des icônes parmi les ressources de DofusDude, sans bloquer le calcul.
+const breakIconCache=new Map();
+async function breakRuneIcon(name){
+ if(!breakIconCache.has(name))breakIconCache.set(name,(async()=>{
+  try{
+   const data=await get('/items/resources/search?'+new URLSearchParams({query:'Rune '+name,limit:'30'}));
+   const rows=Array.isArray(data)?data:data.items||data.results||[];
+   const normalize=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+   const expected=normalize('Rune '+name);
+   const match=rows.find(x=>normalize(x.name)===expected)||rows.find(x=>normalize(x.name)===normalize(name));
+   return match?img(match):'';
+  }catch{return ''}
+ })());
+ return breakIconCache.get(name);
+}
+function breakLoadRuneIcons(b){
+ b.runes.forEach(async(r,i)=>{
+  const src=await breakRuneIcon(r.name);
+  if(!src||breakSelected!==b)return;
+  const el=$(`[data-rune-icon="${i}"]`);
+  if(el){el.src=src;el.hidden=false;el.onerror=()=>{el.hidden=true}}
+ });
 }
 function breakDraw(){
  const b=breakSelected;if(!b)return;
  $('#breakDetail').innerHTML=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">${img(b.detail)?`<img src="${esc(img(b.detail))}" width="50" height="50" alt="">`:''}<strong style="font-size:20px">${esc(b.name)}</strong></div>
  <div class="break-cost"><label>Prix d'achat unitaire de l'équipement (K)<input id="breakCost" type="number" min="0" step="1" value="${esc(b.cost)}" placeholder="Prix HDV"></label><label>Nombre d'équipements brisés<input id="breakQty" type="number" min="1" step="1" value="${esc(b.quantity)}"></label></div>
- ${b.groups.length?`<table class="break-grid break-matrix"><thead><tr><th>Stat</th><th>Mineure</th><th>Moyenne</th><th>Majeure</th></tr></thead><tbody>${b.groups.map(group=>`<tr><td>${esc(group[0].replace(/^(?:Ra |Pa )/,''))}</td>${[0,1,2].map(pos=>{const name=group[pos];if(!name)return '<td class="break-na">—</td>';const i=b.runes.findIndex(r=>r.name===name),r=b.runes[i];return `<td><div class="break-rune-name">${esc(name)}</div><input aria-label="Quantité ${esc(name)}" data-bqty="${i}" type="number" min="0" step="1" value="${esc(r.qty)}" placeholder="Qté"><input aria-label="Prix ${esc(name)}" data-bprice="${i}" type="number" min="0" step="1" value="${esc(r.price)}" placeholder="Prix K"><small data-btotal="${i}">—</small></td>`}).join('')}</tr>`).join('')}</tbody></table>`:'<p class="break-note">Aucune caractéristique compatible reconnue pour cet équipement.</p>'}
+ ${b.runes.length?`<table class="break-grid break-compact"><thead><tr><th>Rune mineure</th><th>Obtenues</th><th>Prix unitaire (K)</th><th>Total</th></tr></thead><tbody>${b.runes.map((r,i)=>`<tr><td><span class="break-rune-label"><img class="break-rune-icon" data-rune-icon="${i}" alt="" hidden><span>${esc(r.name)}</span></span></td><td><input aria-label="Quantité ${esc(r.name)}" data-bqty="${i}" type="number" min="0" step="1" value="${esc(r.qty)}" placeholder="Qté"></td><td><input aria-label="Prix ${esc(r.name)}" data-bprice="${i}" type="number" min="0" step="1" value="${esc(r.price)}" placeholder="Prix K"></td><td class="break-total" data-btotal="${i}">—</td></tr>`).join('')}</tbody></table>`:'<p class="break-note">Aucune caractéristique compatible reconnue pour cet équipement.</p>'}
 
  <div class="break-summary"><div><small>Valeur des runes</small><strong id="breakRevenue">—</strong></div><div><small>Gain / perte</small><strong id="breakProfit">—</strong></div><div><small>Rentabilité</small><strong id="breakPercent">—</strong></div></div><p class="break-note">Les quantités obtenues sont à renseigner après brisage. Le calcul n'inclut pas les taxes HDV.</p>`;
  const update=()=>{
@@ -611,6 +924,6 @@ function breakDraw(){
   $('#breakPercent').textContent=v.percent===null?'—':(v.percent>0?'+':'')+v.percent.toLocaleString('fr-FR',{maximumFractionDigits:1})+' %';
   $('#breakPercent').style.color=v.profit>0?'#5dff91':v.profit<0?'#ff7777':'';
  };
- $('#breakDetail').querySelectorAll('input').forEach(x=>x.addEventListener('input',update));update();
+ $('#breakDetail').querySelectorAll('input').forEach(x=>x.addEventListener('input',update));update();breakLoadRuneIcons(b);
 }
 </script></body></html>
