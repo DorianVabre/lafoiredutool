@@ -679,9 +679,9 @@ function ledgerEntryHTML(lot){
 }
 function ledgerTileHTML(lot){
  const left=Math.max(0,Number(lot.qty)-ledgerSold(lot));
- const title=esc(lot.name),comment=esc(lot.comment||'Aucun commentaire');
+ const title=esc(lot.name),comment=esc(lot.comment||'Aucun commentaire'),buyPrice=fmt(Number(lot.qty)*Number(lot.buy));
  const icon=lot.image?`<img src="${esc(lot.image)}" alt="" loading="lazy">`:'<span class="ledger-tile-fallback" aria-hidden="true">📦</span>';
- return `<button type="button" class="ledger-tile" data-lopen="${esc(lot.id)}" aria-label="Voir le lot : ${title}" title="${title} — ${comment}">${icon}<span class="ledger-tile-name">${title}</span><span class="ledger-tile-qty">${fmtNum(left||lot.qty)}</span><span class="ledger-tile-tip"><strong>${title}</strong><br>${comment}</span></button>`;
+ return `<button type="button" class="ledger-tile" data-lopen="${esc(lot.id)}" aria-label="Voir le lot : ${title}" title="${title} — ${comment} — Prix d’achat : ${buyPrice}">${icon}<span class="ledger-tile-name">${title}</span><span class="ledger-tile-qty">${fmtNum(left||lot.qty)}</span><span class="ledger-tile-tip"><strong>${title}</strong><br>${comment}<br><span class="ledger-tile-buy">Prix d’achat : ${buyPrice}</span></span></button>`;
 }
 function ledgerOpenLot(id){
  const lot=ledger.find(l=>l.id===id);if(!lot)return;
