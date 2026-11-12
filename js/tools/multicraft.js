@@ -9,7 +9,7 @@ const MODE_INTROS={
  break:{title:'Calculateur de brisage',description:'Sélectionne un équipement, indique les runes obtenues et leurs prix pour calculer la rentabilité de son brisage.'},
  ledger:{title:'Historique d’achats',description:'Enregistre tes achats, suis les ventes partielles et retrouve les lots terminés ainsi que tes gains et pertes.'},
  fm:{title:'XP Forgemagie',description:'Compare les runes par poids / prix pour optimiser tes dépenses de forgemagie.'},
- farm:{title:'Rentabilité du farm',description:'Crée tes activités, chronomètre tes sessions et compare leurs gains moyens en kamas par heure.'},
+ farm:{title:'Comparaison de farm',description:'Crée tes activités, chronomètre tes sessions et compare leurs gains moyens en kamas par heure.'},
  drop:{title:'Calculateur de taux de drop',description:'Calcule ton multiplicateur de butin avec la prospection, le challenge, l’Almanax et Ankama Shield.'},
  scroll:{title:'Optimiseur de parchotage',description:'Choisis une caractéristique, renseigne ton niveau actuel et les prix des parchemins pour trouver la combinaison la moins chère jusqu’à 100.'}
 };

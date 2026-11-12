@@ -3,7 +3,7 @@ const html=fs.readFileSync(require('node:path').join(__dirname,'../dofus-craft.h
 const js=html.slice(html.indexOf('function farmTotals('),html.indexOf('const farmItemIcon='));
 function totals(activity,prices){const ctx={prices};vm.createContext(ctx);vm.runInContext(js,ctx);return ctx.farmTotals(activity)}
 const activity={sessions:[{duration:1800000,counts:{'42':3,'43':2}},{duration:1800000,counts:{'42':1,'43':4}}]};
-test('nouvel onglet et introduction',()=>{assert.match(html,/id="tabFarm"/);assert.match(html,/id="farmMode"/);assert.match(html,/farm:\{title:'Rentabilité du farm'/)});
+test('nouvel onglet et introduction',()=>{assert.match(html,/id="tabFarm"/);assert.match(html,/id="farmMode"/);assert.match(html,/farm:\{title:'Comparaison de farm'/)});
 test('moyenne sur toutes les sessions en kamas par heure',()=>{const t=totals(activity,{'42':100,'43':200});assert.equal(t.ms,3600000);assert.equal(t.revenue,1600);assert.equal(t.kph,1600)});
 test('prix manquant rend moyenne indisponible',()=>assert.equal(totals(activity,{'42':100}).kph,null));
 test('zéro récompense ne nécessite aucun prix',()=>assert.equal(totals({sessions:[{duration:3600000,counts:{'42':0}}]},{}).kph,0));

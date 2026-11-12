@@ -1,4 +1,4 @@
-# La Foire du Tool — V90
+# La Foire du Tool — V93
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -21,3 +21,7 @@ Les clés localStorage historiques sont conservées. Les tests ne remplacent pas
 ## V91 — Multiplicateur de drop
 
 Nouvel outil dans « Autres » : prospection à rendement décroissant, challenge, Almanax, Ankama Shield (+5 %), taux de base facultatif. Sauvegarde `la-foire-du-tool-drop-v1`. Le calcul estime une tentative de drop d'un personnage et ne couvre pas les exceptions de butin.
+
+## V93
+
+« Rentabilité du farm » devient « Comparaison de farm » dans la navigation et le titre de page. `dofus-craft.html` est une fixture de tests générée par `npm test` et n’est pas distribuée.
