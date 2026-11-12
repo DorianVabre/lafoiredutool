@@ -1043,6 +1043,7 @@ try{farmRunning=JSON.parse(localStorage.getItem(FARM_TIMER_KEY)||'null')}catch{}
 const farmSave=()=>localStorage.setItem(FARM_KEY,JSON.stringify(farmActivities));
 const farmSaveTimer=()=>{if(farmRunning)localStorage.setItem(FARM_TIMER_KEY,JSON.stringify(farmRunning));else localStorage.removeItem(FARM_TIMER_KEY)};
 const farmId=()=>String(Date.now())+'-'+Math.random().toString(36).slice(2,9);
+const farmElapsed=(timer,now=Date.now())=>Math.max(0,(timer.stoppedAt||timer.pausedAt||now)-timer.startedAt-(timer.pausedMs||0));
 const farmSeconds=ms=>{const sec=Math.max(0,Math.floor(ms/1000));return [Math.floor(sec/3600),Math.floor(sec%3600/60),sec%60].map(n=>String(n).padStart(2,'0')).join(':')};
 function farmTotals(activity){
  const sessions=activity.sessions||[],ms=sessions.reduce((v,s)=>v+s.duration,0),amounts={};
@@ -1105,11 +1106,12 @@ function farmRenderSession(){
   const activity=farmActivities.find(a=>a.id===farmRunning.activityId);
   if(!activity){farmRunning=null;farmSaveTimer();farmRender();return}
   farmSelectedId=activity.id;
-  const elapsed=Date.now()-farmRunning.startedAt;
-  area.innerHTML=`<div class="farm-running"><h3>${esc(activity.name)}</h3><div class="farm-timer" id="farmClock">${farmSeconds(elapsed)}</div><p class="farm-hint">La session reste chronométrée même si tu actualises la page.</p><button id="farmStop" type="button">■ Arrêter la session</button></div>`;
-  $('#farmStop').onclick=()=>{farmRunning.stoppedAt=Date.now();farmSaveTimer();farmRenderSession()};
+  const elapsed=farmElapsed(farmRunning);
+  area.innerHTML=`<div class="farm-running"><h3>${esc(activity.name)}</h3><div class="farm-timer" id="farmClock">${farmSeconds(elapsed)}</div><p class="farm-hint">${farmRunning.pausedAt?'Session en pause : le temps est arrêté.':'La session reste chronométrée même si tu actualises la page.'}</p><div class="farm-actions"><button id="farmPause" type="button">${farmRunning.pausedAt?'▶ Reprendre':'⏸ Mettre en pause'}</button><button id="farmStop" type="button">■ Arrêter la session</button></div></div>`;
+  $('#farmPause').onclick=()=>{if(farmRunning.pausedAt){farmRunning.pausedMs=(farmRunning.pausedMs||0)+Date.now()-farmRunning.pausedAt;delete farmRunning.pausedAt}else farmRunning.pausedAt=Date.now();farmSaveTimer();farmRenderSession()};
+  $('#farmStop').onclick=()=>{farmRunning.stoppedAt=farmRunning.pausedAt||Date.now();farmSaveTimer();farmRenderSession()};
   if(farmRunning.stoppedAt){
-   const duration=Math.max(1000,farmRunning.stoppedAt-farmRunning.startedAt);
+   const duration=Math.max(1000,farmElapsed(farmRunning));
    area.innerHTML=`<h3>${esc(activity.name)}</h3><div class="farm-timer">${farmSeconds(duration)}</div><p class="farm-hint">Combien de récompenses as-tu obtenues ?</p><form id="farmFinish"><div class="farm-session-quantities">${activity.items.map(item=>`<label>${farmItemIcon(item)}<span>${esc(item.name)}</span><input type="number" min="0" step="1" value="0" required data-farm-count="${esc(item.id)}"></label>`).join('')}</div><div class="farm-actions" style="margin-top:14px"><button type="submit" class="active">Enregistrer la session</button><button type="button" id="farmDiscard">Annuler la session</button></div></form>`;
    $('#farmFinish').onsubmit=e=>{e.preventDefault();const counts={};for(const el of area.querySelectorAll('[data-farm-count]')){const v=Number(el.value);if(!Number.isSafeInteger(v)||v<0){alert('Saisis des quantités entières positives.');return}counts[el.dataset.farmCount]=v}activity.sessions.push({id:farmId(),date:new Date(farmRunning.stoppedAt).toISOString(),duration,counts});farmRunning=null;farmSaveTimer();farmSave();farmRender()};
    $('#farmDiscard').onclick=()=>{if(confirm('Abandonner cette session sans enregistrer de récompenses ?')){farmRunning=null;farmSaveTimer();farmRender()}};
@@ -1133,6 +1135,6 @@ function farmRenderCardsOnly(){
 }
 $('#farmSort').onchange=farmRender;
 $('#farmSessionContent').addEventListener('focusout',e=>{if(e.target.matches('[data-farm-price]'))farmRender()});
-function farmTick(){if(farmRunning&&!farmRunning.stoppedAt){const clock=$('#farmClock');if(clock)clock.textContent=farmSeconds(Date.now()-farmRunning.startedAt)}}
+function farmTick(){if(farmRunning&&!farmRunning.stoppedAt){const clock=$('#farmClock');if(clock)clock.textContent=farmSeconds(farmElapsed(farmRunning))}}
 if(typeof setInterval==='function'){farmTicker=setInterval(farmTick,1000);farmRender();}
 </script></body></html>
