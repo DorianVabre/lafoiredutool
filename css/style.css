@@ -290,3 +290,17 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 .mode-tabs .mode-group-links button{width:100%;min-height:39px;text-align:left;padding:9px 11px;font-size:13px;white-space:normal}
 @media(max-width:950px){.mode-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:540px){.mode-tabs{grid-template-columns:1fr}.mode-group-links{flex-direction:row;flex-wrap:wrap}.mode-tabs .mode-group-links button{width:auto;flex:1 1 140px}}
+
+/* Multiplicateur de drop */
+.drop-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:25px;align-items:start}
+.drop-layout .panel{min-width:0}.drop-hint{color:#a9baa9;font-size:13px;line-height:1.55}
+.drop-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}
+.drop-fields label,.drop-base{display:grid;gap:7px;font-size:13px;color:#d2e2d0}
+.drop-fields input:not([type=checkbox]),.drop-base input{width:100%;min-width:0}
+.drop-fields .drop-shield{display:flex;align-items:center;gap:9px;align-self:end;padding:11px 0;cursor:pointer}
+.drop-shield input{accent-color:#b8eb72;width:17px;height:17px}
+.drop-base{margin-top:12px}.drop-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+.drop-summary .stat strong{overflow-wrap:anywhere}.drop-breakdown{display:grid;gap:9px;margin:18px 0}
+.drop-breakdown>div{display:flex;justify-content:space-between;gap:12px;padding:9px 12px;border:1px solid #425945;border-radius:8px;color:#d2e2d0;font-size:13px}
+.drop-error{color:#ffc2a8;font-size:12px;min-height:1em}
+@media(max-width:780px){.drop-layout{grid-template-columns:1fr}}
