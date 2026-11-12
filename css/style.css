@@ -304,3 +304,7 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 .drop-breakdown>div{display:flex;justify-content:space-between;gap:12px;padding:9px 12px;border:1px solid #425945;border-radius:8px;color:#d2e2d0;font-size:13px}
 .drop-error{color:#ffc2a8;font-size:12px;min-height:1em}
 @media(max-width:780px){.drop-layout{grid-template-columns:1fr}}
+
+/* Entrée discrète du mini-jeu caché */
+.secret-corn-link{display:inline-block;font-size:.75em;vertical-align:middle;text-decoration:none;transition:transform .15s ease;cursor:pointer}
+.secret-corn-link:hover,.secret-corn-link:focus-visible{transform:rotate(-12deg) scale(1.2)}

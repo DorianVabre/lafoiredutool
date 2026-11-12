@@ -25,3 +25,8 @@ Nouvel outil dans « Autres » : prospection à rendement décroissant, challeng
 ## V93
 
 « Rentabilité du farm » devient « Comparaison de farm » dans la navigation et le titre de page. `dofus-craft.html` est une fixture de tests générée par `npm test` et n’est pas distribuée.
+
+## V94 — Mini-jeu caché
+Depuis l'onglet « Comparaison de farm », cliquer sur 🌽 à droite du titre pour ouvrir `mais.html`.
+Le mini-jeu est indépendant des calculateurs et ne modifie aucune donnée enregistrée.
+Le joueur et le rival se déplacent à 240 px/s. Le rival réagit après 250 ms et reste immobile entre deux maïs.

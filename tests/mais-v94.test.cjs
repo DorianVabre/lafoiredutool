@@ -1,0 +1,12 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const root=path.join(__dirname,'..');const {SPEED,distance,moveTowards,clampPoint}=require('../js/games/mais-engine.js');
+test('vitesse constante partagée',()=>assert.equal(SPEED,240));
+test('distance euclidienne',()=>assert.equal(distance({x:0,y:0},{x:3,y:4}),5));
+test('déplacement sans dépassement',()=>assert.deepEqual(moveTowards({x:0,y:0},{x:3,y:4},10),{x:3,y:4}));
+test('déplacement proportionnel',()=>assert.deepEqual(moveTowards({x:0,y:0},{x:30,y:40},5),{x:3,y:4}));
+test('cible identique ne produit pas de NaN',()=>assert.deepEqual(moveTowards({x:4,y:2},{x:4,y:2},5),{x:4,y:2}));
+test('limites du terrain',()=>assert.deepEqual(clampPoint({x:-3,y:999},500,300),{x:25,y:275}));
+test('lien secret ajouté uniquement au titre farm',()=>{const src=fs.readFileSync(path.join(root,'js/tools/multicraft.js'),'utf8');assert.match(src,/mode==='farm'/);assert.match(src,/corn\.href='mais\.html'/);assert.match(src,/corn\.textContent='🌽'/)});
+test('page et scripts du mini-jeu présents',()=>{const html=fs.readFileSync(path.join(root,'mais.html'),'utf8');for(const id of ['arena','player','enemy','corn','playerScore','enemyScore','restart'])assert.match(html,new RegExp('id="'+id+'"'));assert.match(html,/js\/games\/mais-engine\.js/);assert.match(html,/js\/games\/mais\.js/)});
+test('réaction de 250 ms, ennemi immobile sans maïs',()=>{const src=fs.readFileSync(path.join(root,'js/games/mais.js'),'utf8');assert.match(src,/enemyReadyAt=now\+250/);assert.match(src,/if\(corn&&now>=enemyReadyAt\)enemy=moveTowards/)});
+test('jeu rejouable et score des deux joueurs',()=>{const src=fs.readFileSync(path.join(root,'js/games/mais.js'),'utf8');assert.match(src,/scores=\{player:0,enemy:0\}/);assert.match(src,/addEventListener\('click',reset\)/)});
