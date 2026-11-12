@@ -1,0 +1,5 @@
+const test=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');const html=fs.readFileSync(require('node:path').join(__dirname,'../dofus-craft.html'),'utf8');const css=html.match(/<style>([\s\S]*?)<\/style>/)[1];
+test('mêmes colonnes pour les quatre modes',()=>assert.match(css,/#singleMode \.layout,#multiMode \.multi-layout,#breakMode \.layout,#ledgerMode \.ledger-layout\{[\s\S]*?grid-template-columns:350px minmax\(0,1fr\)/));
+test('aucun panneau ne peut étirer la grille',()=>assert.match(css,/#ledgerMode \.ledger-layout > \.panel\{[\s\S]*?min-width:0;[\s\S]*?max-width:100%/));
+test('statistiques de l’historique limitées à la largeur du panneau',()=>assert.match(css,/#ledgerMode \.ledger-summary\{min-width:0;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/));
+test('grille responsive identique sur tous les modes',()=>assert.match(css,/@media\(max-width:800px\)\{[\s\S]*?#singleMode \.layout,#multiMode \.multi-layout,#breakMode \.layout,#ledgerMode \.ledger-layout\{[\s\S]*?grid-template-columns:minmax\(0,1fr\)/));

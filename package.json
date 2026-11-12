@@ -1,0 +1,10 @@
+{
+  "name": "la-foire-du-tool",
+  "version": "90.0.0",
+  "private": true,
+  "scripts": {
+    "pretest": "node scripts/build-test-fixture.cjs",
+    "test": "node --test tests/*.test.cjs",
+    "check:syntax": "node scripts/check-syntax.cjs"
+  }
+}

@@ -1,0 +1,14 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../dofus-craft.html'),'utf8');
+const js=html.slice(html.indexOf('const SCROLL_TYPES='),html.indexOf('function scrollRead(){'));
+const context={};vm.createContext(context);vm.runInContext(js.replace(/const SCROLL_KEY=[\s\S]*?function scrollOptimize\(/,'function scrollOptimize('),context);
+const opt=(n,p)=>context.scrollOptimize(n,p);
+test('onglet et champs disponibles',()=>{assert.match(html,/id="tabScroll"/);assert.match(html,/id="scrollMode"/);assert.match(html,/id="scrollStat"/);assert.match(html,/id="scrollCurrent"/);for(let i=0;i<4;i++)assert.match(html,new RegExp('id="scrollPrice'+i+'"'));});
+test('puissant moins cher que deux petits',()=>{const x=opt(0,[100,100,100,150]);assert.equal(x.total,7500);assert.equal(x.counts[3],50)});
+test('petit uniquement jusqu’à 25, moyen jusqu’à 50, grand jusqu’à 80',()=>{const x=opt(0,[1,2,3,100]);assert.equal(x.total,25+25*2+30*3+10*100);assert.equal(x.counts[0],25);assert.equal(x.counts[1],25);assert.equal(x.counts[2],30);assert.equal(x.counts[3],10)});
+test('respecte le niveau actuel',()=>{const x=opt(98,[1,1,1,200]);assert.equal(x.total,200);assert.equal(x.counts[3],1)});
+test('100 déjà atteint',()=>{const x=opt(100,[null,null,null,null]);assert.equal(x.total,0);assert.equal(x.steps.length,0)});
+test('prix absents bloquent le chemin',()=>assert.equal(opt(0,[null,null,null,null]),null));
+test('pas de dépassement à 101',()=>{const x=opt(99,[null,null,null,1]);assert.equal(x,null)});
+test('les prix zéro sont valides',()=>assert.equal(opt(0,[0,0,0,0]).total,0));
+test('état mémorisé par caractéristique',()=>{assert.match(html,/scrollSaved\[stat\]/);assert.match(html,/localStorage\.setItem\(SCROLL_KEY/)});

@@ -1,0 +1,4 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');const html=fs.readFileSync(require('node:path').join(__dirname,'../dofus-craft.html'),'utf8');const card=html.slice(html.indexOf('return `<article class="farm-card"'),html.indexOf('}).join(',html.indexOf('return `<article class="farm-card"')));
+test('carte activité : uniquement sélectionner et supprimer',()=>{assert.match(card,/Sélectionner l’activité/);assert.doesNotMatch(card,/Détails \/ prix|data-farm-start|data-farm-manual/);});
+test('boutons session dans bloc distinct avec espacement',()=>{assert.match(html,/class="farm-session-actions"/);assert.match(html,/\.farm-session-actions\{[^}]*gap:12px/);});
+test('filtre de tri aligné au titre',()=>{assert.match(html,/\.farm-heading\{flex-wrap:nowrap;align-items:center\}/);assert.match(html,/\.farm-heading h2\{margin:0/);});

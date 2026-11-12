@@ -1,0 +1,12 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../dofus-craft.html'),'utf8');
+const src=html.slice(html.indexOf('function ledgerMatchesQuery('),html.indexOf('function ledgerRender(){'));
+const ctx={};vm.createContext(ctx);vm.runInContext(src,ctx);
+const lot={name:'Épée du Bouftou',comment:'Bonne affaire',date:'2026-11-11',qty:3,buy:200,sales:[{date:'2026-11-12',qty:2,price:400}]};
+test('recherche insensible aux accents et à la casse',()=>assert.equal(ctx.ledgerMatchesQuery(lot,'epee BOUFTOU'),true));
+test('recherche aussi dans les commentaires et dates',()=>{assert.equal(ctx.ledgerMatchesQuery(lot,'bonne affaire'),true);assert.equal(ctx.ledgerMatchesQuery(lot,'2026-11-12'),true)});
+test('recherche sans résultat',()=>assert.equal(ctx.ledgerMatchesQuery(lot,'dragodinde'),false));
+test('recherche vide montre tous les lots',()=>assert.equal(ctx.ledgerMatchesQuery(lot,'  '),true));
+test('deux blocs séparés et deux recherches',()=>{assert.match(html,/class="panel ledger-current-panel"/);assert.match(html,/class="panel ledger-archived-panel"/);assert.match(html,/id="ledgerActiveSearch"/);assert.match(html,/id="ledgerArchivedSearch"/)});
+test('archive fermée par défaut et recherche qui ouvre',()=>{assert.match(html,/<details id="ledgerArchive"/);assert.match(html,/ledgerArchive'\)\.open=true/);});
+test('filtre sans modifier le stockage ni les totaux',()=>{assert.match(html,/const t=ledgerTotals\(ledger\)/);assert.match(html,/active\.filter\(lot=>ledgerMatchesQuery/);assert.match(html,/archived\.filter\(lot=>ledgerMatchesQuery/);});

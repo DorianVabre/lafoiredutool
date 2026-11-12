@@ -1,0 +1,8 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../dofus-craft.html'),'utf8');
+const code=html.slice(html.indexOf('function multiChoiceFor('),html.indexOf('function multiDecisionHTML('));
+function setup(){const multi={strategy:'auto',overrides:{},items:[{id:1},{id:2}]};const radios=['auto','manual','craft','buy'].map(value=>({value,checked:false}));const ctx={multi,document:{querySelectorAll:()=>radios},multiCalculate:()=>{}};vm.createContext(ctx);vm.runInContext(code,ctx);return {ctx,multi}}
+test('cocher Manuel après Tout crafter conserve les dropdowns Craft',()=>{const {ctx}=setup();ctx.multiSetStrategy('craft');ctx.multiSetStrategy('manual');assert.equal(ctx.multiChoiceFor(1),'craft');assert.equal(ctx.multiChoiceFor(2),'craft')});
+test('cocher Manuel après Tout acheter conserve les dropdowns Achat',()=>{const {ctx}=setup();ctx.multiSetStrategy('buy');ctx.multiSetStrategy('manual');assert.equal(ctx.multiChoiceFor(1),'buy');assert.equal(ctx.multiChoiceFor(2),'buy')});
+test('cocher Manuel après Auto conserve les dropdowns Auto',()=>{const {ctx}=setup();ctx.multiSetStrategy('auto');ctx.multiSetStrategy('manual');assert.equal(ctx.multiChoiceFor(1),'auto');assert.equal(ctx.multiChoiceFor(2),'auto')});
+test('cocher Manuel en mode Manuel ne modifie pas les choix mixtes',()=>{const {ctx}=setup();ctx.multiSetStrategy('craft');ctx.multiSetItemChoice(1,'buy');ctx.multiSetStrategy('manual');assert.equal(ctx.multiChoiceFor(1),'buy');assert.equal(ctx.multiChoiceFor(2),'craft')});

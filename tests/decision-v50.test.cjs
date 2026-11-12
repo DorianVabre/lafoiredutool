@@ -1,0 +1,10 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../dofus-craft.html'),'utf8');
+const code=html.slice(html.indexOf('function multiDecisionDisplay('),html.indexOf('function multiDecisionHTML('));
+const ctx={};vm.createContext(ctx);vm.runInContext(code,ctx);
+test('HDV plus cher que craft donne Perte rouge',()=>{const r=ctx.multiDecisionDisplay({craft:100,buy:150,source:'craft'},'buy',2);assert.equal(r.label,'Perte');assert.equal(r.value,100);assert.equal(r.css,'loss')});
+test('Craft plus cher que HDV donne Perte rouge',()=>{const r=ctx.multiDecisionDisplay({craft:150,buy:100,source:'buy'},'craft',2);assert.equal(r.label,'Perte');assert.equal(r.value,100)});
+test('Choix le moins cher donne Gain vert',()=>{const r=ctx.multiDecisionDisplay({craft:100,buy:150,source:'craft'},'craft',2);assert.equal(r.label,'Gain');assert.equal(r.value,100);assert.equal(r.css,'craft-saving')});
+test('Prix égaux restent gris',()=>{const r=ctx.multiDecisionDisplay({craft:100,buy:100,source:'craft'},'buy',2);assert.equal(r.css,'even');assert.equal(r.value,0)});
+test('Prix incomplets restent neutres',()=>assert.equal(ctx.multiDecisionDisplay({craft:null,buy:100,source:'buy'},'buy').css,'pending'));
+test('Pastilles retenu supprimées',()=>assert.doesNotMatch(html,/Craft retenu|Achat HDV retenu|multi-global-choice/));

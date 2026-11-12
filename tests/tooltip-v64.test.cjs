@@ -1,0 +1,1 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');const s=fs.readFileSync(require('node:path').join(__dirname,'../dofus-craft.html'),'utf8');test('no duplicated K in either tooltip',()=>{assert.doesNotMatch(s,/Prix d’achat : \${buyPrice} K/);assert.equal((s.match(/Prix d’achat : \${buyPrice}/g)||[]).length,2)});

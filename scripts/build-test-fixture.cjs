@@ -1,0 +1,10 @@
+const fs=require('node:fs');const path=require('node:path');
+const root=path.join(__dirname,'..');
+const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+const matches=[...html.matchAll(/<script src="(js\/[^"]+)" defer><\/script>/g)];
+if(matches.length!==10)throw Error(`Expected 10 app scripts, found ${matches.length}`);
+const script=matches.map(m=>fs.readFileSync(path.join(root,m[1]),'utf8')).join('\n');
+const css=fs.readFileSync(path.join(root,'css/style.css'),'utf8');
+const fixture=html.replace('<link rel="stylesheet" href="css/style.css">',`<style>\n${css}\n</style>`).replace(/<script src="js\/[^"]+" defer><\/script>(?:\n)?/g,'').replace('</body>',`<script>\n${script}\n</script></body>`);
+fs.writeFileSync(path.join(root,'dofus-craft.html'),fixture);
+console.log('Fixture de test générée depuis les fichiers déployés.');

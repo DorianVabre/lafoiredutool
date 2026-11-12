@@ -1,0 +1,13 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../dofus-craft.html'),'utf8');
+const code=html.match(/function multiDecisionDifference\(d,quantity=1\)\{[\s\S]*?\n\}/)[0];
+const ctx={};vm.runInNewContext(code,ctx);const calc=(d,q)=>ctx.multiDecisionDifference(d,q);
+test('gain positif absolu craft avantageux',()=>assert.equal(calc({craft:800,buy:1000},3),600));
+test('gain positif absolu achat avantageux',()=>assert.equal(calc({craft:1250,buy:1000},4),1000));
+test('gain nul si égalité',()=>assert.equal(calc({craft:1000,buy:1000},5),0));
+test('gain indisponible si prix manquant',()=>{assert.equal(calc({craft:null,buy:1000},2),null);assert.equal(calc({craft:1000,buy:null},2),null)});
+test('prix HDV zéro',()=>assert.equal(calc({craft:50,buy:0},2),100));
+test('gain multiplié par la quantité de la ligne',()=>assert.match(html,/multiDecisionDisplay\(d,selected,e\.qty\)/));
+test('libellé gain sans pourcentage ni par unité',()=>{assert.match(html,/\${diff.label} - \${diffText}/);assert.doesNotMatch(html,/Écart \${diffText}/)});
+test('gain visible dans footer replié',()=>{assert.match(html,/multi-choice-pill multi-difference/);assert.match(html,/multi-entry\.is-collapsed \.multi-choice/)});
+test('mise à jour pendant saisie',()=>assert.match(html,/block\.replaceWith\(tmp\.firstElementChild\)/));

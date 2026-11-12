@@ -1,0 +1,11 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../dofus-craft.html'),'utf8');
+const js=html.match(/const ownedSingle=new Map\(\)[\s\S]*?(?=function nodeValue\()/)[0];
+const ctx={prices:{1:100,2:20},isPrice:x=>x!==undefined&&x!==null&&x!==''&&Number(x)>=0};vm.runInNewContext(js,ctx);
+const leaf={uid:11,id:1,qty:2,children:null};
+test('possédés 0 : coût intégral',()=>assert.equal(ctx.stockCost(leaf,5,new Map()).cost,500));
+test('stock partiel : quantité déduite',()=>assert.equal(ctx.stockCost(leaf,5,new Map([[11,3]])).cost,200));
+test('stock complet : coût nul sans prix',()=>assert.equal(ctx.stockCost({...leaf,id:999},5,new Map([[11,5]])).cost,0));
+test('stock excédentaire : jamais de coût négatif',()=>assert.equal(ctx.stockCost(leaf,5,new Map([[11,100]])).cost,0));
+test('composants enfants : coût calculé sur manquants',()=>{const parent={uid:10,id:999,children:[{uid:12,id:2,qty:3,children:null}]};assert.equal(ctx.stockCost(parent,2,new Map([[12,4]])).cost,40)});
+test('champs distincts dans les deux modes',()=>{assert.match(html,/data-owned-node/);assert.match(html,/data-inventory/);assert.match(html,/Prix unitaire \(K\)/);assert.match(html,/Possédés/)});
