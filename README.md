@@ -1,4 +1,4 @@
-# La Foire du Tool — V98
+# La Foire du Tool — V99
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -43,3 +43,8 @@ Mise en vente (2 %) et changements de prix (1 % du nouveau prix) sur des lignes 
 ## V98 — Actions HDV
 
 Quatre boutons : Mise en vente, Changement de prix, Retrait et Vente. Seule la mise en vente (2 %) est possible au départ et après retrait. Vente est ensuite sélectionnée par défaut. Le changement coûte 1 %. Le retrait conserve les taxes payées ; les ventes partielles laissent le stock restant en HDV. Texte et champ Prix actualisés.
+
+
+## V99 — Vente au dernier prix HDV
+
+La vente reprend automatiquement le prix de la dernière mise en vente ou du dernier changement de prix, sans champ de prix à saisir. Un message accompagne le retrait du stock HDV.
