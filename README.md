@@ -1,4 +1,4 @@
-# La Foire du Tool — V99
+# La Foire du Tool — V100
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -48,3 +48,8 @@ Quatre boutons : Mise en vente, Changement de prix, Retrait et Vente. Seule la m
 ## V99 — Vente au dernier prix HDV
 
 La vente reprend automatiquement le prix de la dernière mise en vente ou du dernier changement de prix, sans champ de prix à saisir. Un message accompagne le retrait du stock HDV.
+
+
+## V100 — Alignement du changement de prix
+
+Le texte explicatif des taxes occupe sa propre ligne pour aligner le champ Prix et les boutons Enregistrer le changement de prix et Supprimer le lot, avec retour à la ligne sur les petits écrans.

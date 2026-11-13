@@ -315,3 +315,6 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 #ledgerLotDialog .ledger-action-choices{display:flex;flex-wrap:wrap;gap:8px;width:100%}
 #ledgerLotDialog .ledger-action-choices button:disabled{opacity:.35;cursor:not-allowed}
 #ledgerLotDialog .ledger-sale label[hidden]{display:none}
+
+#ledgerLotDialog .ledger-tax-help{flex-basis:100%;margin:0;color:#b8c9b6;font-size:12px}
+#ledgerLotDialog .ledger-tax-help[hidden]{display:none}
