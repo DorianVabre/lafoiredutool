@@ -1,4 +1,4 @@
-# La Foire du Tool — V96
+# La Foire du Tool — V98
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -34,3 +34,12 @@ Le joueur et le rival se déplacent à 240 px/s. Le rival réagit après 250 ms 
 ## V96 — Consultation des lots terminés
 
 Suppression des informations de stock restant et de kamas en attente pour les lots terminés. Affichage de la marge nette en kamas et en pourcentage dans leur infobulle.
+
+## V97 — Taxes HDV
+
+Mise en vente (2 %) et changements de prix (1 % du nouveau prix) sur des lignes distinctes, déduites de la marge. Ces actions concernent tout le stock restant. Une vente directe crée la mise en vente manquante. Les anciennes ventes conservent leur calcul historique.
+
+
+## V98 — Actions HDV
+
+Quatre boutons : Mise en vente, Changement de prix, Retrait et Vente. Seule la mise en vente (2 %) est possible au départ et après retrait. Vente est ensuite sélectionnée par défaut. Le changement coûte 1 %. Le retrait conserve les taxes payées ; les ventes partielles laissent le stock restant en HDV. Texte et champ Prix actualisés.

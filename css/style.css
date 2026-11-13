@@ -311,3 +311,7 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 /* Entrée discrète du mini-jeu caché */
 .secret-corn-link{display:inline-block;font-size:.75em;vertical-align:middle;text-decoration:none;transition:transform .15s ease;cursor:pointer}
 .secret-corn-link:hover,.secret-corn-link:focus-visible{transform:rotate(-12deg) scale(1.2)}
+
+#ledgerLotDialog .ledger-action-choices{display:flex;flex-wrap:wrap;gap:8px;width:100%}
+#ledgerLotDialog .ledger-action-choices button:disabled{opacity:.35;cursor:not-allowed}
+#ledgerLotDialog .ledger-sale label[hidden]{display:none}
