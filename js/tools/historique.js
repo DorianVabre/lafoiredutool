@@ -43,10 +43,10 @@ function ledgerTileHTML(lot){
  const title=esc(lot.name),comment=esc(lot.comment||''),buyPrice=fmt(Number(lot.qty)*Number(lot.buy));
  const archived=left===0;
  const profit=archived?ledgerTotals([lot]).profit:0;
- const outcomeClass=archived?(profit>0?' ledger-tile-profit':profit<0?' ledger-tile-loss':''):'';
+ const outcomeClass=archived?(profit>0?' ledger-tile-profit':profit<0?' ledger-tile-loss':''):(ledgerIsListed(lot)?' ledger-tile-listed':'');
  const margin=archived?`${ledgerSigned(profit)} (${ledgerSignedPercent(ledgerProfitPercent(lot))})`:'';
  const icon=lot.image?`<img src="${esc(lot.image)}" alt="" loading="lazy">`:'<span class="ledger-tile-fallback" aria-hidden="true">📦</span>';
- return `<button type="button" class="ledger-tile${outcomeClass}" data-lopen="${esc(lot.id)}" aria-label="Voir le lot : ${title}" title="${title}${comment?` — ${comment}`:''} — Prix d’achat : ${buyPrice}${archived?` — Marge nette : ${margin}`:''}">${icon}<span class="ledger-tile-name">${title}</span><span class="ledger-tile-qty">${fmtNum(left||lot.qty)}</span><span class="ledger-tile-tip"><strong>${title}</strong>${comment?`<br>${comment}`:''}<br><span class="ledger-tile-buy">Prix d’achat : ${buyPrice}</span>${archived?`<br><span class="ledger-tile-margin ${profit>0?'green':profit<0?'red':'neutral'}">Marge nette : ${margin}</span>`:''}</span></button>`;
+ return `<button type="button" class="ledger-tile${outcomeClass}" data-lopen="${esc(lot.id)}" aria-label="Voir le lot : ${title}${ledgerIsListed(lot)?' — En vente en HDV':''}" title="${title}${comment?` — ${comment}`:''} — Prix d’achat : ${buyPrice}${archived?` — Marge nette : ${margin}`:''}">${icon}<span class="ledger-tile-name">${title}</span><span class="ledger-tile-qty">${fmtNum(left||lot.qty)}</span><span class="ledger-tile-tip"><strong>${title}</strong>${comment?`<br>${comment}`:''}<br><span class="ledger-tile-buy">Prix d’achat : ${buyPrice}</span>${archived?`<br><span class="ledger-tile-margin ${profit>0?'green':profit<0?'red':'neutral'}">Marge nette : ${margin}</span>`:''}</span></button>`;
 }
 function ledgerOpenLot(id){
  const lot=ledger.find(l=>l.id===id);if(!lot)return;

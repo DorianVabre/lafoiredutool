@@ -1,4 +1,4 @@
-# La Foire du Tool — V100
+# La Foire du Tool — V101
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -53,3 +53,8 @@ La vente reprend automatiquement le prix de la dernière mise en vente ou du der
 ## V100 — Alignement du changement de prix
 
 Le texte explicatif des taxes occupe sa propre ligne pour aligner le champ Prix et les boutons Enregistrer le changement de prix et Supprimer le lot, avec retour à la ligne sur les petits écrans.
+
+
+## V101 — Position de la modale et statut HDV
+
+La modale des lots garde une position haute fixe lors du changement d’action et grandit vers le bas, avec défilement pour les longs historiques. Les lots en cours mis en vente ont un fond hachuré orangé ; après retrait, ils retrouvent leur aspect initial. Les couleurs des lots terminés restent liées à leur marge.
