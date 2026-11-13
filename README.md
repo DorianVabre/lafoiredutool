@@ -1,4 +1,4 @@
-# La Foire du Tool — V93
+# La Foire du Tool — V96
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -30,3 +30,7 @@ Nouvel outil dans « Autres » : prospection à rendement décroissant, challeng
 Depuis l'onglet « Comparaison de farm », cliquer sur 🌽 à droite du titre pour ouvrir `mais.html`.
 Le mini-jeu est indépendant des calculateurs et ne modifie aucune donnée enregistrée.
 Le joueur et le rival se déplacent à 240 px/s. Le rival réagit après 250 ms et reste immobile entre deux maïs.
+
+## V96 — Consultation des lots terminés
+
+Suppression des informations de stock restant et de kamas en attente pour les lots terminés. Affichage de la marge nette en kamas et en pourcentage dans leur infobulle.

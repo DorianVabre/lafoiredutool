@@ -225,6 +225,9 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 #ledgerMode .ledger-tile .ledger-tile-tip{display:none;position:absolute;z-index:6;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);width:max-content;max-width:min(260px,75vw);white-space:normal;overflow-wrap:anywhere;background:#0d1911;border:1px solid #92bb80;border-radius:9px;padding:8px 10px;color:#f4f8f1;font-size:12px;box-shadow:0 7px 22px #0008;pointer-events:none}
 #ledgerMode .ledger-tile:hover .ledger-tile-tip,#ledgerMode .ledger-tile:focus-visible .ledger-tile-tip{display:block}
 #ledgerMode .ledger-archived-panel .ledger-tile{border-color:#5d6a5c}
+/* Rayures discrètes sur les lots terminés : bénéfice net après taxe HDV. */
+#ledgerMode .ledger-archived-panel .ledger-tile-profit{background:repeating-linear-gradient(135deg,rgba(49,150,83,.23) 0px,rgba(49,150,83,.23) 7px,rgba(20,41,27,.8) 7px,rgba(20,41,27,.8) 14px);border-color:#47895a}
+#ledgerMode .ledger-archived-panel .ledger-tile-loss{background:repeating-linear-gradient(135deg,rgba(176,60,66,.25) 0px,rgba(176,60,66,.25) 7px,rgba(46,25,27,.82) 7px,rgba(46,25,27,.82) 14px);border-color:#a15458}
 #ledgerLotDialog{width:min(580px,calc(100vw - 30px));max-height:min(88vh,900px);overflow:auto;border:1px solid #729573;border-radius:16px;padding:22px;background:#18271d;color:#f1f7ee;box-shadow:0 24px 80px #000b}
 #ledgerLotDialog::backdrop{background:#000b;backdrop-filter:blur(3px)}
 #ledgerLotDialog .ledger-modal-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
