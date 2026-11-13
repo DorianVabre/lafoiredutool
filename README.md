@@ -1,4 +1,4 @@
-# La Foire du Tool — V101
+# La Foire du Tool — V102
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -58,3 +58,8 @@ Le texte explicatif des taxes occupe sa propre ligne pour aligner le champ Prix 
 ## V101 — Position de la modale et statut HDV
 
 La modale des lots garde une position haute fixe lors du changement d’action et grandit vers le bas, avec défilement pour les longs historiques. Les lots en cours mis en vente ont un fond hachuré orangé ; après retrait, ils retrouvent leur aspect initial. Les couleurs des lots terminés restent liées à leur marge.
+
+
+## V102 — Nom de l’adversaire du mini-jeu
+
+Dans le mini-jeu du maïs, le rival est renommé Guildeux organisé dans le score, le message de récolte et le libellé accessible du personnage.
