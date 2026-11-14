@@ -266,4 +266,72 @@ function multiCalculate(preserveShoppingFocus=false){
 }
 document.querySelectorAll('[name="multiStrategy"]').forEach(el=>el.onchange=()=>{if(el.checked)multiSetStrategy(el.value)});
 
+// Les sessions conservent la préparation ; les prix restent partagés et actualisés.
+const MultiSessions=(()=>{
+ const KEY='la-foire-du-tool-multicraft-sessions-v1',strategies=['auto','manual','craft','buy'];
+ const clone=value=>JSON.parse(JSON.stringify(value));
+ function capture(state){
+  let count=0;
+  function node(n,depth=0){
+   if(depth>25||++count>5000||!Number.isSafeInteger(n.id)||!Number.isFinite(n.qty)||n.qty<0)throw Error('Recette invalide.');
+   if(n.loading||n.error)throw Error('Attends que tous les composants soient chargés sans erreur.');
+   return {id:n.id,qty:n.qty,name:String(n.name||''),image:String(n.image||''),detail:{recipe:clone(n.detail?.recipe||[])},expanded:!!n.expanded,children:Array.isArray(n.children)?n.children.map(c=>node(c,depth+1)):null};
+  }
+  if(!Array.isArray(state.items)||!strategies.includes(state.strategy))throw Error('Session invalide.');
+  const items=state.items.map(e=>{
+   if(!Number.isSafeInteger(e.id)||!Number.isSafeInteger(e.qty)||e.qty<1||!Array.isArray(e.nodes))throw Error('Recette invalide.');
+   if(e.loading||e.error)throw Error('Attends que toutes les recettes soient chargées sans erreur.');
+   return {id:e.id,name:String(e.name||''),image:String(e.image||''),qty:e.qty,collapsed:!!e.collapsed,noRecipe:!!e.noRecipe,nodes:e.nodes.map(n=>node(n))};
+  });
+  const inventory=Object.fromEntries(Object.entries(state.inventory||{}).filter(([id,n])=>Number.isSafeInteger(Number(id))&&Number.isSafeInteger(n)&&n>=0));
+  const overrides=Object.fromEntries(Object.entries(state.overrides||{}).filter(([id,choice])=>items.some(e=>String(e.id)===id)&&['auto','craft','buy'].includes(choice)));
+  return {items,strategy:state.strategy,inventory,overrides};
+ }
+ function restore(data,state){
+  const saved=capture(data); // Valider avant de toucher à la session en cours.
+  function unpack(n){return {...n,uid:++state.seq,loading:false,error:'',children:n.children?.map(unpack)||null}}
+  state.items=saved.items.map(e=>({...e,loading:false,error:'',detail:null,nodes:e.nodes.map(unpack)}));
+  state.strategy=saved.strategy;state.inventory=saved.inventory;state.overrides=saved.overrides;
+ }
+ function read(){
+  let saved;try{saved=JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return []}
+  if(!Array.isArray(saved))return [];
+  return saved.flatMap(s=>{try{if(typeof s.id!=='string'||typeof s.title!=='string'||!s.title.trim()||!Number.isFinite(s.at))return [];return [{id:s.id,title:s.title.slice(0,80),at:s.at,data:capture(s.data)}]}catch{return []}});
+ }
+ function write(sessions){localStorage.setItem(KEY,JSON.stringify(sessions))}
+ return {capture,restore,read,write};
+})();
+(()=>{
+ if(typeof document.getElementById!=='function'||document.getElementById('multiSessionForm')?.tagName!=='FORM')return;
+ const el=id=>document.getElementById(id);let sessions=MultiSessions.read(),undo=null;
+ const message=text=>el('multiSessionStatus').textContent=text;
+ function setUndo(action){undo=action;el('multiSessionUndo').hidden=!action}
+ function render(){
+  el('multiSessionList').innerHTML=sessions.length?sessions.map(s=>'<article class="multi-session-card"><strong>'+esc(s.title)+'</strong><small>'+s.data.items.length+' recette'+(s.data.items.length>1?'s':'')+' · '+new Date(s.at).toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'short'})+'</small><div><button type="button" data-session-load="'+esc(s.id)+'">Charger</button><button type="button" class="session-delete" data-session-delete="'+esc(s.id)+'" aria-label="Supprimer la session '+esc(s.title)+'">Supprimer</button></div></article>').join(''):'<p class="multi-session-help">Aucune session enregistrée.</p>';
+  el('multiSessionList').querySelectorAll('[data-session-load]').forEach(b=>b.onclick=()=>{
+   try{
+    const session=sessions.find(s=>s.id===b.dataset.sessionLoad);if(!session)return;
+    const previous=MultiSessions.capture(multi),title=el('multiSessionName').value;
+    MultiSessions.restore(session.data,multi);el('multiSessionName').value=session.title;
+    refresh();setUndo(()=>{MultiSessions.restore(previous,multi);el('multiSessionName').value=title;refresh();message('Chargement annulé.');});message('Session « '+session.title+' » chargée avec les derniers prix renseignés.');
+   }catch(error){message(error.message)}
+  });
+  el('multiSessionList').querySelectorAll('[data-session-delete]').forEach(b=>b.onclick=()=>{
+   try{const previous=sessions,next=sessions.filter(s=>s.id!==b.dataset.sessionDelete);MultiSessions.write(next);sessions=next;render();setUndo(()=>{MultiSessions.write(previous);sessions=previous;render();message('Suppression annulée.');});message('Session supprimée.')}catch{message('Impossible de supprimer la session : stockage indisponible.')}
+  });
+ }
+ function refresh(){document.querySelectorAll('[name="multiStrategy"]').forEach(input=>input.checked=input.value===multi.strategy);multiRender()}
+ el('multiSessionForm').addEventListener('submit',event=>{
+  event.preventDefault();const title=el('multiSessionName').value.trim();
+  if(!title){message('Donne un titre à ta session.');return}
+  if(!multi.items.length){message('Ajoute au moins un objet avant d’enregistrer la session.');return}
+  try{
+   const data=MultiSessions.capture(multi),record={id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2),title:title.slice(0,80),at:Date.now(),data},next=[record,...sessions];
+   MultiSessions.write(next);sessions=next;setUndo(null);render();message('Session « '+record.title+' » enregistrée.');
+  }catch(error){message(error.message.includes('chargé')?error.message:'Impossible d’enregistrer la session. Vérifie les recettes et l’espace de stockage disponible.')}
+ });
+ el('multiSessionUndo').addEventListener('click',()=>{try{if(undo)undo();setUndo(null)}catch{message('Impossible d’annuler : stockage indisponible.')}});
+ render();
+})();
+
 

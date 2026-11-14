@@ -1,4 +1,4 @@
-# La Foire du Tool — V116
+# La Foire du Tool — V117
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -129,3 +129,7 @@ Une petite horloge accompagne les prix renseignés dans le craft unitaire, le mu
 ## V116 — La forge secrète du Gelano
 
 Dans la recherche de runes de l’XP forgemagie, saisir « Gelano » puis Entrée ouvre `gelano.html` (casse indifférente). Le Gelano commence avec 1 PA. Sur un objet vide, le PA passe à 66 % et le PM à 1,5 % ; avec le PA, le PM passe à 1,5 % ; avec le PM, le PA passe à 26 %. Un échec retire le bonus présent. L’objectif est 1 PA + 1 PM, avec historique des 20 dernières tentatives, nombre total de runes consommées, écran de victoire et bouton pour recommencer. Le meilleur score est sauvegardé dans une clé indépendante des calculateurs. Les trois illustrations DofusDude sont incluses localement ; le mini-jeu fonctionne sans appel à l’API.
+
+## V117 — Sessions multicraft sauvegardées
+
+Un panneau sous « Ajouter des objets » permet d’enregistrer la sélection en cours avec un titre et de charger ou supprimer les sessions précédentes. Les recettes et composants chargés, quantités, choix achat/craft, stratégie et possessions sont sauvegardés localement. Les prix partagés et leur ancienneté restent ceux des derniers relevés. Un chargement ou une suppression peut être annulé.
