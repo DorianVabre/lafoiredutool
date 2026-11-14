@@ -47,7 +47,7 @@ const PriceDates=(()=>{
  function scan(root=document){if(root.matches?.(selector))decorate(root);root.querySelectorAll?.(selector).forEach(decorate)}
  function hide(){if(active)active.removeAttribute('aria-describedby');active=null;tooltip.hidden=true}
  function show(button){
-  const input=button.parentElement.querySelector(selector),info=details(input);if(!info){hide();return}
+  const input=button.parentElement.querySelector(selector),info=button.dataset.craftHelp?{text:button.dataset.craftHelp,at:null,old:false}:details(input);if(!info){hide();return}
   if(active&&active!==button)active.removeAttribute('aria-describedby');active=button;
   button.setAttribute('aria-label',info.text);button.classList.toggle('price-age-old',info.old);button.setAttribute('aria-describedby',tooltip.id);
   tooltip.textContent=info.text+(info.at?'\nDernière saisie : '+new Date(info.at).toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'short'}):'');tooltip.hidden=false;
@@ -58,13 +58,18 @@ const PriceDates=(()=>{
  function onPrice(event){const input=event.target;if(!input.matches?.(selector)||input.validity?.badInput||input.value!==''&&!isPrice(input.value))return;PriceDates.record(key(input),input.value);document.querySelectorAll(selector).forEach(refresh)}
  document.addEventListener('input',onPrice,true);document.addEventListener('change',onPrice,true);
  document.addEventListener('change',event=>{if(event.target.id==='scrollStat')scan()});
- document.addEventListener('click',event=>{const button=event.target.closest?.('.price-age');if(button){event.preventDefault();show(button)}else{hide();scan()}});
- document.addEventListener('mouseover',event=>{const button=event.target.closest?.('.price-age');if(button)show(button)});
- document.addEventListener('mouseout',event=>{if(event.target.closest?.('.price-age')&&!event.relatedTarget?.closest?.('.price-age'))hide()});
- document.addEventListener('focusin',event=>{const button=event.target.closest?.('.price-age');if(button)show(button)});
- document.addEventListener('focusout',event=>{if(event.target.closest?.('.price-age'))hide()});
+ document.addEventListener('click',event=>{const button=event.target.closest?.('.price-age,.craft-help');if(button){event.preventDefault();show(button)}else{hide();scan()}});
+ document.addEventListener('mouseover',event=>{const button=event.target.closest?.('.price-age,.craft-help');if(button)show(button)});
+ document.addEventListener('mouseout',event=>{if(event.target.closest?.('.price-age,.craft-help')&&!event.relatedTarget?.closest?.('.price-age,.craft-help'))hide()});
+ document.addEventListener('focusin',event=>{const button=event.target.closest?.('.price-age,.craft-help');if(button)show(button)});
+ document.addEventListener('focusout',event=>{if(event.target.closest?.('.price-age,.craft-help'))hide()});
  document.addEventListener('keydown',event=>{if(event.key==='Escape')hide()});
  window.addEventListener('scroll',hide,true);window.addEventListener('resize',hide);window.addEventListener('pageshow',()=>scan());
  new MutationObserver(records=>{for(const r of records)for(const node of r.addedNodes)if(node.nodeType===1)scan(node);if(active&&!active.isConnected)hide()}).observe(document.body,{childList:true,subtree:true});
  scan();
 })();
+
+function craftHelpHTML(){
+ const text='Ouvrir "Fabriquer" pour les ingrédients composites. Le moins cher entre crafter et acheter est choisi automatiquement.';
+ return `<button type="button" class="craft-help" data-craft-help="${esc(text)}" aria-label="${esc(text)}">?</button>`;
+}

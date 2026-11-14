@@ -1,4 +1,4 @@
-# La Foire du Tool — V117
+# La Foire du Tool — V118
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -133,3 +133,7 @@ Dans la recherche de runes de l’XP forgemagie, saisir « Gelano » puis Entré
 ## V117 — Sessions multicraft sauvegardées
 
 Un panneau sous « Ajouter des objets » permet d’enregistrer la sélection en cours avec un titre et de charger ou supprimer les sessions précédentes. Les recettes et composants chargés, quantités, choix achat/craft, stratégie et possessions sont sauvegardés localement. Les prix partagés et leur ancienneté restent ceux des derniers relevés. Un chargement ou une suppression peut être annulé.
+
+## V118 — Aide Fabriquer en infobulle
+
+La phrase d’aide des ingrédients composites quitte le haut du craft unitaire pour une petite bulle « ? », alignée à côté de chaque bouton Fabriquer dans les crafts unitaire et multicraft. L’explication apparaît au survol, au focus clavier ou au clic.
