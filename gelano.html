@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width,initial-scale=1">
+ <title>La forge du Gelano — La Foire du Tool</title>
+ <link rel="stylesheet" href="css/gelano.css">
+ <script src="js/games/gelano-engine.js" defer></script>
+ <script src="js/games/gelano.js" defer></script>
+</head>
+<body>
+ <main class="forge-shell">
+  <nav class="forge-nav" aria-label="Navigation"><a href="index.html#fm">← Retour à l’XP forgemagie</a><span>◆ La Foire du Tool</span></nav>
+  <header class="forge-heading">
+   <div><p class="eyebrow">Atelier secret</p><h1>La forge du Gelano</h1><p>Un PA, un PM. Combien de runes avant le miracle ?</p></div>
+   <div class="scoreboard"><div><span>Runes utilisées</span><strong id="runeCount">0</strong></div><div><span>Meilleur score</span><strong id="bestScore">—</strong></div></div>
+  </header>
+  <div class="forge-layout">
+   <section class="forge-panel history-panel" aria-labelledby="historyTitle">
+    <div class="section-heading"><h2 id="historyTitle">Historique</h2><span id="historyCount">0 tentative</span></div>
+    <p id="historyEmpty" class="history-empty">La première rune n’attend que toi.</p>
+    <ol id="forgeHistory" class="forge-history" aria-label="Les 20 dernières tentatives"></ol>
+   </section>
+   <section id="workbench" class="forge-panel workbench" aria-labelledby="gelanoTitle">
+    <div class="item-heading">
+     <div class="item-portrait"><img src="data/gelano/gelano.png" width="80" height="80" alt=""></div>
+     <div><h2 id="gelanoTitle">Gelano</h2><p>Anneau · niveau 60</p><span id="itemProgress" class="item-progress">1 / 2 bonus</span></div>
+     <button id="resetForge" class="quiet-button" type="button">Nouvel essai</button>
+    </div>
+    <div class="effects-header" aria-hidden="true"><span>Effet</span><span>Jet</span><span>Rune à passer</span></div>
+    <div class="effect-row effect-pa" id="paRow">
+     <div class="effect-name"><span class="stat-symbol" aria-hidden="true">✦</span><div><strong>Point d’action</strong><small>PA · maximum 1</small></div></div>
+     <strong class="effect-value" id="paValue">1</strong>
+     <button id="applyPa" class="rune-button" type="button" disabled><img src="data/gelano/ga-pa.png" width="36" height="36" alt=""><span><strong>Rune Ga Pa</strong><small id="paChance">Déjà présent</small></span></button>
+    </div>
+    <div class="effect-row effect-pm" id="pmRow">
+     <div class="effect-name"><span class="stat-symbol" aria-hidden="true">✧</span><div><strong>Point de mouvement</strong><small>PM · maximum 1</small></div></div>
+     <strong class="effect-value" id="pmValue">0</strong>
+     <button id="applyPm" class="rune-button" type="button"><img src="data/gelano/ga-pme.png" width="36" height="36" alt=""><span><strong>Rune Ga Pme</strong><small id="pmChance">1,5 % de réussite</small></span></button>
+    </div>
+    <p id="forgeStatus" class="forge-status" role="status" aria-live="polite" aria-atomic="true">Le PA est en place. Tente le PM !</p>
+    <section id="forgeVictory" class="forge-victory" aria-labelledby="victoryTitle" hidden>
+     <span class="victory-star" aria-hidden="true">✦</span><h2 id="victoryTitle">Bravo, Gelano PA/PM !</h2>
+     <p id="victoryScore"></p><button id="restartForge" type="button">Recommencer</button>
+    </section>
+    <div class="rune-totals"><span>Runes PA <strong id="paUsed">0</strong></span><span>Runes PM <strong id="pmUsed">0</strong></span><span>Objectif <strong>1 PA + 1 PM</strong></span></div>
+    <p class="forge-help">Clique sur une rune pour la tenter. Un échec fait sauter le bonus présent. Les runes sont illimitées : seul leur nombre compte.</p>
+   </section>
+  </div>
+  <footer class="forge-footer">Mini-jeu communautaire · Visuels DOFUS © Ankama · <a href="https://docs.dofusdu.de/">DofusDude</a></footer>
+ </main>
+</body>
+</html>

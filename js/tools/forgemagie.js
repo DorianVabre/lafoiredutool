@@ -101,4 +101,10 @@ async function fmChooseItem(item){fmItemCandidates=[];$('#fmItemResults').innerH
 async function fmSearchEquipment(){const query=$('#fmItemSearch').value.trim(),seq=++fmItemSeq,el=$('#fmItemResults');if(query.length<2){el.innerHTML='';return}el.textContent='Recherche…';try{const data=await get('/items/equipment/search?'+new URLSearchParams({query,limit:'25'}));if(seq!==fmItemSeq)return;fmItemCandidates=Array.isArray(data)?data:data.items||data.results||[];el.innerHTML=fmItemCandidates.map((x,i)=>`<button type="button" data-fm-item="${i}">${img(x.item_fields||x)?`<img src="${esc(img(x.item_fields||x))}" alt="">`:''}${esc(x.name)}</button>`).join('')||'<p class="fm-empty">Aucun équipement trouvé.</p>';el.querySelectorAll('[data-fm-item]').forEach(btn=>btn.onclick=()=>fmChooseItem(fmItemCandidates[Number(btn.dataset.fmItem)]))}catch(e){if(seq===fmItemSeq)el.textContent='Recherche impossible : '+e.message}}
 $('#fmBasicOnly').addEventListener('change',fmRenderItemRanking);
 $('#fmItemSearch').addEventListener('input',()=>{clearTimeout(fmItemTimer);fmItemTimer=setTimeout(fmSearchEquipment,300)});
+function fmOpenGelano(event){
+ if(event.key!=='Enter'||event.isComposing||event.repeat||fmNorm($('#fmSearch').value.trim())!=='gelano')return;
+ event.preventDefault();window.location.href='gelano.html';
+}
+$('#fmSearch').addEventListener('keydown',fmOpenGelano);
 $('#fmSearch').addEventListener('input',fmRenderPrices);fmRenderPrices();fmRenderRanking();fmLoadIcons();
+if(typeof window!=='undefined'&&window.location?.hash==='#fm')switchMode('fm');
