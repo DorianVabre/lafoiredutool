@@ -1,4 +1,4 @@
-# La Foire du Tool — V102
+# La Foire du Tool — V115
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -63,3 +63,65 @@ La modale des lots garde une position haute fixe lors du changement d’action e
 ## V102 — Nom de l’adversaire du mini-jeu
 
 Dans le mini-jeu du maïs, le rival est renommé Guildeux organisé dans le score, le message de récolte et le libellé accessible du personnage.
+
+
+## V103 — Trajets et navigation
+
+Nouvel onglet « Trajets et zaaps » dans Autres : coordonnées collées, choix de monde et de portion de carte, meilleur zaap selon les passages connus, commandes `/zaap` et `/travel` à copier, parcours et zaaps alternatifs. Les zaaps sélectionnés sont mémorisés localement. Données Dofus 3.7.13.17 chargées au premier calcul ; accès à conditions inconnues et deux zaaps incomplets exclus.
+
+L’historique d’achats passe dans Rentabilité, dans l’ordre : Comparaison de farm, Historique d’achats, Brisage.
+
+## V104 — Chargement local des trajets
+
+Correction du chargement des zaaps et des trajets lorsque la page est ouverte directement depuis `index.html` : les données sont chargées à la demande par un script classique, sans `fetch` JSON. Le chargement HTTP reste pris en charge. Un message précise le fichier manquant si le dossier `data` n’accompagne pas la page.
+
+## V105 — Commande de trajet combinée
+
+La commande `/zaap … ; /travel …` est copiée automatiquement après un calcul ou un changement de destination ou de zaap. Un champ unique et un bouton permettent de la recopier si nécessaire ; le navigateur peut refuser la copie automatique. Suppression du détail du parcours et de la phrase d’instruction. Le bas de page commun mentionne seulement les données locales et l’accessibilité de certaines API, avec les sources conservées dans les crédits.
+
+## V106 — Copie du zaap conseillé
+
+Une icône en haut à droite de la bulle « Zaap conseillé » copie uniquement `/zaap x,y`. La commande combinée reste disponible et copiée automatiquement au calcul. Le bouton principal est renommé « Copier la commande ».
+
+
+## V107 — Pied de page simplifié
+
+Suppression du lien « Sources et méthode » et du document associé.
+
+
+## V108 — Copie des noms d’objets et de runes
+
+Icônes de copie dans les recherches, les recettes principales et leurs composants, le multicraft et sa liste de courses, le brisage et la forgemagie (objets et runes), ainsi que dans le titre des lots de l’historique. Le clic de copie reste indépendant de la sélection de l’objet. Confirmation visuelle et repli de copie pour les pages locales.
+
+
+## V109 — Noms soulignés et copiables
+
+Retour à la structure de mise en page précédant les icônes de copie : suppression des boutons, des conteneurs de recherche supplémentaires et des espacements associés. Les noms eux-mêmes sont désormais cliquables et soulignés en pointillés, sans ajout de largeur ou de hauteur. Copie aussi accessible avec Entrée ou Espace ; les autres zones des résultats conservent la sélection de l’objet.
+
+
+## V110 — Craft unitaire compact
+
+Espacement vertical réduit entre les composants et champs plus compacts dans le craft unitaire. Le bouton « Fabriquer » se place directement sous le nom et la quantité du composant, au lieu d’occuper une ligne séparée sous tous les champs.
+
+
+## V111 — Titre du craft et confirmation de copie
+
+Le titre du craft unitaire affiche l’icône de l’objet à la place du préfixe « 2. ». Les résultats de recherche de tous les outils et des recettes manuelles retrouvent des noms simples, sans copie au clic. Les noms copiables des objets sélectionnés, composants et runes affichent brièvement une infobulle « Copié ! » après une copie réussie, sans déplacer la mise en page.
+
+
+## V112 — Multicraft compact et aide contextuelle
+
+Composants et en-têtes du multicraft resserrés. Le bouton « Fabriquer » se place sous le nom de son composant, avant sa ligne séparatrice ; la grille conserve uniquement les quatre colonnes réellement utilisées. Dans le craft unitaire, l’explication des composants fabricables n’apparaît que si la recette en contient au moins un.
+
+## V113 — Recalcul du parchotage par défaut
+
+La Vitalité est explicitement retenue si aucune caractéristique n’est encore sélectionnée au chargement. Le résultat est recalculé à l’ouverture de l’onglet, au retour sur la page et lors de la validation des champs, en plus de la saisie, pour prendre en compte les valeurs restaurées par le navigateur sans événement `input`. Les prix et niveaux restent sauvegardés séparément par caractéristique.
+
+
+## V114 — Trajet le plus court sans choix de portion
+
+Le calcul de trajet compare automatiquement tous les accès correspondant aux coordonnées et retient le plus court depuis les zaaps sélectionnés. Le choix et la mention des portions disparaissent de l’interface ; la commande combinée est copiée directement. L’espace horizontal entre « Fabriquer » et l’indication « Craft/Achat moins cher » est augmenté dans les crafts unitaire et multicraft.
+
+## V115 — Ancienneté des prix
+
+Une petite horloge accompagne les prix renseignés dans le craft unitaire, le multicraft, le parchotage, l’XP forgemagie, le brisage et la comparaison de farm. Son infobulle indique l’ancienneté et la date de dernière saisie ; elle devient orange après 7 jours. Les dates sont enregistrées localement et partagées quand le prix l’est déjà. Les anciens prix sans date sont signalés comme à vérifier, sans leur inventer une date. Seule une nouvelle saisie du prix remet son ancienneté à zéro.

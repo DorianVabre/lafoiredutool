@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
 const html=fs.readFileSync(require('node:path').join(__dirname,'../dofus-craft.html'),'utf8');
-test('onglet brisage avant historique',()=>assert.ok(html.indexOf('id="tabBreak"')<html.indexOf('id="tabLedger"')));
+test('onglet brisage après historique',()=>assert.ok(html.indexOf('id="tabLedger"')<html.indexOf('id="tabBreak"')));
 test('recherche uniquement équipements',()=>assert.match(html,/get\('\/items\/equipment\/search\?/));
 test('les runes sont dérivées des effets',()=>assert.match(html,/function breakRuneNames\(d\)/));
 test('variantes vi pa vi ra vi',()=>assert.match(html,/\['Vi','Pa Vi','Ra Vi'\]/));

@@ -51,12 +51,20 @@ function scrollRender(){
  steps.innerHTML=result.phases.length?result.phases.map(p=>'<span class="scroll-step"><b>'+p.count+' × '+SCROLL_TYPES[p.index].name+'</b> · '+p.from+' → '+p.to+'</span>').join(''):'<span class="scroll-help">Aucun parchemin nécessaire.</span>';
 }
 function scrollLoad(){
- const stat=document.querySelector('#scrollStat').value,record=scrollSaved[stat]||{};
+ const select=document.querySelector('#scrollStat');if(!select.value)select.value='Vitalité';
+ const stat=select.value,record=scrollSaved[stat]||{};
  document.querySelector('#scrollCurrent').value=record.current??'0';
  SCROLL_TYPES.forEach((_,i)=>document.querySelector('#scrollPrice'+i).value=record.prices?.[i]??'');
  scrollRender();
 }
+function scrollRefresh(){scrollSave();scrollRender()}
 document.querySelector('#scrollStat').addEventListener('change',scrollLoad);
-for(const field of ['#scrollCurrent',...SCROLL_TYPES.map((_,i)=>'#scrollPrice'+i)])document.querySelector(field).addEventListener('input',()=>{scrollSave();scrollRender()});
+for(const field of ['#scrollCurrent',...SCROLL_TYPES.map((_,i)=>'#scrollPrice'+i)]){
+ document.querySelector(field).addEventListener('input',scrollRefresh);
+ document.querySelector(field).addEventListener('change',scrollRefresh);
+}
+// Le navigateur peut restaurer les champs après l'initialisation sans émettre input.
+document.querySelector('#tabScroll').addEventListener('click',scrollRefresh);
+if(typeof window!=='undefined'&&typeof window.addEventListener==='function')window.addEventListener('pageshow',scrollRefresh);
 scrollLoad();
 

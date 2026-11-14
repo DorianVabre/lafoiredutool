@@ -8,7 +8,7 @@ const css=fs.readFileSync(path.join(__dirname,'../css/style.css'),'utf8');
 const segment=src.slice(src.indexOf('const ledgerSold='),src.indexOf('function ledgerOpenLot('));
 function setup(){
  const context={fmt:n=>`${Math.round(n)} K`,fmtNum:n=>String(n),esc:s=>String(s),Intl};
- vm.createContext(context);
+ vm.createContext(context);vm.runInContext(fs.readFileSync('js/core/copy-names.js','utf8'),context);
  vm.runInContext(segment+'\nthis.api={ledgerProfitPercent,ledgerSignedPercent,ledgerTileHTML,ledgerEntryHTML,ledgerTotals};',context);
  return context.api;
 }
