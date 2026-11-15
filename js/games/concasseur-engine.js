@@ -25,13 +25,14 @@
   }
   if(state.elapsed>=DURATION)state.phase='finished';return events;
  }
- function hit(state,lane){
+ function hit(state,lane,inputTime=state.elapsed){
   if(state.phase!=='playing'||!Number.isInteger(lane)||lane<0||lane>4)return null;
-  const note=state.notes.filter(n=>!n.done&&n.lane===lane&&Math.abs(n.at-state.elapsed)<=WINDOW).sort((a,b)=>Math.abs(a.at-state.elapsed)-Math.abs(b.at-state.elapsed)||a.at-b.at)[0];
+  const judgedAt=Math.max(0,Math.min(state.elapsed,Number.isFinite(inputTime)?inputTime:state.elapsed));
+  const note=state.notes.filter(n=>!n.done&&n.lane===lane&&Math.abs(n.at-judgedAt)<=WINDOW).sort((a,b)=>Math.abs(a.at-judgedAt)-Math.abs(b.at-judgedAt)||a.at-b.at)[0];
   if(!note){state.empty++;state.combo=0;state.score=Math.max(0,state.score-25);return {kind:'empty',lane,points:-25}}
   note.done=true;
   if(note.cat){state.cats++;state.combo=0;state.score=Math.max(0,state.score-250);return {kind:'cat',lane,note,points:-250}}
-  const error=Math.abs(state.elapsed-note.at),quality=error<=45?'perfect':error<=95?'good':'late',factor=quality==='perfect'?1.25:quality==='good'?1:.75,coefficient=state.coefficients[note.item];
+  const error=Math.abs(judgedAt-note.at),quality=error<=45?'perfect':error<=95?'good':'late',factor=quality==='perfect'?1.25:quality==='good'?1:.75,coefficient=state.coefficients[note.item];
   state.combo++;state.maxCombo=Math.max(state.maxCombo,state.combo);state.hits++;if(quality==='perfect')state.perfects++;
   const multiplier=Math.min(3,1+Math.floor(state.combo/10)*.25),points=Math.round(coefficient*factor*multiplier);
   state.score+=points;coefficientHit(state,note.item);return {kind:quality,lane,note,points,coefficient,multiplier};

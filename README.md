@@ -1,4 +1,4 @@
-# La Foire du Tool — V154
+# La Foire du Tool — V155
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -296,3 +296,8 @@ Clic maintenu et glissement pour les brouillons au clic droit, les cases KO aux 
 ## V154 — Glissement au clic droit et indices contextuels
 
 Glissement réservé au clic droit : le clic gauche reste ponctuel, sans déplacement ni nettoyage au survol. Indice tient compte des placements corrects, des listes de brouillons compatibles et des KO valides, écarte les déductions déjà marquées et propose seulement les nouvelles cases. Les brouillons ne sont retirés que lorsqu’une étape de déduction les contredit, avec explication ; les KO occupant une case de la solution peuvent également être corrigés. Chaque correction est annulable et interrompt le clic sans autre nouvelle proposition. Clés et enquêtes inchangées.
+
+
+## V155 — Frappes simultanées du concasseur
+
+Les frappes utilisent l’horodatage des événements clavier/pointeur, avec un suivi indépendant des touches pressées et relâchées. Le rendu, le HUD et l’animation du marteau sont mutualisés dans la frame suivante au lieu d’être refaits à chaque touche d’un accord ; le HUD ne réécrit plus les valeurs inchangées. Les états de touches sont réinitialisés en pause, à la reprise, au redémarrage et en fin de partie. Les fenêtres de jugement et les règles de score restent identiques.

@@ -2,6 +2,7 @@
  const E=ConcasseurEngine,$=id=>document.getElementById(id),board=$('gameBoard'),lanes=[...board.querySelectorAll('.lane')],rendered=new Map(),flashes=Array(5).fill(0),KEY='la-foire-du-tool-concasseur-best-v1';
  let game=null,mode='ready',origin=0,pausedAt=0,frame=0,best=0,hitY=0,lastBeat=-1,muted=false,audio=null,master=null,inside=false;
  try{const value=Number(localStorage.getItem(KEY));if(Number.isSafeInteger(value)&&value>=0)best=value}catch{}
+ const heldKeys=new Set(),hudValues=new Map();let hammerPending=false;
  const fmt=n=>Math.round(n).toLocaleString('fr-FR');$('gameBest').textContent=best?fmt(best):'—';
  E.ITEMS.forEach((item,index)=>{const label=document.createElement('div');label.title=item.name;label.innerHTML='<img src="'+E.image(item.id)+'" width="26" height="26" alt=""><span>'+item.name+'</span>';$('laneLegend').append(label);lanes[index].setAttribute('aria-label','Frapper '+item.name+', touche '+['D','F','Espace','J','K'][index])});
  for(const item of E.ITEMS){const row=document.createElement('div');row.className='coefficient-item';row.innerHTML='<img src="'+E.image(item.id)+'" alt=""><div><span class="coefficient-name">'+item.name+'</span><small>Niveau '+item.level+'</small><div class="coefficient-meter"><i></i></div></div><strong data-coeff="'+item.id+'">100 %</strong>';$('coefficientList').append(row)}
@@ -22,12 +23,18 @@
   gain.gain.setValueAtTime(.001,t);gain.gain.exponentialRampToValueAtTime(.6,t+.04);gain.gain.setValueAtTime(.45,t+.25);gain.gain.exponentialRampToValueAtTime(.001,t+.6);
   voice.connect(filter);filter.connect(gain);gain.connect(master);voice.start(t);voice.stop(t+.62);tone(490,290,.5,.12,'sine',.07);
  }
+ function hudText(id,value){if(hudValues.get(id)===value)return;hudValues.set(id,value);$(id).textContent=value}
  function hud(){
   if(!game)return;
-  $('gameScore').textContent=fmt(game.score);$('gameCombo').innerHTML=game.combo+' <span>×'+Math.min(3,1+Math.floor(game.combo/10)*.25).toLocaleString('fr-FR')+'</span>';
-  $('gameTime').textContent=Math.max(0,Math.ceil((E.DURATION-game.elapsed)/1000))+' s';
-  $('paceLabel').textContent=game.elapsed<20000?'Ça descend…':game.elapsed<40000?'La cadence monte':'Surchauffe du concasseur';
-  for(const cell of coefficientCells){const value=game.coefficients[cell.dataset.coeff];cell.textContent=value+' %';cell.classList.toggle('is-low',value<70);cell.classList.toggle('is-high',value>120);cell.parentElement.querySelector('i').style.width=value/E.MAX_COEFF*100+'%'}
+  hudText('gameScore',fmt(game.score));
+  if(hudValues.get('combo')!==game.combo){hudValues.set('combo',game.combo);$('gameCombo').innerHTML=game.combo+' <span>×'+Math.min(3,1+Math.floor(game.combo/10)*.25).toLocaleString('fr-FR')+'</span>'}
+  hudText('gameTime',Math.max(0,Math.ceil((E.DURATION-game.elapsed)/1000))+' s');
+  hudText('paceLabel',game.elapsed<20000?'Ça descend…':game.elapsed<40000?'La cadence monte':'Surchauffe du concasseur');
+  for(const cell of coefficientCells){const value=game.coefficients[cell.dataset.coeff],key='coefficient:'+cell.dataset.coeff;if(hudValues.get(key)===value)continue;hudValues.set(key,value);cell.textContent=value+' %';cell.classList.toggle('is-low',value<70);cell.classList.toggle('is-high',value>120);cell.parentElement.querySelector('i').style.width=value/E.MAX_COEFF*100+'%'}
+ }
+ function animateHammer(){
+  if(!hammerPending)return;hammerPending=false;
+  if(inside&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches)$('hammerCursor').animate?.([{transform:'translate(-50%,-50%) rotate(-20deg)'},{transform:'translate(-50%,-50%) rotate(-65deg)'},{transform:'translate(-50%,-50%) rotate(-20deg)'}],{duration:140});
  }
  function feedback(event,now){
   if(event.kind==='avoided')return;
@@ -51,7 +58,7 @@
  }
  function overlay(which){$('gameOverlay').hidden=false;$('introContent').hidden=which!=='intro';$('resultsContent').hidden=which!=='results';$('pauseContent').hidden=which!=='pause';$('startGame').hidden=which==='pause';$('resumeGame').hidden=which!=='pause'}
  function finish(){
-  mode='finished';board.classList.remove('is-playing');$('hammerCursor').hidden=true;$('pauseGame').disabled=true;overlay('results');$('startGame').textContent='Rejouer';$('finalScore').textContent=fmt(game.score);
+  heldKeys.clear();hammerPending=false;mode='finished';board.classList.remove('is-playing');$('hammerCursor').hidden=true;$('pauseGame').disabled=true;overlay('results');$('startGame').textContent='Rejouer';$('finalScore').textContent=fmt(game.score);
   const record=game.score>best;if(record){best=game.score;try{localStorage.setItem(KEY,String(best))}catch{}}$('gameBest').textContent=best?fmt(best):'—';$('resultBadge').textContent=record?'Nouveau record !':'Partie terminée';
   $('resultStats').innerHTML=[[game.hits,'Objets brisés'],[E.accuracy(game)+' %','Précision'],[game.maxCombo,'Meilleure série'],[game.perfects,'Parfaits'],[game.cats,'Chachas touchés'],[game.avoided,'Chachas épargnés']].map(([value,label])=>'<div><strong>'+value+'</strong><small>'+label+'</small></div>').join('');$('gameStatus').textContent='Partie terminée : '+fmt(game.score)+' points.';$('startGame').focus({preventScroll:true});
  }
@@ -65,38 +72,45 @@
   for(const event of E.advance(game,now-origin))feedback(event,now);
   if(game.phase==='finished'){hud();finish();return}
   const beat=Math.floor(game.elapsed/400);if(beat!==lastBeat){lastBeat=beat;tone(125,40,.10,.16,'sine');if(beat%2)tone(2300,1200,.022,.035,'square')}
-  draw(now);hud();frame=requestAnimationFrame(tick);
+  draw(now);hud();animateHammer();frame=requestAnimationFrame(tick);
  }
  function start(){
-  cancelAnimationFrame(frame);initAudio();game=E.create();mode='countdown';origin=performance.now()+3000;lastBeat=-1;rendered.clear();for(const lane of lanes){lane.querySelector('.note-layer').replaceChildren();lane.classList.remove('is-good','is-bad')}
+  cancelAnimationFrame(frame);heldKeys.clear();hudValues.clear();hammerPending=false;initAudio();game=E.create();mode='countdown';origin=performance.now()+3000;lastBeat=-1;rendered.clear();for(const lane of lanes){lane.querySelector('.note-layer').replaceChildren();lane.classList.remove('is-good','is-bad')}
   $('gameOverlay').hidden=true;$('countdown').hidden=false;$('countdown').textContent='3';$('pauseGame').disabled=true;$('pauseGame').textContent='Pause';$('gameStatus').textContent='Préparez votre marteau…';measure();hud();board.focus({preventScroll:true});frame=requestAnimationFrame(tick);
  }
  function pause(){
+  heldKeys.clear();hammerPending=false;
   if(mode!=='playing'&&mode!=='countdown')return;
   const wasCountdown=mode==='countdown';mode=wasCountdown?'paused-countdown':'paused';pausedAt=performance.now();cancelAnimationFrame(frame);board.classList.remove('is-playing');$('hammerCursor').hidden=true;$('countdown').hidden=true;overlay('pause');$('pauseGame').disabled=false;$('pauseGame').textContent='Reprendre';$('gameStatus').textContent='Partie en pause.';
  }
  function resume(){
   if(mode!=='paused'&&mode!=='paused-countdown')return;
-  origin+=performance.now()-pausedAt;mode=mode==='paused-countdown'?'countdown':'playing';$('countdown').hidden=mode!=='countdown';$('gameOverlay').hidden=true;$('pauseGame').textContent='Pause';$('pauseGame').disabled=mode==='countdown';board.classList.toggle('is-playing',mode==='playing');$('hammerCursor').hidden=mode!=='playing'||!inside;$('gameStatus').textContent=mode==='countdown'?'Préparez votre marteau…':'La cadence reprend !';initAudio();board.focus({preventScroll:true});frame=requestAnimationFrame(tick);
+  heldKeys.clear();origin+=performance.now()-pausedAt;mode=mode==='paused-countdown'?'countdown':'playing';$('countdown').hidden=mode!=='countdown';$('gameOverlay').hidden=true;$('pauseGame').textContent='Pause';$('pauseGame').disabled=mode==='countdown';board.classList.toggle('is-playing',mode==='playing');$('hammerCursor').hidden=mode!=='playing'||!inside;$('gameStatus').textContent=mode==='countdown'?'Préparez votre marteau…':'La cadence reprend !';initAudio();board.focus({preventScroll:true});frame=requestAnimationFrame(tick);
  }
- function strike(lane){
+ function strike(lane,timeStamp){
   if(mode!=='playing')return;
-  const now=performance.now();for(const event of E.advance(game,now-origin))feedback(event,now);if(game.phase==='finished'){hud();finish();return}
-  const event=E.hit(game,lane);if(event)feedback(event,now);draw(now);hud();
-  if(inside&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches)$('hammerCursor').animate?.([{transform:'translate(-50%,-50%) rotate(-20deg)'},{transform:'translate(-50%,-50%) rotate(-65deg)'},{transform:'translate(-50%,-50%) rotate(-20deg)'}],{duration:140});
+  const now=performance.now();let inputAt=Number.isFinite(timeStamp)?timeStamp:now;
+  // Accepter aussi les navigateurs qui datent les événements depuis l’époque Unix.
+  if(inputAt>now&&Number.isFinite(performance.timeOrigin))inputAt-=performance.timeOrigin;
+  if(inputAt<origin||inputAt>now)inputAt=now;
+  const elapsed=inputAt-origin;for(const event of E.advance(game,elapsed))feedback(event,now);if(game.phase==='finished'){hud();finish();return}
+  const event=E.hit(game,lane,elapsed);if(event)feedback(event,now);
+  // Le prochain tick partage un seul rendu/HUD/animation entre toutes les frappes reçues.
+  hammerPending=true;
  }
- lanes.forEach((lane,index)=>lane.addEventListener('pointerdown',event=>{if(event.button!==0)return;event.preventDefault();strike(index)}));
+ lanes.forEach((lane,index)=>lane.addEventListener('pointerdown',event=>{if(event.button!==0)return;event.preventDefault();strike(index,event.timeStamp)}));
  board.addEventListener('pointerenter',()=>inside=true);board.addEventListener('pointerleave',()=>{inside=false;$('hammerCursor').hidden=true});board.addEventListener('pointermove',event=>{const cursor=$('hammerCursor');cursor.hidden=mode!=='playing';cursor.style.left=event.clientX+'px';cursor.style.top=event.clientY+'px'});
  function handleGameKey(event){
   if(event.isComposing)return;
   const keys=['KeyD','KeyF','Space','KeyJ','KeyK'],index=keys.indexOf(event.code);
-  if(mode==='playing'&&index>=0){event.preventDefault();if(!event.repeat)strike(index);return}
+  if(mode==='playing'&&index>=0){event.preventDefault();if(event.repeat||heldKeys.has(event.code))return;heldKeys.add(event.code);strike(index,event.timeStamp);return}
   if(event.repeat)return;
   if(event.code==='KeyP'||event.code==='Escape'){if(['playing','countdown','paused','paused-countdown'].includes(mode)){event.preventDefault();mode.startsWith('paused')?resume():pause()}return}
   if(mode!=='playing')return;
-  if(event.code==='Enter'){const lane=event.target.closest?.('[data-lane]');if(lane){event.preventDefault();strike(Number(lane.dataset.lane))}}
+  if(event.code==='Enter'){const lane=event.target.closest?.('[data-lane]');if(lane){event.preventDefault();strike(Number(lane.dataset.lane),event.timeStamp)}}
  }
- document.addEventListener('keydown',handleGameKey);
+ function releaseGameKey(event){heldKeys.delete(event.code)}
+ document.addEventListener('keydown',handleGameKey);document.addEventListener('keyup',releaseGameKey);
  $('startGame').addEventListener('click',start);$('resumeGame').addEventListener('click',resume);$('pauseGame').addEventListener('click',()=>mode.startsWith('paused')?resume():pause());
  $('soundToggle').addEventListener('click',()=>{muted=!muted;$('soundToggle').setAttribute('aria-pressed',String(!muted));$('soundToggle').textContent=muted?'Son coupé':'Son activé';if(master)master.gain.value=muted?0:.22;if(!muted)initAudio();if(mode==='playing'||mode==='countdown')board.focus({preventScroll:true})});
  window.addEventListener('blur',pause);document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});window.addEventListener('resize',()=>{measure();if(game)draw(performance.now())});measure();

@@ -1,7 +1,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const source=fs.readFileSync(path.join(__dirname,'../js/games/concasseur.js'),'utf8');
 function setup(){
- const hits=[],ctx=vm.createContext({mode:'playing',strike:lane=>hits.push(lane),pause(){ctx.mode='paused'},resume(){ctx.mode='playing'}});
+ const hits=[],ctx=vm.createContext({heldKeys:new Set(),mode:'playing',strike:lane=>hits.push(lane),pause(){ctx.mode='paused'},resume(){ctx.mode='playing'}});
  const start=source.indexOf('function handleGameKey('),end=source.indexOf("document.addEventListener('keydown',handleGameKey)",start);vm.runInContext(source.slice(start,end),ctx);
  function press(code,extra={}){const event={code,target:{closest:()=>null},preventDefault(){this.prevented=true},...extra};ctx.handleGameKey(event);return event}
  return {ctx,hits,press};
