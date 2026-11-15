@@ -1,4 +1,4 @@
-# La Foire du Tool — V140
+# La Foire du Tool — V141
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -227,3 +227,7 @@ Le brisage utilise 🏺 dans le menu et le titre. Le marteau près de « Rentabi
 Mini-jeu de 60 secondes à cinq pistes, accessible par les trois coups de marteau. Des équipements THL et des Chachas descendent vers des cercles de frappe. Souris, tactile ou touches D/F/Espace/J/K ; timing parfait à ±45 ms, bon à ±95 ms, tolérance maximale ±140 ms. Le score dépend du timing, du coefficient de l’objet et du combo. Un brisage retire 24 points de coefficient à l’objet et ajoute 7 aux autres, entre 20 % et 220 %. Les Chachas touchés miaulent et coûtent 250 points ; les objets ratés et frappes à vide sont également pénalisés. Pause manuelle et automatique, résultats, record local et bouton Rejouer. Les visuels DofusDude sont inclus dans `data/concasseur/` ; sons synthétisés avec Web Audio, désactivables. Aucun prix ni stock des calculateurs n’est utilisé.
 
 Chaque équipement conserve une colonne fixe, identifiée par son icône et son nom en haut de piste. Les Chachas restent des intrus possibles sur toutes les pistes pour éviter une colonne qu’il suffirait d’ignorer.
+
+## V141 — Clavier du concasseur après réglage du son
+
+Un clic sur le bouton du son rend le focus à la piste pendant la partie et le décompte. D/F/Espace/J/K restent prioritaires pendant le jeu, même si un bouton a le focus ; Espace ne réactive plus le son et son maintien ne fait pas défiler la page.

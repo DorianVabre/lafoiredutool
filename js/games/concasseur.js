@@ -87,14 +87,17 @@
  }
  lanes.forEach((lane,index)=>lane.addEventListener('pointerdown',event=>{if(event.button!==0)return;event.preventDefault();strike(index)}));
  board.addEventListener('pointerenter',()=>inside=true);board.addEventListener('pointerleave',()=>{inside=false;$('hammerCursor').hidden=true});board.addEventListener('pointermove',event=>{const cursor=$('hammerCursor');cursor.hidden=mode!=='playing';cursor.style.left=event.clientX+'px';cursor.style.top=event.clientY+'px'});
- document.addEventListener('keydown',event=>{
-  if(event.repeat||event.isComposing)return;
-  if(event.code==='KeyP'||event.code==='Escape'){if(['playing','countdown','paused','paused-countdown'].includes(mode)){event.preventDefault();mode.startsWith('paused')?resume():pause()}return}
-  if(mode!=='playing'||event.target.closest?.('button:not(.lane)'))return;
+ function handleGameKey(event){
+  if(event.isComposing)return;
   const keys=['KeyD','KeyF','Space','KeyJ','KeyK'],index=keys.indexOf(event.code);
-  if(index>=0){event.preventDefault();strike(index)}else if(event.code==='Enter'){const lane=event.target.closest?.('[data-lane]');if(lane){event.preventDefault();strike(Number(lane.dataset.lane))}}
- });
+  if(mode==='playing'&&index>=0){event.preventDefault();if(!event.repeat)strike(index);return}
+  if(event.repeat)return;
+  if(event.code==='KeyP'||event.code==='Escape'){if(['playing','countdown','paused','paused-countdown'].includes(mode)){event.preventDefault();mode.startsWith('paused')?resume():pause()}return}
+  if(mode!=='playing')return;
+  if(event.code==='Enter'){const lane=event.target.closest?.('[data-lane]');if(lane){event.preventDefault();strike(Number(lane.dataset.lane))}}
+ }
+ document.addEventListener('keydown',handleGameKey);
  $('startGame').addEventListener('click',start);$('resumeGame').addEventListener('click',resume);$('pauseGame').addEventListener('click',()=>mode.startsWith('paused')?resume():pause());
- $('soundToggle').addEventListener('click',()=>{muted=!muted;$('soundToggle').setAttribute('aria-pressed',String(!muted));$('soundToggle').textContent=muted?'Son coupé':'Son activé';if(master)master.gain.value=muted?0:.22;if(!muted)initAudio()});
+ $('soundToggle').addEventListener('click',()=>{muted=!muted;$('soundToggle').setAttribute('aria-pressed',String(!muted));$('soundToggle').textContent=muted?'Son coupé':'Son activé';if(master)master.gain.value=muted?0:.22;if(!muted)initAudio();if(mode==='playing'||mode==='countdown')board.focus({preventScroll:true})});
  window.addEventListener('blur',pause);document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});window.addEventListener('resize',()=>{measure();if(game)draw(performance.now())});measure();
 })();
