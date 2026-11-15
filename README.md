@@ -1,4 +1,4 @@
-# La Foire du Tool — V171
+# La Foire du Tool — V173
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -383,3 +383,17 @@ Aperçu et historique des récoltes : une ligne « XP totale = X (y de [Blé], z
 ## V171 — XP par heure des activités
 
 Le cumul d’XP par métier est remplacé par un indicateur compact XP / heure, dans l’activité sélectionnée et sa carte. Calcul pondéré : somme des XP / somme des durées des sessions dont l’XP est entièrement estimée ; anciennes sessions sans XP et estimations incomplètes exclues. L’historique affiche seulement l’XP totale en petit après les récoltes. Le détail par ressource reste dans l’aperçu de saisie. Version V171 dans tous les footers.
+
+
+## V172 — Objectifs de niveau et suivis d’élevage parallèles
+
+Bascule Fécondité / Niveau dans Mes montures, fécondité par défaut. Mode Niveau : niveau actuel, XP totale déjà acquise et niveau visé de 1 à 200, conservés par monture ; capacité Sage ×2. Stratégies et sélections d’enclos séparées pour chaque mode. Le plan XP optimise les achats selon les prix renseignés, indique l’XP de réserve consommée et à recharger par enclos, maintient le palier de vitesse choisi par des recharges successives, et retire chaque monture à son objectif. Le mode économie ne charge que le besoin restant, par remplissages plafonnés à 80 000 ; une réserve existante plus haute est conservée. Arrondis aux ticks de 10 secondes.
+
+Deux suivis persistants indépendants sur des enclos distincts : pauses, confirmations, arrêts et fenêtres d’alertes séparés, y compris sur les autres pages. Les enclos occupés par l’autre suivi sont signalés et exclus. Les montures et leur progression restent sauvegardées lors des déplacements ou d’un arrêt. Les données et suivis de fécondité existants sont conservés.
+
+Barème local des 200 niveaux dans [data/elevage-xp.json](data/elevage-xp.json), relevé le 15/11/2026 depuis [les tableaux d’expérience](https://www.dofuspourlesnoobs.com/tableaux-dexpeacuterience.html). Règles recoupées avec le [guide de l’éleveur actualisé le 13/10/2026](https://www.dofuspourlesnoobs.com/guide-de-l-eleveur.html). Hors bonus Almanax. Version V172 dans tous les footers.
+
+
+## V173 — Cible XP commune et réduction des suivis
+
+Cible du plan XP placée à côté de la stratégie : niveau de 1 à 200 ou XP totale de 0 à 867 582, sauvegardée et appliquée à toutes les montures des enclos sélectionnés. Les cartes conservent les valeurs actuelles ; la cible du suivi reste figée au lancement. Les anciens suivis gardent leurs objectifs. Bouton Réduire présent dans chaque fenêtre développée, même sur la page Élevage ; réduction indépendante maintenue au rafraîchissement, et bouton Détails pour rouvrir. Version V173 dans tous les footers.

@@ -1,7 +1,10 @@
 /* Élevage 3.7 : simulation de lots, ticks de 10 s, hors Almanax. */
 const Breeding = (() => {
+ const xpLevels=[0,0,19,49,96,161,246,353,481,633,809,1011,1238,1491,1772,2081,2419,2786,3182,3609,4067,4557,5078,5632,6219,6839,7493,8182,8905,9664,10457,11287,12154,13057,13997,14974,15990,17043,18135,19266,20437,21646,22896,24186,25516,26887,28299,29753,31248,32785,34365,35987,37652,39360,41111,42906,44745,46628,48555,50527,52544,54607,56714,58868,61067,63312,65604,67942,70327,72760,75239,77766,80341,82964,85635,88355,91123,93940,96806,99721,102685,105700,108764,111878,115042,118257,121523,124840,128207,131626,135096,138618,142191,145817,149495,153225,157008,160843,164732,168673,172668,176716,180818,184974,189183,193447,197765,202137,206565,211046,215583,220176,224823,229526,234284,239099,243969,248895,253878,258917,264013,269165,274375,279641,284965,290346,295784,301280,306834,312446,318116,323845,329631,335477,341381,347343,353365,359446,365587,371786,378045,384364,390743,397182,403681,410240,416859,423539,430280,437082,443944,450868,457852,464898,472006,479175,486406,493699,501054,508470,515950,523491,531095,538762,546491,554283,562139,570057,578039,586084,594193,602365,610601,618901,627265,635693,644185,652742,661363,670049,678799,687615,696495,705440,714451,723527,732668,741875,751148,760486,769890,779361,788897,798500,808169,817904,827706,837575,847510,857513,867582];
+ const xpForLevel=level=>{if(!Number.isInteger(level)||level<1||level>200)throw Error("Niveau de monture invalide : 1 à 200.");return xpLevels[level]};
+ const levelForXp=xp=>{let level=1;while(level<200&&xp>=xpLevels[level+1])level++;return level};
  const keys=['down','up','endurance','maturity','love'];
- const labels={down:'Perte de sérénité',up:'Gain de sérénité',endurance:'Endurance',maturity:'Maturité',love:'Amour'};
+ const labels={down:'Perte de sérénité',up:'Gain de sérénité',endurance:'Endurance',maturity:'Maturité',love:'Amour',xp:'Expérience de monture'};
  const caps=[80000,140000,180000,200000];
  const strategies={economy:{label:'Économie · minimum nécessaire',cap:null},tier1:{label:'Vitesse · palier 1 · 80 000',cap:80000},tier2:{label:'Vitesse · palier 2 · 140 000',cap:140000},tier3:{label:'Vitesse · palier 3 · 180 000',cap:180000},speed:{label:'Vitesse · palier 4 · 200 000',cap:200000}};
  const rate=q=>q>180000?40:q>140000?30:q>80000?20:q>0?10:0;
@@ -81,11 +84,39 @@ const Breeding = (() => {
   if(upfront.length)events.unshift({at:0,text:'Désactiver toutes les jauges. Recharger les jauges ci-dessous dès le départ. Les laisser désactivées jusqu’à l’étape qui les utilise.',recharges:upfront,loads:upfront.map(describe)});
   return {events,seconds,cost,shopping:[...shopping.values()],final:mounts,fuel,strategy};
  }
- function planMany(pens,catalog,prices,strategy='economy'){
+ function planXp(pen,catalog,prices,strategy='economy',targetXp){
+  if(!Object.prototype.hasOwnProperty.call(strategies,strategy))throw Error('Stratégie inconnue.');validate(pen);
+  const mounts=pen.mounts.map(m=>({...m})),fuel={...pen.fuel,xp:pen.fuel.xp??0},events=[],shopping=new Map();let seconds=0,cost=0,consumed=0;
+  if(!Number.isInteger(fuel.xp)||fuel.xp<0||fuel.xp>200000)throw Error('Réserve d’XP invalide : 0 à 200 000.');
+  if(targetXp!==undefined&&(!Number.isInteger(targetXp)||targetXp<0||targetXp>xpForLevel(200)))throw Error('Cible XP invalide : 0 à 867 582.');
+  for(const m of mounts){if(targetXp===undefined)xpForLevel(m.targetLevel);if(!Number.isInteger(m.xp)||m.xp<0||m.xp>xpForLevel(200))throw Error('XP de monture invalide.');}
+  const goal=m=>targetXp??xpForLevel(m.targetLevel),done=m=>m.xp>=goal(m),need=m=>Math.max(0,(goal(m)-m.xp)/(m.trait==='sage'?2:1));
+  let remaining=mounts.filter(m=>!done(m));const ready=mounts.filter(done);
+  if(ready.length)events.push({at:0,removeIds:ready.map(m=>m.id)});
+  const cap=strategies[strategy].cap??80000,floor=cap===200000?180000:cap===180000?140000:cap===140000?80000:0;
+  const emit=extra=>events.push({at:seconds,...extra});
+  function recharge(){const demand=Math.ceil(Math.max(...remaining.map(need))),target=strategy==='economy'?Math.max(fuel.xp,Math.min(80000,fuel.xp+Math.max(0,Math.ceil((demand-fuel.xp)/2000))*2000)):Math.max(fuel.xp,cap);
+   const before=fuel.xp,buy=purchase(before,target,catalog.filter(x=>x.gauge==='xp'),prices);fuel.xp=buy.end;cost+=buy.cost;
+   const counts=new Map();for(const x of buy.items){counts.set(x.id,{...x,qty:(counts.get(x.id)?.qty||0)+1});shopping.set(x.id,{...x,unitPrice:prices[x.id],qty:(shopping.get(x.id)?.qty||0)+1})}
+   if(buy.items.length)emit({recharges:[{gauge:'xp',added:buy.end-before,items:[...counts.values()]}]});
+  }
+  if(remaining.length){recharge();emit({active:['xp'],mountIds:remaining.map(m=>m.id)});}
+  for(let ticks=0;remaining.length;ticks++){
+   if(ticks>100000)throw Error('Simulation XP interrompue.');
+   if(fuel.xp<=floor)recharge();const gain=Math.min(fuel.xp,rate(fuel.xp));if(!gain)throw Error('Carburant XP insuffisant.');seconds+=10;fuel.xp-=gain;consumed+=gain;
+   for(const m of remaining)m.xp=Math.min(xpForLevel(200),m.xp+gain*(m.trait==='sage'?2:1));
+   const finished=remaining.filter(done);if(finished.length){emit({removeIds:finished.map(m=>m.id)});remaining=remaining.filter(m=>!done(m));}
+  }
+  emit({active:[]});return {mode:'xp',events,seconds,cost,shopping:[...shopping.values()],final:mounts,fuel,strategy,consumed};
+ }
+ function planMany(pens,catalog,prices,strategy='economy',mode='fertility',targetXp){
+  if(!['fertility','xp'].includes(mode))throw Error('Mode inconnu.');
   if(!pens.length)throw Error('Sélectionne au moins un enclos.');
   const initialPens=JSON.parse(JSON.stringify(pens)),eventsByTime=new Map(),shopping=new Map(),final=[];let cost=0,seconds=0;
   const ids=pens.flatMap(p=>p.mounts.map(m=>m.id));if(ids.some(x=>!x)||new Set(ids).size!==ids.length)throw Error('Identités de montures invalides.');
-  for(const p of pens){let result;try{result=plan(p,catalog,prices,strategy)}catch(error){throw Error(p.name+' : '+error.message)}cost+=result.cost;seconds=Math.max(seconds,result.seconds);final.push(...result.final);for(const x of result.shopping)shopping.set(x.id,{...x,qty:x.qty+(shopping.get(x.id)?.qty||0)});
+  const xpPens=[];
+  for(const p of pens){let result;try{result=mode==='xp'?planXp(p,catalog,prices,strategy,targetXp):plan(p,catalog,prices,strategy)}catch(error){throw Error(p.name+' : '+error.message)}cost+=result.cost;seconds=Math.max(seconds,result.seconds);final.push(...result.final);for(const x of result.shopping)shopping.set(x.id,{...x,qty:x.qty+(shopping.get(x.id)?.qty||0)});
+   if(mode==='xp')xpPens.push({penId:p.id,penName:p.name,consumed:result.consumed,added:result.events.flatMap(e=>e.recharges||[]).reduce((n,r)=>n+r.added,0),seconds:result.seconds});
    let occupied=new Set(p.mounts.map(m=>m.id)),active=[];
    const grouped=new Map();for(const event of result.events){if(!grouped.has(event.at))grouped.set(event.at,[]);grouped.get(event.at).push(event)}
    for(const [at,source] of grouped){const before=new Set(occupied),prior=[...active],recharges=[];for(const event of source){recharges.push(...(event.recharges||[]));if(event.mountIds)occupied=new Set(event.mountIds);for(const id of event.removeIds||[])occupied.delete(id);if(event.active)active=[...event.active]}
@@ -95,8 +126,8 @@ const Breeding = (() => {
    }
   }
   const events=[...eventsByTime].sort((a,b)=>a[0]-b[0]).map(([at,entries])=>({at,entries,text:entries.map(x=>x.penName+' : '+x.text).join('\n')}));
-  return {multi:true,penIds:pens.map(p=>p.id),initialPens,events,shopping:[...shopping.values()],cost,seconds,final,strategy};
+  return {multi:true,mode,targetXp:mode==='xp'?targetXp:undefined,penIds:pens.map(p=>p.id),initialPens,events,shopping:[...shopping.values()],cost,seconds,final,strategy,xpPens};
  }
- return {keys,labels,caps,strategies,rate,purchase,plan,planMany,validate};
+ return {keys,labels,caps,strategies,rate,purchase,plan,planXp,planMany,validate,xpForLevel,levelForXp};
 })();
 if(typeof module!=='undefined')module.exports=Breeding;

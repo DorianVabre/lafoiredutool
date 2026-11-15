@@ -30,3 +30,13 @@
 
 /* V167 : pourcentages sur la largeur de la carte, champs numériques natifs. */
 .breed-reserve-card{display:grid;grid-template-columns:34px minmax(0,1fr);column-gap:7px;row-gap:3px}.breed-reserve-stats{grid-column:1/-1;min-width:0;flex-wrap:wrap;margin-top:0;column-gap:7px;row-gap:3px}.breed-reserve-stats>span{flex:0 0 auto}
+
+/* V172 : objectifs indépendants, progression XP et suivis parallèles. */
+#breedingMode .breed-mode-switch{position:relative;display:inline-grid;grid-template-columns:auto 42px auto;align-items:center;gap:8px;max-width:none;cursor:pointer;font-size:13px}#breedingMode .breed-mode-switch input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}.breed-switch-track{position:relative;display:block;width:42px;height:24px;border:1px solid #8aaa75;border-radius:20px;background:#304932;transition:background .15s}.breed-switch-track::after{content:'';position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#d7ecc2;transition:transform .15s}#breedGoal:checked+.breed-switch-track{background:#735c35}#breedGoal:checked+.breed-switch-track::after{transform:translateX(18px)}#breedGoal:focus-visible+.breed-switch-track{outline:2px solid #d5efad;outline-offset:3px}.breed-color-xp{color:#edca88}.breed-xp-gauges{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 8px}.breed-xp-gauges label{min-width:0;font-size:12px}.breed-xp-gauges label:last-child{grid-column:1/-1}.breed-xp-gauges input{min-width:0;appearance:auto}.breed-xp-status,.breed-xp-totals{font-size:12px;color:#d8c396}.breed-xp-status{margin:8px 0}.breed-mount-card-footer{margin-top:10px}.breeding-alarm-stack{position:fixed;right:18px;bottom:12px;z-index:20;width:min(600px,calc(100vw - 36px));max-height:calc(100vh - 24px);overflow:auto;display:flex;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:none}.breeding-alarm-stack>.breeding-alarm-banner{position:relative;right:auto;bottom:auto;width:100%;max-height:40vh;margin:0;flex:none;pointer-events:auto}.breeding-alarm-stack>.breed-alarm-compact{width:min(330px,100%)}
+
+/* V173 : cible commune à côté de la stratégie. */
+#breedingMode .breed-xp-target{max-width:300px}.breed-xp-target-controls{display:grid;grid-template-columns:minmax(80px,1fr) minmax(95px,1fr);gap:6px}.breed-xp-target-controls input,.breed-xp-target-controls select{min-width:0}
+
+.breed-strategy-controls{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;max-width:100%}.breed-strategy-controls>label{min-width:0!important}.breed-xp-target-controls{max-width:100%}
+
+.breed-xp-target{display:grid;gap:6px;min-width:0}
