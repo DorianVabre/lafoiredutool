@@ -16,3 +16,5 @@ button,a{-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:poin
 @media(max-width:400px){.forge-nav{font-size:11px}.forge-nav>span{font-size:10px}.workbench{padding:12px}.effects-header,.effect-row{grid-template-columns:minmax(0,1fr) 22px 118px;gap:6px}.effect-name{gap:5px}.effect-name strong{font-size:11px}.effect-name small{font-size:9px}.rune-button strong{font-size:10px}.rune-button small{font-size:9px}.rune-button img{width:25px;height:25px}.quiet-button{padding:6px;font-size:10px}.item-heading h2{font-size:20px}.effect-value{font-size:21px}}
 
 .forge-brand{display:inline-flex;align-items:center;gap:6px}.forge-brand img{display:block;object-fit:contain;flex:none}
+
+.site-version{white-space:nowrap;font-size:11px;font-weight:600}

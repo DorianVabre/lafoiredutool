@@ -1,4 +1,4 @@
-# La Foire du Tool — V155
+# La Foire du Tool — V156
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -301,3 +301,8 @@ Glissement réservé au clic droit : le clic gauche reste ponctuel, sans déplac
 ## V155 — Frappes simultanées du concasseur
 
 Les frappes utilisent l’horodatage des événements clavier/pointeur, avec un suivi indépendant des touches pressées et relâchées. Le rendu, le HUD et l’animation du marteau sont mutualisés dans la frame suivante au lieu d’être refaits à chaque touche d’un accord ; le HUD ne réécrit plus les valeurs inchangées. Les états de touches sont réinitialisés en pause, à la reprise, au redémarrage et en fin de partie. Les fenêtres de jugement et les règles de score restent identiques.
+
+
+## V156 — Texte des coefficients et version visible
+
+Texte du concasseur reformulé : « À chaque brisage, l’objet perd 24 % de coefficient, et les autres en gagnent 7. » Version du site affichée dans le footer de la page principale et des quatre mini-jeux.
