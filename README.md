@@ -1,4 +1,4 @@
-# La Foire du Tool — V156
+# La Foire du Tool — V163
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -306,3 +306,38 @@ Les frappes utilisent l’horodatage des événements clavier/pointeur, avec un 
 ## V156 — Texte des coefficients et version visible
 
 Texte du concasseur reformulé : « À chaque brisage, l’objet perd 24 % de coefficient, et les autres en gagnent 7. » Version du site affichée dans le footer de la page principale et des quatre mini-jeux.
+
+
+## V157 — Gestion des enclos
+
+Nouvel onglet Élevage dans Optimisation : six enclos selon le niveau métier, dix dragodindes par enclos, jauges et réserves persistantes. Plan de fécondité par lots et ticks de 10 s, stratégies économie (réserve minimale) ou vitesse (remplissage maximal), combinaison de carburants au coût minimal parmi les prix saisis. Catalogue local de 120 carburants Dofusdude relevés le 15/11/2026. Parcours commun déterministe, sans garantie d’optimalité globale ni bonus Almanax. Suivi manuel avec confirmations, alarmes Web Audio partagées entre outils et reprises sur les autres pages ; son à réactiver après navigation, arrière-plan soumis aux restrictions du navigateur. Version V157 dans tous les footers.
+
+
+## V158 — Espèces de montures et images des carburants
+
+Images des consommables dans la saisie des prix. Sélecteur d’espèce (Dragodinde, Muldo, Volkorne) avant le nom de chaque monture, conservé dans la sauvegarde ; les anciennes entrées prennent Dragodinde par défaut. Libellés génériques « monture » dans l’outil et les plans. Version V158 dans tous les footers.
+
+
+## V159 — Parcours et catalogue des montures
+
+Sélecteur avec recherche et filtre de famille pour 306 montures élevables Dofusdude. Images et noms copiables pour les consommables, les achats et les recharges. Suivi compact hors Élevage, compte à rebours et heure de prochaine action. Parcours en colonnes durée cumulée / incrément / action ; les étapes confirmées disparaissent et le plan actif est restauré au rechargement. Recharges avancées au départ sans modifier les réserves simulées : premières recharges de chaque jauge, et regroupement des suivantes en économie lorsque tout reste au palier 1 sans perte ; les autres restent au bon moment. Version V159 dans tous les footers.
+
+
+## V160 — Réserve persistante et suivi multi-enclos
+
+Identifiants permanents et migration des montures existantes, réserve à gauche, drag & drop et sélecteur de déplacement entre enclos. Le retrait conserve la monture. Sélection des enclos pour un plan parallèle commun, actions simultanées regroupées et libellés courts. Confirmation des actions : recharge des carburants et transfert réel des montures dans la sauvegarde. Simulation persistante par ticks de 10 secondes, consommation partagée, pause/reprise et arrêt à chaque action attendue ; reprise sur les autres pages. Les déplacements pendant une pause arrêtent le plan pour pouvoir le recalculer. Prix dotés de l’horloge commune de dernière saisie. État estimé, toujours à rapprocher des valeurs en jeu. Version V160 dans tous les footers.
+
+
+## V161 — Cartes de montures et jauges visuelles
+
+Enclos présentés en cartes adaptatives sans défilement horizontal ; réserve compacte avec portraits, icônes de jauges et tri persistant (nom, espèce/robe, maturité, endurance, amour, fécondité, sens inversable). Carburants toujours visibles, icônes et barres graduées aux paliers 80k/140k/180k. Barres sous les jauges des montures, mises à jour pendant le suivi. Clic sur une monture : fiche détaillée et suppression, annulable dans la réserve ; une monture suivie ne peut être supprimée qu’après mise en pause, ce qui arrête le plan concerné. Planning adaptatif sur petit écran. Version V161 dans tous les footers.
+
+
+## V162 — Suppression groupée et détails de présentation
+
+Sélection de montures depuis les enclos ou la réserve, sélection globale par zone et suppression atomique du lot. Annulation du dernier lot avec restauration des identités et des jauges dans la réserve ; compatibilité avec les anciennes suppressions individuelles. Protection des montures suivies tant que le plan n’est pas en pause. Loupe accolée au nom de l’espèce, retrait du bouton Fiche et surlignage dynamique des jauges accessibles selon la sérénité. Espacement de 25 px entre la navigation et le bloc Mes montures. Version V162 dans tous les footers.
+
+
+## V163 — Cartes déplaçables et Ctrl+clic
+
+Glisser-déposer depuis toute la carte de monture en enclos et en réserve ; les champs restent modifiables. Ctrl+clic (ou Cmd+clic) ajoute ou retire une monture de la sélection sans ouvrir sa fiche. Glisser une monture sélectionnée déplace le lot entier, avec contrôle atomique des dix places, conservation des identités et protection du plan en cours. Version V163 dans tous les footers.
