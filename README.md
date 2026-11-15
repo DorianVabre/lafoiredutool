@@ -1,4 +1,4 @@
-# La Foire du Tool — V163
+# La Foire du Tool — V165
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -341,3 +341,13 @@ Sélection de montures depuis les enclos ou la réserve, sélection globale par 
 ## V163 — Cartes déplaçables et Ctrl+clic
 
 Glisser-déposer depuis toute la carte de monture en enclos et en réserve ; les champs restent modifiables. Ctrl+clic (ou Cmd+clic) ajoute ou retire une monture de la sélection sans ouvrir sa fiche. Glisser une monture sélectionnée déplace le lot entier, avec contrôle atomique des dix places, conservation des identités et protection du plan en cours. Version V163 dans tous les footers.
+
+
+## V164 — Choix du palier de vitesse et amour à sérénité zéro
+
+Cinq stratégies : économie au minimum nécessaire ou vitesse avec remplissage au palier 1 (80 000), 2 (140 000), 3 (180 000) ou 4 (200 000). Coûts, recharges et durées calculés selon le palier choisi, sans retirer les réserves déjà supérieures. Le choix historique speed correspond toujours au palier 4. L’amour est accessible dès 0 de sérénité dans le planificateur, les ticks du suivi, les surlignages et la fiche ; aucun passage à +1 n’est imposé. Version V164 dans tous les footers.
+
+
+## V165 — Protecteurs et XP métier des routes de farm
+
+Dans Comparaison de farm, option de fin de session (chronométrée ou manuelle) pour les 85 ressources récoltables reconnues : protecteurs vaincus donnant chacun un sac de 50, quantités saisies sacs inclus ou ajout automatique des sacs. XP métier estimée à partir du nombre d’actions ou d’un rendement moyen hors sacs ; XP par action proposée selon 10 + floor(niveau de récolte / 5), modifiable, avec bonus explicite. Historique détaillé, revenus incluant les sacs une seule fois et cumul d’XP par métier sur les sessions renseignées. Anciennes sessions inchangées, aucun XP fictif déduit des seuls sacs. Catalogue des compétences DofusDB relevé le 15/11/2026 dans data/farm-recoltes.json ; barème indicatif recoupé avec https://dofuswiki.fandom.com/wiki/Farmer/Gathering et https://www.reddit.com/r/Dofus/comments/1d9og13/ ; sacs confirmés par https://dofus.jeuxonline.info/article/1609/paysan. Version V165 dans tous les footers.

@@ -1,0 +1,601 @@
+{
+  "resources": [
+    {
+      "id": 303,
+      "name": "Bois de Frêne",
+      "job": "Bûcheron",
+      "level": 1,
+      "skill": 6
+    },
+    {
+      "id": 460,
+      "name": "Bois de Chêne",
+      "job": "Bûcheron",
+      "level": 60,
+      "skill": 10
+    },
+    {
+      "id": 312,
+      "name": "Fer",
+      "job": "Mineur",
+      "level": 1,
+      "skill": 24
+    },
+    {
+      "id": 441,
+      "name": "Cuivre",
+      "job": "Mineur",
+      "level": 20,
+      "skill": 25
+    },
+    {
+      "id": 442,
+      "name": "Bronze",
+      "job": "Mineur",
+      "level": 40,
+      "skill": 26
+    },
+    {
+      "id": 443,
+      "name": "Kobalte",
+      "job": "Mineur",
+      "level": 60,
+      "skill": 28
+    },
+    {
+      "id": 350,
+      "name": "Argent",
+      "job": "Mineur",
+      "level": 120,
+      "skill": 29
+    },
+    {
+      "id": 313,
+      "name": "Or",
+      "job": "Mineur",
+      "level": 160,
+      "skill": 30
+    },
+    {
+      "id": 446,
+      "name": "Bauxite",
+      "job": "Mineur",
+      "level": 140,
+      "skill": 31
+    },
+    {
+      "id": 461,
+      "name": "Bois d'If",
+      "job": "Bûcheron",
+      "level": 100,
+      "skill": 33
+    },
+    {
+      "id": 449,
+      "name": "Bois d'Ébène",
+      "job": "Bûcheron",
+      "level": 140,
+      "skill": 34
+    },
+    {
+      "id": 470,
+      "name": "Bois d'Orme",
+      "job": "Bûcheron",
+      "level": 180,
+      "skill": 35
+    },
+    {
+      "id": 471,
+      "name": "Bois d'Érable",
+      "job": "Bûcheron",
+      "level": 80,
+      "skill": 37
+    },
+    {
+      "id": 472,
+      "name": "Bois de Charme",
+      "job": "Bûcheron",
+      "level": 160,
+      "skill": 38
+    },
+    {
+      "id": 473,
+      "name": "Bois de Châtaignier",
+      "job": "Bûcheron",
+      "level": 20,
+      "skill": 39
+    },
+    {
+      "id": 476,
+      "name": "Bois de Noyer",
+      "job": "Bûcheron",
+      "level": 40,
+      "skill": 40
+    },
+    {
+      "id": 474,
+      "name": "Bois de Merisier",
+      "job": "Bûcheron",
+      "level": 120,
+      "skill": 41
+    },
+    {
+      "id": 289,
+      "name": "Blé",
+      "job": "Paysan",
+      "level": 1,
+      "skill": 45
+    },
+    {
+      "id": 401,
+      "name": "Houblon",
+      "job": "Paysan",
+      "level": 60,
+      "skill": 46
+    },
+    {
+      "id": 423,
+      "name": "Lin",
+      "job": "Paysan",
+      "level": 80,
+      "skill": 50
+    },
+    {
+      "id": 532,
+      "name": "Seigle",
+      "job": "Paysan",
+      "level": 100,
+      "skill": 52
+    },
+    {
+      "id": 400,
+      "name": "Orge",
+      "job": "Paysan",
+      "level": 20,
+      "skill": 53
+    },
+    {
+      "id": 425,
+      "name": "Chanvre",
+      "job": "Paysan",
+      "level": 140,
+      "skill": 54
+    },
+    {
+      "id": 444,
+      "name": "Étain",
+      "job": "Mineur",
+      "level": 100,
+      "skill": 55
+    },
+    {
+      "id": 445,
+      "name": "Manganèse",
+      "job": "Mineur",
+      "level": 80,
+      "skill": 56
+    },
+    {
+      "id": 533,
+      "name": "Avoine",
+      "job": "Paysan",
+      "level": 40,
+      "skill": 57
+    },
+    {
+      "id": 405,
+      "name": "Malt",
+      "job": "Paysan",
+      "level": 120,
+      "skill": 58
+    },
+    {
+      "id": 421,
+      "name": "Ortie",
+      "job": "Alchimiste",
+      "level": 1,
+      "skill": 68
+    },
+    {
+      "id": 428,
+      "name": "Sauge",
+      "job": "Alchimiste",
+      "level": 20,
+      "skill": 69
+    },
+    {
+      "id": 395,
+      "name": "Trèfle à 5 feuilles",
+      "job": "Alchimiste",
+      "level": 40,
+      "skill": 71
+    },
+    {
+      "id": 380,
+      "name": "Menthe Sauvage",
+      "job": "Alchimiste",
+      "level": 60,
+      "skill": 72
+    },
+    {
+      "id": 593,
+      "name": "Orchidée Freyesque",
+      "job": "Alchimiste",
+      "level": 80,
+      "skill": 73
+    },
+    {
+      "id": 594,
+      "name": "Edelweiss",
+      "job": "Alchimiste",
+      "level": 100,
+      "skill": 74
+    },
+    {
+      "id": 1782,
+      "name": "Goujon",
+      "job": "Pêcheur",
+      "level": 1,
+      "skill": 124
+    },
+    {
+      "id": 1844,
+      "name": "Truite",
+      "job": "Pêcheur",
+      "level": 20,
+      "skill": 125
+    },
+    {
+      "id": 603,
+      "name": "Poisson-Chaton",
+      "job": "Pêcheur",
+      "level": 40,
+      "skill": 126
+    },
+    {
+      "id": 1794,
+      "name": "Carpe d'Iem",
+      "job": "Pêcheur",
+      "level": 60,
+      "skill": 127
+    },
+    {
+      "id": 598,
+      "name": "Greuvette",
+      "job": "Pêcheur",
+      "level": 10,
+      "skill": 128
+    },
+    {
+      "id": 1757,
+      "name": "Crabe Sourimi",
+      "job": "Pêcheur",
+      "level": 30,
+      "skill": 129
+    },
+    {
+      "id": 1750,
+      "name": "Poisson Pané",
+      "job": "Pêcheur",
+      "level": 50,
+      "skill": 130
+    },
+    {
+      "id": 1805,
+      "name": "Sardine Brillante",
+      "job": "Pêcheur",
+      "level": 70,
+      "skill": 131
+    },
+    {
+      "id": 2358,
+      "name": "Bois de Bombu",
+      "job": "Bûcheron",
+      "level": 70,
+      "skill": 139
+    },
+    {
+      "id": 2357,
+      "name": "Bois d'Oliviolet",
+      "job": "Bûcheron",
+      "level": 90,
+      "skill": 141
+    },
+    {
+      "id": 7013,
+      "name": "Bois de Bambou",
+      "job": "Bûcheron",
+      "level": 110,
+      "skill": 154
+    },
+    {
+      "id": 7016,
+      "name": "Bois de Bambou Sombre",
+      "job": "Bûcheron",
+      "level": 170,
+      "skill": 155
+    },
+    {
+      "id": 7014,
+      "name": "Bois de Bambou Sacré",
+      "job": "Bûcheron",
+      "level": 190,
+      "skill": 158
+    },
+    {
+      "id": 7018,
+      "name": "Riz",
+      "job": "Paysan",
+      "level": 100,
+      "skill": 159
+    },
+    {
+      "id": 7059,
+      "name": "Graine de Pandouille",
+      "job": "Alchimiste",
+      "level": 120,
+      "skill": 160
+    },
+    {
+      "id": 7033,
+      "name": "Dolomite",
+      "job": "Mineur",
+      "level": 180,
+      "skill": 161
+    },
+    {
+      "id": 7032,
+      "name": "Silicate",
+      "job": "Mineur",
+      "level": 100,
+      "skill": 162
+    },
+    {
+      "id": 7925,
+      "name": "Bois de Kaliptus",
+      "job": "Bûcheron",
+      "level": 150,
+      "skill": 174
+    },
+    {
+      "id": 11102,
+      "name": "Perce-Neige",
+      "job": "Alchimiste",
+      "level": 200,
+      "skill": 188
+    },
+    {
+      "id": 11106,
+      "name": "Poisskaille",
+      "job": "Pêcheur",
+      "level": 200,
+      "skill": 189
+    },
+    {
+      "id": 11107,
+      "name": "Bois de Tremble",
+      "job": "Bûcheron",
+      "level": 200,
+      "skill": 190
+    },
+    {
+      "id": 11109,
+      "name": "Frostiz",
+      "job": "Paysan",
+      "level": 200,
+      "skill": 191
+    },
+    {
+      "id": 11110,
+      "name": "Obsidienne",
+      "job": "Mineur",
+      "level": 200,
+      "skill": 192
+    },
+    {
+      "id": 16385,
+      "name": "Ginseng",
+      "job": "Alchimiste",
+      "level": 140,
+      "skill": 303
+    },
+    {
+      "id": 16387,
+      "name": "Belladone",
+      "job": "Alchimiste",
+      "level": 160,
+      "skill": 304
+    },
+    {
+      "id": 16389,
+      "name": "Mandragore",
+      "job": "Alchimiste",
+      "level": 180,
+      "skill": 305
+    },
+    {
+      "id": 16488,
+      "name": "Bois de Noisetier",
+      "job": "Bûcheron",
+      "level": 130,
+      "skill": 306
+    },
+    {
+      "id": 16454,
+      "name": "Maïs",
+      "job": "Paysan",
+      "level": 160,
+      "skill": 307
+    },
+    {
+      "id": 16456,
+      "name": "Millet",
+      "job": "Paysan",
+      "level": 180,
+      "skill": 308
+    },
+    {
+      "id": 1847,
+      "name": "Brochet",
+      "job": "Pêcheur",
+      "level": 80,
+      "skill": 317
+    },
+    {
+      "id": 600,
+      "name": "Kralamoure",
+      "job": "Pêcheur",
+      "level": 90,
+      "skill": 318
+    },
+    {
+      "id": 16461,
+      "name": "Anguille",
+      "job": "Pêcheur",
+      "level": 100,
+      "skill": 319
+    },
+    {
+      "id": 16463,
+      "name": "Dorade Grise",
+      "job": "Pêcheur",
+      "level": 110,
+      "skill": 320
+    },
+    {
+      "id": 1801,
+      "name": "Perche",
+      "job": "Pêcheur",
+      "level": 120,
+      "skill": 321
+    },
+    {
+      "id": 1784,
+      "name": "Raie Bleue",
+      "job": "Pêcheur",
+      "level": 130,
+      "skill": 322
+    },
+    {
+      "id": 16465,
+      "name": "Lotte",
+      "job": "Pêcheur",
+      "level": 140,
+      "skill": 323
+    },
+    {
+      "id": 602,
+      "name": "Requin Marteau-Faucille",
+      "job": "Pêcheur",
+      "level": 150,
+      "skill": 324
+    },
+    {
+      "id": 1779,
+      "name": "Bar Rikain",
+      "job": "Pêcheur",
+      "level": 160,
+      "skill": 325
+    },
+    {
+      "id": 16467,
+      "name": "Morue",
+      "job": "Pêcheur",
+      "level": 170,
+      "skill": 326
+    },
+    {
+      "id": 16469,
+      "name": "Tanche",
+      "job": "Pêcheur",
+      "level": 180,
+      "skill": 327
+    },
+    {
+      "id": 16471,
+      "name": "Espadon",
+      "job": "Pêcheur",
+      "level": 190,
+      "skill": 328
+    },
+    {
+      "id": 17993,
+      "name": "Quisnoa",
+      "job": "Paysan",
+      "level": 200,
+      "skill": 341
+    },
+    {
+      "id": 17995,
+      "name": "Écume de mer",
+      "job": "Mineur",
+      "level": 200,
+      "skill": 342
+    },
+    {
+      "id": 17991,
+      "name": "Bois d'Aquajou",
+      "job": "Bûcheron",
+      "level": 200,
+      "skill": 343
+    },
+    {
+      "id": 17992,
+      "name": "Salikrone",
+      "job": "Alchimiste",
+      "level": 200,
+      "skill": 344
+    },
+    {
+      "id": 17994,
+      "name": "Patelle",
+      "job": "Pêcheur",
+      "level": 200,
+      "skill": 347
+    },
+    {
+      "id": 23825,
+      "name": "Pichon d'encre",
+      "job": "Pêcheur",
+      "level": 200,
+      "skill": 389
+    },
+    {
+      "id": 23903,
+      "name": "Cristal pliable",
+      "job": "Mineur",
+      "level": 200,
+      "skill": 391
+    },
+    {
+      "id": 23902,
+      "name": "Cristal liquide",
+      "job": "Mineur",
+      "level": 200,
+      "skill": 392
+    },
+    {
+      "id": 23824,
+      "name": "Tulipe en papier",
+      "job": "Alchimiste",
+      "level": 200,
+      "skill": 393
+    },
+    {
+      "id": 27621,
+      "name": "Cendrepierre",
+      "job": "Mineur",
+      "level": 180,
+      "skill": 410
+    },
+    {
+      "id": 27375,
+      "name": "Bois de Pin",
+      "job": "Bûcheron",
+      "level": 90,
+      "skill": 411
+    }
+  ],
+  "source": "https://api.dofusdb.fr/skills",
+  "retrieved": "2026-11-15"
+}

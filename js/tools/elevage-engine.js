@@ -3,6 +3,7 @@ const Breeding = (() => {
  const keys=['down','up','endurance','maturity','love'];
  const labels={down:'Perte de sérénité',up:'Gain de sérénité',endurance:'Endurance',maturity:'Maturité',love:'Amour'};
  const caps=[80000,140000,180000,200000];
+ const strategies={economy:{label:'Économie · minimum nécessaire',cap:null},tier1:{label:'Vitesse · palier 1 · 80 000',cap:80000},tier2:{label:'Vitesse · palier 2 · 140 000',cap:140000},tier3:{label:'Vitesse · palier 3 · 180 000',cap:180000},speed:{label:'Vitesse · palier 4 · 200 000',cap:200000}};
  const rate=q=>q>180000?40:q>140000?30:q>80000?20:q>0?10:0;
  const full=m=>['endurance','maturity','love'].every(k=>m[k]>=20000);
  function validate(pen){
@@ -31,6 +32,7 @@ const Breeding = (() => {
   result.reverse();return {cost:costs.get(target),items:result,end:target};
  }
  function plan(pen,catalog,prices,strategy='economy'){
+  if(!Object.prototype.hasOwnProperty.call(strategies,strategy))throw Error('Stratégie inconnue.');
   validate(pen);const mounts=pen.mounts.map(m=>({...m})),fuel={...pen.fuel},events=[],shopping=new Map();let seconds=0,cost=0;
   const emit=(text,extra={})=>events.push({at:seconds,text,...extra});
   const ready=mounts.filter(full);if(ready.length)emit('Retirer les montures déjà fécondes : '+ready.map(m=>m.name).join(', '),{removeIds:ready.map(m=>m.id),removeNames:ready.map(m=>m.name)});
@@ -39,7 +41,7 @@ const Breeding = (() => {
    if(!group.length)return;
    const loads=[],recharges=[];
    for(const k of active){const demand=Math.ceil(Math.max(...group.map(m=>need(m,k))));if(!demand)continue;
-    const target=strategy==='speed'?200000:fuel[k]+Math.max(0,Math.ceil((demand-fuel[k])/2000))*2000;
+    const target=strategies[strategy].cap??(fuel[k]+Math.max(0,Math.ceil((demand-fuel[k])/2000))*2000);
     const before=fuel[k],buy=purchase(before,target,catalog.filter(x=>x.gauge===k),prices);fuel[k]=buy.end;cost+=buy.cost;
     for(const x of buy.items){shopping.set(x.id,{...x,unitPrice:prices[x.id],qty:(shopping.get(x.id)?.qty||0)+1});}
     if(buy.items.length){const counts=new Map();for(const x of buy.items)counts.set(x.id,{...x,qty:(counts.get(x.id)?.qty||0)+1});const items=[...counts.values()];recharges.push({gauge:k,added:buy.end-before,items});loads.push(labels[k]+' : '+items.map(x=>x.qty+' × '+x.name).join(', '));}
@@ -49,7 +51,7 @@ const Breeding = (() => {
    while(remaining.length){if(++ticks>50000)throw Error('Simulation interrompue : progression impossible.');seconds+=10;
     // Check eligibility at the start of the tick for deterministic simultaneous effects.
     const changes=remaining.map(m=>({m,serenity:m.serenity}));
-    for(const k of active){const eligible=changes.filter(({m,serenity:s})=>k==='up'||k==='down'||(m[k]<20000&&(k==='endurance'?s<0:k==='love'?s>0:Math.abs(s)<=2000)));
+    for(const k of active){const eligible=changes.filter(({m,serenity:s})=>k==='up'||k==='down'||(m[k]<20000&&(k==='endurance'?s<0:k==='love'?s>=0:Math.abs(s)<=2000)));
      if(!eligible.length)continue;const gain=Math.min(fuel[k],rate(fuel[k]));if(!gain)throw Error('Carburant insuffisant pour '+labels[k]);fuel[k]-=gain;
      for(const {m} of eligible){if(k==='up'||k==='down')m.serenity=Math.max(-5000,Math.min(5000,m.serenity+gain*(k==='up'?1:-1)));else m[k]=Math.min(20000,m[k]+gain*((k==='love'&&m.trait==='amoureuse')||(k==='endurance'&&m.trait==='endurante')?2:1));}
     }
@@ -62,7 +64,7 @@ const Breeding = (() => {
   phase('Ramener la sérénité dans la zone négative utile',preparation.filter(m=>m.serenity<-2000),['up'],m=>m.serenity>=-2000,(m)=>-2000-m.serenity);
   phase('Ramener la sérénité dans la zone négative utile',preparation.filter(m=>m.serenity>=0&&(m.endurance<20000||m.serenity>2000)),['down'],m=>m.serenity<0,(m)=>m.serenity+1);
   phase('Préparer endurance et maturité',todo.filter(m=>m.endurance<20000||m.maturity<20000),['endurance','maturity'],m=>m.endurance>=20000&&m.maturity>=20000,(m,k)=>(20000-m[k])/(k==='endurance'&&m.trait==='endurante'?2:1));
-  phase('Passer en sérénité positive',todo.filter(m=>m.love<20000&&m.serenity<=0),['up'],m=>m.serenity>0,m=>1-m.serenity);
+  phase('Préparer la sérénité pour l’amour',todo.filter(m=>m.love<20000&&m.serenity<0),['up'],m=>m.serenity>=0,m=>-m.serenity);
   phase('Terminer l’amour',todo.filter(m=>m.love<20000),['love'],full,(m)=>(20000-m.love)/(m.trait==='amoureuse'?2:1));
   if(mounts.some(m=>!full(m)))throw Error('Le plan ne permet pas de rendre toutes les montures fécondes.');
   // Inactive gauges do not drain. Move their first load to departure without
@@ -95,6 +97,6 @@ const Breeding = (() => {
   const events=[...eventsByTime].sort((a,b)=>a[0]-b[0]).map(([at,entries])=>({at,entries,text:entries.map(x=>x.penName+' : '+x.text).join('\n')}));
   return {multi:true,penIds:pens.map(p=>p.id),initialPens,events,shopping:[...shopping.values()],cost,seconds,final,strategy};
  }
- return {keys,labels,caps,rate,purchase,plan,planMany,validate};
+ return {keys,labels,caps,strategies,rate,purchase,plan,planMany,validate};
 })();
 if(typeof module!=='undefined')module.exports=Breeding;
