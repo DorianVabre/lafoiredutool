@@ -1,0 +1,24 @@
+{
+  "researchedAt": "2026-11-15",
+  "scope": "DOFUS : modèle de rendement moyen hors bonus, niveaux de métier 1 à 200. Données communautaires, pas un relevé officiel exhaustif du serveur actuel.",
+  "normal": {
+    "minimum": "1 + floor(niveauMetier / 30)",
+    "maximum": "7 + floor(niveauMetier / 10) - floor(niveauRequisRessource / 10)",
+    "mean": "(minimum + maximum) / 2",
+    "eligibility": "niveauMetier >= niveauRequisRessource"
+  },
+  "fixedOneResourceIds": [11102,11106,11107,11109,17991,17992,17993,17994,17995,23824],
+  "unconfirmedResourceIds": [11110,23825,23902,23903],
+  "unconfirmedNotes": "Obsidienne : tableau ancien ambigu (7–8). Pichon d'encre et cristaux de Pandala : pas de fourchette confirmée. Leur XP reste indisponible, leurs sacs et revenus sont comptabilisés.",
+  "xpPerAction": "10 + floor(niveauRequisRessource / 5), barème fourni par l'utilisateur : niveau 1 = 10 XP, 10 = 12 XP, puis +2 tous les 10 niveaux jusqu'à 200 = 50 XP.",
+  "estimation": "Retirer 50 unités par protecteur ; diviser le reste par la moyenne corrigée du bonus de quantité ; multiplier par l'XP par action et le bonus d'XP. Les sacs ne donnent pas d'XP métier.",
+  "limitations": "Modèle à niveau et bonus constants. Quantités aléatoires ; bonus de maturité, arrondis du serveur et montées de niveau pendant la session ne sont pas reconstitués. Certaines cellules des anciens tableaux paysans sont incohérentes à 140/180 : utilisation de la règle de progression, pas de ces cellules isolées.",
+  "sources": [
+    {"url":"https://api.dofusdb.fr/skills/45","use":"Identification des ressources et niveaux requis ; catalogue complet dans farm-recoltes.json. L'API ne fournit pas les rendements."},
+    {"url":"https://dofuswiki.fandom.com/wiki/Alchemist/Gathering","use":"Progression min/max et exceptions Perce-Neige, Salikrone, Tulipe en papier."},
+    {"url":"https://dofuswiki.fandom.com/wiki/Lumberjack/Gathering","use":"Tableaux des bois ; Tremble et Aquajou à une unité."},
+    {"url":"https://dofuswiki.fandom.com/wiki/Farmer/Gathering","use":"Tableaux des céréales ; Frostiz et Quisnoa à une unité."},
+    {"url":"https://dofuswiki.fandom.com/wiki/Fisherman/Gathering","use":"Tableaux des poissons ; Poisskaille et Patelle à une unité."},
+    {"url":"https://dofuswiki.fandom.com/wiki/Miner/Gathering","use":"Tableaux des minerais ; Écume de mer à une unité ; Obsidienne laissée non confirmée."}
+  ]
+}

@@ -1,4 +1,4 @@
-# La Foire du Tool — V165
+# La Foire du Tool — V167
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -351,3 +351,15 @@ Cinq stratégies : économie au minimum nécessaire ou vitesse avec remplissage 
 ## V165 — Protecteurs et XP métier des routes de farm
 
 Dans Comparaison de farm, option de fin de session (chronométrée ou manuelle) pour les 85 ressources récoltables reconnues : protecteurs vaincus donnant chacun un sac de 50, quantités saisies sacs inclus ou ajout automatique des sacs. XP métier estimée à partir du nombre d’actions ou d’un rendement moyen hors sacs ; XP par action proposée selon 10 + floor(niveau de récolte / 5), modifiable, avec bonus explicite. Historique détaillé, revenus incluant les sacs une seule fois et cumul d’XP par métier sur les sessions renseignées. Anciennes sessions inchangées, aucun XP fictif déduit des seuls sacs. Catalogue des compétences DofusDB relevé le 15/11/2026 dans data/farm-recoltes.json ; barème indicatif recoupé avec https://dofuswiki.fandom.com/wiki/Farmer/Gathering et https://www.reddit.com/r/Dofus/comments/1d9og13/ ; sacs confirmés par https://dofus.jeuxonline.info/article/1609/paysan. Version V165 dans tous les footers.
+
+
+## V166 — Rendements et XP de récolte automatiques
+
+Le formulaire des sessions demande désormais un niveau par métier, mémorisé par activité. Plus de saisie des actions, du rendement moyen ou de l’XP par action : fourchette et moyenne calculées par ressource, XP selon le barème fourni (10 à 50), après exclusion des sacs de 50. Bonus de quantité et d’XP séparés. Même calcul en session manuelle et chronométrée ; historique existant conservé sans recalcul.
+
+Règles, sources, exceptions et limites dans [data/farm-rendements.json](data/farm-rendements.json). Modèle communautaire à niveau constant : progression normale + minimum tous les 30 niveaux, maximum tous les 10 ; exceptions à une unité. Rendement non confirmé pour Obsidienne, Pichon d’encre, Cristal liquide et Cristal pliable : pas d’XP inventée, sacs et revenus conservés. Les anciens tableaux contiennent quelques incohérences ; l’interface présente donc une estimation, pas une mesure exacte. Version V166 dans tous les footers.
+
+
+## V167 — Réserve et saisie des jauges
+
+Les pourcentages de la réserve occupent toute la largeur de leur carte et peuvent revenir à la ligne, y compris avec trois jauges à 100 % et le témoin de fécondité. Flèches numériques natives rétablies sur les jauges. Le déplacement de la carte est désactivé dès l’appui dans un champ et pendant son édition, puis rétabli sans déverrouiller les montures d’un plan actif. Version V167 dans tous les footers.
