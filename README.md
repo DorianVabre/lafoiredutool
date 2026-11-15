@@ -1,4 +1,4 @@
-# La Foire du Tool — V150
+# La Foire du Tool — V154
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -276,3 +276,23 @@ Suppression de la phrase de légende sous le plan. Les consignes de placement et
 ## V150 — Brouillons nettoyés et aides de résolution
 
 Un placement grise sa ligne et sa colonne et retire les brouillons incompatibles. Annuler restaure placements et notes. Consigne raccourcie et navigation personnalisée au clavier retirée. Indice retire d’abord les placements confirmés faux et s’arrête, puis propose une déduction expliquée au clic suivant. Solution affiche les éliminations successives, les positions finales et le coupable, sans remplir le plan. Les aides s’adaptent aux éditions précédentes ; si un ancien niveau dépasse la propagation simple, cela est signalé. Clés et niveaux inchangés.
+
+
+## V151 — Déductions plus accessibles
+
+Nouvelles affaires E6 : chaque application utile d’un témoignage réduit le suspect concerné à six cases maximum ; les relations sont exploitées lorsque l’autre suspect a lui aussi six possibilités maximum. Les indices de position trop vagues (plus de six cases libres dès le départ) sont exclus ; les plus précis se présentent avant les relations. Le générateur conserve les indices qui rendent cette progression possible, même si une propagation plus exigeante pourrait s’en passer. Les éliminations automatiques de ligne/colonne restent applicables à toutes les cases. Diversité, plafond de deux indices par famille, unicité et déduction sans supposition conservés. Clés E1 à E5 inchangées ; Indice et Solution suivent le nouveau parcours pour E6.
+
+
+## V152 — Cases KO et sélection latérale
+
+Pastilles rondes des suspects à gauche de la grille, avec prénom visible et nom complet au survol. Nouvel outil ∅ Vide pour marquer une case KO sans placer de suspect : suppression des brouillons de cette case, sauvegarde, retrait au clic et restauration complète par Annuler. Les cases KO restent des annotations du joueur, indépendantes des preuves utilisées par Indice et Solution. Réinitialiser efface également les marqueurs. Message de vérification en échec raccourci. Clés et enquêtes inchangées.
+
+
+## V153 — Marquage en glissant
+
+Clic maintenu et glissement pour les brouillons au clic droit, les cases KO aux deux boutons et le déplacement d’un suspect au clic gauche. Le premier marquage définit ajout ou effacement, les cases déjà parcourues ne basculent pas de nouveau et Annuler restaure le geste entier. Les brouillons supprimés pendant le déplacement d’un suspect correspondent uniquement à sa dernière position, sans suppression cumulée le long du trajet. Arrêt au relâchement ou à la perte de focus. Le rappel permanent sur les cases occupées est masqué dans les témoignages ; numérotation des aides et sauvegardes des cases cochées adaptées. Clés et enquêtes inchangées.
+
+
+## V154 — Glissement au clic droit et indices contextuels
+
+Glissement réservé au clic droit : le clic gauche reste ponctuel, sans déplacement ni nettoyage au survol. Indice tient compte des placements corrects, des listes de brouillons compatibles et des KO valides, écarte les déductions déjà marquées et propose seulement les nouvelles cases. Les brouillons ne sont retirés que lorsqu’une étape de déduction les contredit, avec explication ; les KO occupant une case de la solution peuvent également être corrigés. Chaque correction est annulable et interrompt le clic sans autre nouvelle proposition. Clés et enquêtes inchangées.

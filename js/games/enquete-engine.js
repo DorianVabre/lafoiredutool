@@ -6,8 +6,8 @@ const EnqueteEngine=(()=>{
  function rng(seed){let n=seed>>>0;return()=>{n+=0x6D2B79F5;let t=n;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
  function shuffle(a,random){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
  function checksum(seed){return (Math.imul(seed^0x8f42ac19,2654435761)>>>0).toString(36).toUpperCase().padStart(7,'0')}
- function key(seed,version='E5'){return version+'-'+(seed>>>0).toString(36).toUpperCase().padStart(7,'0')+'-'+checksum(seed>>>0)}
- function parse(value){const m=String(value).trim().toUpperCase().match(/^(E[12345])-([0-9A-Z]{7})-([0-9A-Z]{7})$/);if(!m)return null;const seed=parseInt(m[2],36);return seed<=4294967295&&key(seed,m[1])===m[0]?seed:null}
+ function key(seed,version='E6'){return version+'-'+(seed>>>0).toString(36).toUpperCase().padStart(7,'0')+'-'+checksum(seed>>>0)}
+ function parse(value){const m=String(value).trim().toUpperCase().match(/^(E[123456])-([0-9A-Z]{7})-([0-9A-Z]{7})$/);if(!m)return null;const seed=parseInt(m[2],36);return seed<=4294967295&&key(seed,m[1])===m[0]?seed:null}
  function permutations(a){if(!a.length)return [[]];return a.flatMap((x,i)=>permutations(a.filter((_,j)=>j!==i)).map(p=>[x,...p]))}
  const perms=permutations([0,1,2,3,4,5]);
  // Une solution est indexée par suspect : {r,c}. Les permutations imposent une personne par ligne et colonne.
@@ -121,23 +121,23 @@ const EnqueteEngine=(()=>{
   return {...base,key:key(seed,'E3'),clues};
  }
  // Propagation seulement : aucun branchement, aucun accès à la solution attendue.
- function deduce(clues,{reverse=false,explain=false,placements=[]}={}){
-  const blocked=clues.find(c=>c.blocked)?.blocked||new Set(),initial=Array.from({length:36},(_,n)=>n).filter(n=>!blocked.has(n));
-  let domains=Array.from({length:6},(_,i)=>placements[i]?[placements[i].r*6+placements[i].c].filter(n=>!blocked.has(n)):initial.slice());const trace=[];
+ function deduce(clues,{reverse=false,explain=false,placements=[],comfortable=false,candidates=null,excluded=[]}={}){
+  const blocked=new Set([...(clues.find(c=>c.blocked)?.blocked||[]),...excluded]),initial=Array.from({length:36},(_,n)=>n).filter(n=>!blocked.has(n));
+  let domains=Array.from({length:6},(_,i)=>placements[i]?[placements[i].r*6+placements[i].c].filter(n=>!blocked.has(n)):initial.filter(n=>!candidates?.[i]||candidates[i].includes(n)));const trace=[];
   const point=n=>({r:Math.floor(n/6),c:n%6}),different=(a,b)=>Math.floor(a/6)!==Math.floor(b/6)&&a%6!==b%6;
-  function restrict(i,keep,reason,context){const next=domains[i].filter(keep);if(next.length===domains[i].length)return false;const step={suspect:i,removed:domains[i].filter(n=>!next.includes(n)),reason};if(explain)Object.assign(step,{before:domains[i].slice(),after:next.slice(),context});trace.push(step);domains[i]=next;return true}
+  function restrict(i,keep,reason,context,max=36){const next=domains[i].filter(keep);if(next.length===domains[i].length||next.length>max)return false;const step={suspect:i,removed:domains[i].filter(n=>!next.includes(n)),reason};if(comfortable)step.remaining=next.length;if(explain)Object.assign(step,{before:domains[i].slice(),after:next.slice(),context});trace.push(step);domains[i]=next;return true}
   const ordered=reverse?clues.slice().reverse():clues;
   let changed=true,passes=0;
   while(changed&&domains.every(d=>d.length)&&passes++<300){changed=false;
    for(const clue of ordered){
-    if(clue.unary)changed=restrict(clue.index,n=>clue.unary(point(n)),clue.text,explain?{type:'unary',clue:clues.indexOf(clue)}:null)||changed;
+    if(clue.unary)changed=restrict(clue.index,n=>clue.unary(point(n)),clue.text,explain?{type:'unary',clue:clues.indexOf(clue)}:null,comfortable?6:36)||changed;
     if(clue.pair){const [i,j]=clue.indices;
-     changed=restrict(i,a=>domains[j].some(b=>different(a,b)&&clue.pair(point(a),point(b),domains)),clue.text,explain?{type:'pair',clue:clues.indexOf(clue),other:j,otherDomain:domains[j].slice()}:null)||changed;
-     changed=restrict(j,b=>domains[i].some(a=>different(a,b)&&clue.pair(point(a),point(b),domains)),clue.text,explain?{type:'pair',clue:clues.indexOf(clue),other:i,otherDomain:domains[i].slice()}:null)||changed;
+     if(!comfortable||domains[j].length<=6)changed=restrict(i,a=>domains[j].some(b=>different(a,b)&&clue.pair(point(a),point(b),domains)),clue.text,explain?{type:'pair',clue:clues.indexOf(clue),other:j,otherDomain:domains[j].slice()}:null,comfortable?6:36)||changed;
+     if(!comfortable||domains[i].length<=6)changed=restrict(j,b=>domains[i].some(a=>different(a,b)&&clue.pair(point(a),point(b),domains)),clue.text,explain?{type:'pair',clue:clues.indexOf(clue),other:i,otherDomain:domains[i].slice()}:null,comfortable?6:36)||changed;
     }
    }
    // Une ligne et une colonne par suspect : élimination par compatibilité, puis places uniques.
-   for(let i=0;i<6;i++)for(let j=0;j<6;j++)if(i!==j)changed=restrict(i,a=>domains[j].some(b=>different(a,b)),'Une personne par ligne et colonne',explain?{type:'distinct',other:j,otherDomain:domains[j].slice()}:null)||changed;
+   for(let i=0;i<6;i++)for(let j=0;j<6;j++)if(i!==j&&(!comfortable||domains[j].length<=6))changed=restrict(i,a=>domains[j].some(b=>different(a,b)),'Une personne par ligne et colonne',explain?{type:'distinct',other:j,otherDomain:domains[j].slice()}:null)||changed;
    for(const axis of [n=>Math.floor(n/6),n=>n%6])for(let value=0;value<6;value++){
     const possible=domains.map((d,i)=>d.some(n=>axis(n)===value)?i:-1).filter(i=>i>=0);
     if(possible.length===1)changed=restrict(possible[0],n=>axis(n)===value,'Seul suspect possible dans cette ligne ou colonne',explain?{type:'only',axis:axis(6)===1?'ligne':'colonne',value}:null)||changed;
@@ -160,9 +160,10 @@ const EnqueteEngine=(()=>{
  }
  function fourth(seed,attempt=0,edition='E4'){
   const source=(seed+Math.imul(attempt,0x9e3779b9))>>>0;
-  const base=edition==='E5'?irregular(source):decorated(source),random=rng(source^0x478ace91),blocked=base.clues.find(c=>c.fixed),pool=[];
+  const base=edition==='E5'||edition==='E6'?irregular(source):decorated(source),random=rng(source^0x478ace91),blocked=base.clues.find(c=>c.fixed),pool=[];
   const roomAt=(r,c)=>room(r,c,base.roomMap),roomNames=base.rooms;
-  if(edition==='E5'){
+  const solve=clues=>deduce(clues,{comfortable:edition==='E6'});
+  if(edition==='E5'||edition==='E6'){
    const irregularCount=base.rooms.filter((_,id)=>{const cells=base.roomMap.flatMap((v,n)=>v===id?[n]:[]),rows=cells.map(n=>Math.floor(n/6)),cols=cells.map(n=>n%6);return (Math.max(...rows)-Math.min(...rows)+1)*(Math.max(...cols)-Math.min(...cols)+1)!==cells.length}).length;
    if(irregularCount<2){if(attempt<63)return fourth(seed,attempt+1,edition);throw Error('Contours de salles insuffisamment variés')}
   }
@@ -181,7 +182,7 @@ const EnqueteEngine=(()=>{
    unary(i,name+' se trouve dans la moitié '+(p.r<3?'nord':'sud')+' du manoir.',a=>(a.r<3)===(p.r<3),'half');
    unary(i,name+' se trouve dans la moitié '+(p.c<3?'ouest':'est')+' du manoir.',a=>(a.c<3)===(p.c<3),'half');
    unary(i,name+' est dans : '+roomNames[roomAt(p.r,p.c)]+'.',a=>roomAt(a.r,a.c)===roomAt(p.r,p.c),'room');
-   if(edition==='E5'){const excluded=(roomAt(p.r,p.c)+1+Math.floor(random()*3))%4;unary(i,name+' ne se trouve pas dans : '+roomNames[excluded]+'.',a=>roomAt(a.r,a.c)!==excluded,'room')}
+   if(edition==='E5'||edition==='E6'){const excluded=(roomAt(p.r,p.c)+1+Math.floor(random()*3))%4;unary(i,name+' ne se trouve pas dans : '+roomNames[excluded]+'.',a=>roomAt(a.r,a.c)!==excluded,'room')}
    unary(i,name+' est sur la ligne '+(p.r+1)+'.',a=>a.r===p.r,'row');
    unary(i,name+' est dans la colonne '+String.fromCharCode(65+p.c)+'.',a=>a.c===p.c,'column');
    const landmark=base.decor[i],distance=Math.abs(p.r-landmark.r)+Math.abs(p.c-landmark.c);
@@ -203,30 +204,32 @@ const EnqueteEngine=(()=>{
     };pool.push(los);
    }
   }
-  const unique=[...new Map(pool.map(c=>[c.signature,c])).values()],ordered=shuffle(unique,random);
+  const unique=[...new Map(pool.map(c=>[c.signature,c])).values()].filter(c=>edition!=='E6'||!c.unary||Array.from({length:36},(_,n)=>n).filter(n=>!blocked.blocked.has(n)&&c.unary(point(n))).length<=6),ordered=shuffle(unique,random);
   let clues=[blocked];
   // Semer des familles différentes ; compléter seulement par des faits qui font progresser la propagation.
-  for(const kind of (edition==='E5'?['pm','pm','los','decor','room']:['pm','pm','los','decor'])){const c=ordered.find(c=>c.kind===kind&&!clues.includes(c));if(c)clues.push(c)}
-  let proof=deduce(clues);
+  for(const kind of (edition==='E5'||edition==='E6'?['pm','pm','los','decor','room']:['pm','pm','los','decor'])){const c=ordered.find(c=>c.kind===kind&&!clues.includes(c));if(c)clues.push(c)}
+  let proof=solve(clues);
   while(!proof.solved){
    const before=proof.domains.reduce((n,d)=>n+d.length,0);
    let chosen=null,nextProof=null;
    for(const candidate of [...ordered.filter(c=>c.kind!=='row'&&c.kind!=='column'),...ordered.filter(c=>c.kind==='row'||c.kind==='column')]){
     if(clues.includes(candidate)||clues.filter(c=>c.kind===candidate.kind).length>=2)continue;
-    const next=deduce(clues.concat(candidate));if(next.domains.reduce((n,d)=>n+d.length,0)<before){chosen=candidate;nextProof=next;break}
+    const next=solve(clues.concat(candidate));if(next.domains.reduce((n,d)=>n+d.length,0)<before){chosen=candidate;nextProof=next;break}
    }
    if(!chosen){if(attempt<63)return fourth(seed,attempt+1,edition);throw Error('Aucune combinaison de déduction disponible')}clues.push(chosen);proof=nextProof;
   }
   // Un indice retiré uniquement si les règles de déduction résolvent encore le niveau, sans supposition.
-  for(const c of shuffle(clues.filter(c=>!c.fixed),random)){const next=clues.filter(v=>v!==c);if(deduce(next).solved)clues=next}
+  for(const c of shuffle(clues.filter(c=>!c.fixed),random)){const next=clues.filter(v=>v!==c);if(solve(next).solved)clues=next}
   const families=new Set(clues.filter(c=>c.kind).map(c=>c.kind));
-  if(families.size<4||!families.has('pm')||!families.has('los')||edition==='E5'&&!families.has('room')){if(attempt<63)return fourth(seed,attempt+1,edition);throw Error('Diversité des indices insuffisante')}
-  proof=deduce(clues);
+  if(families.size<4||!families.has('pm')||!families.has('los')||(edition==='E5'||edition==='E6')&&!families.has('room')){if(attempt<63)return fourth(seed,attempt+1,edition);throw Error('Diversité des indices insuffisante')}
+  proof=solve(clues);
   const resolved=proof.domains.map(d=>point(d[0]));
   if(!proof.solved||!clues.every(c=>c.test(resolved)))throw Error('Preuve de déduction invalide');
+  if(edition==='E6'){const size=c=>Array.from({length:36},(_,n)=>n).filter(n=>!blocked.blocked.has(n)&&c.unary(point(n))).length;clues=clues.filter(c=>c.fixed).concat(clues.filter(c=>c.unary).sort((a,b)=>size(a)-size(b)),clues.filter(c=>!c.fixed&&!c.unary))}
+  proof=solve(clues);
   return {...base,seed,key:key(seed,edition),clues,deduction:proof};
  }
- function generate(seed,version='E5'){return version==='E5'?fourth(seed,0,'E5'):version==='E4'?fourth(seed):third(seed,version)}
+ function generate(seed,version='E6'){return version==='E6'?fourth(seed,0,'E6'):version==='E5'?fourth(seed,0,'E5'):version==='E4'?fourth(seed):third(seed,version)}
  // Adaptation des témoignages des anciennes éditions, sans modifier leurs niveaux ni leurs clés.
  function explanationClues(puzzle){
   const point=n=>({r:Math.floor(n/6),c:n%6}),blocked=new Set((puzzle.decor||[]).concat(puzzle.victim).map(p=>p.r*6+p.c));
@@ -245,18 +248,47 @@ const EnqueteEngine=(()=>{
    }return c;
   }).concat(puzzle.clues.some(c=>c.blocked)?[]:[{fixed:true,blocked,text:'Les cases occupées par le corps et le décor sont exclues.',test:s=>s.every(p=>!blocked.has(p.r*6+p.c))}]);
  }
- function walkthrough(puzzle,placements=[]){
-  const clues=explanationClues(puzzle),proof=deduce(clues,{explain:true,placements}),coordinate=n=>String.fromCharCode(65+n%6)+(Math.floor(n/6)+1),list=ns=>ns.map(coordinate).join(', ');
+ function walkthrough(puzzle,placements=[],{candidates=null,excluded=[]}={}){
+  const clues=explanationClues(puzzle),proof=deduce(clues,{explain:true,placements,comfortable:puzzle.key.startsWith('E6-'),candidates,excluded}),coordinate=n=>String.fromCharCode(65+n%6)+(Math.floor(n/6)+1),list=ns=>ns.map(coordinate).join(', ');
+  let number=0;const visibleNumbers=clues.map(c=>c.fixed?null:++number);
   const steps=proof.trace.map(step=>{
    const name=puzzle.names[step.suspect],ctx=step.context;let title,text;
    if(ctx.type==='only'){const location=ctx.axis==='ligne'?String(ctx.value+1):String.fromCharCode(65+ctx.value);title='La '+ctx.axis+' '+location+' impose '+name;text='Chaque '+ctx.axis+' doit contenir un suspect. '+name+' est le seul à avoir encore une possibilité dans cette '+ctx.axis+'.'}
    else if(ctx.type==='distinct'){title='Croiser les lignes et colonnes';text=puzzle.names[ctx.other]+' ne peut être qu’en '+list(ctx.otherDomain)+'. Chacune des cases éliminées de '+name+' occuperait la même ligne ou la même colonne que toutes ces possibilités : l’autre suspect n’aurait plus de place.'}
-   else{title='Témoignage n°'+(ctx.clue+1);text='« '+clues[ctx.clue].text+' »';if(ctx.type==='pair')text+=' '+puzzle.names[ctx.other]+' a encore les possibilités suivantes : '+list(ctx.otherDomain)+'. En croisant ce témoignage avec ces possibilités et les lignes / colonnes distinctes, on élimine les cases sans correspondance pour '+name+'.';else text+=' On conserve uniquement les cases possibles pour '+name+' qui respectent ce témoignage.'}
+   else{title='Témoignage n°'+visibleNumbers[ctx.clue];text='« '+clues[ctx.clue].text+' »';if(ctx.type==='pair')text+=' '+puzzle.names[ctx.other]+' a encore les possibilités suivantes : '+list(ctx.otherDomain)+'. En croisant ce témoignage avec ces possibilités et les lignes / colonnes distinctes, on élimine les cases sans correspondance pour '+name+'.';else text+=' On conserve uniquement les cases possibles pour '+name+' qui respectent ce témoignage.'}
    return {...step,title,text,subject:name,removedText:list(step.removed),remainingText:list(step.after)};
   });
   return {steps,solved:proof.solved,domains:proof.domains};
  }
- return {generate,solutions,key,parse,room,pmDistance,lineOfSight,deduce,walkthrough};
+ // Les annotations compatibles servent de point de départ ; seules les éliminations prouvées retirent un brouillon.
+ function hintPlan(puzzle,{placements=[],notes=[],excluded=[]}={}){
+  const cell=p=>p.r*6+p.c,coord=n=>String.fromCharCode(65+n%6)+(Math.floor(n/6)+1),answers=puzzle.answer.map(cell),occupied=new Set(answers);
+  const validKO=excluded.filter(n=>!occupied.has(n)),wrongKO=excluded.filter(n=>occupied.has(n));
+  const fixed=new Set((puzzle.decor||[]).concat(puzzle.victim).map(cell)),candidates=puzzle.names.map((_,i)=>{
+   if(placements[i])return [cell(placements[i])];
+   const free=Array.from({length:36},(_,n)=>n).filter(n=>!fixed.has(n)&&!validKO.includes(n)&&!placements.some(p=>p&&(p.r===Math.floor(n/6)||p.c===n%6)));
+   const marked=notes[i]||[];return marked.includes(answers[i])?free.filter(n=>marked.includes(n)):free;
+  });
+  const guide=walkthrough(puzzle,placements,{candidates,excluded:validKO});
+  if(wrongKO.length){
+   const n=wrongKO[0],i=answers.indexOf(n);let proof=guide.steps.find(s=>s.suspect===i&&s.after.length===1);
+   if(!proof)proof=walkthrough(puzzle,placements).steps.find(s=>s.suspect===i&&s.after.length===1);
+   return {correction:{type:'ko',cells:[n],title:'Corriger une case KO',text:'Le KO en '+coord(n)+' exclut une case occupée par '+puzzle.names[i]+'. '+(proof?proof.text:'La vérification de la solution confirme que cette case n’est pas vide.')},steps:[],solved:guide.solved};
+  }
+  for(const step of guide.steps){
+   if(placements[step.suspect])continue;
+   const wrong=(notes[step.suspect]||[]).filter(n=>step.removed.includes(n));
+   if(wrong.length)return {correction:{type:'notes',suspect:step.suspect,cells:wrong,title:step.title,text:step.text,subject:step.subject},steps:[],solved:guide.solved};
+  }
+  const steps=guide.steps.filter(s=>!placements[s.suspect]).map(s=>({...s,newPositions:s.after.filter(n=>!(notes[s.suspect]||[]).includes(n)&&!validKO.includes(n))})).filter(s=>s.newPositions.length);
+  // Une seule case peut déjà rester grâce aux placements et KO du joueur, sans nouvelle élimination.
+  for(let i=0;i<6;i++)if(!placements[i]&&candidates[i].length===1&&!(notes[i]||[]).includes(candidates[i][0])){
+   const n=candidates[i][0];steps.unshift({suspect:i,title:'Une seule case disponible',subject:puzzle.names[i],text:'Tes placements corrects, les cases KO validées et les cases occupées par le décor ne laissent qu’une seule case disponible pour '+puzzle.names[i]+'.',after:[n],removed:[],newPositions:[n]});
+  }
+  return {steps,solved:guide.solved};
+ }
+ return {generate,solutions,key,parse,room,pmDistance,lineOfSight,deduce,walkthrough,hintPlan};
+
 
 
 

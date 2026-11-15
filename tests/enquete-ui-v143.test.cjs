@@ -1,13 +1,13 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),E=require('../js/games/enquete-engine.js');
 function app({initial=null,hash=E.key(42)}={}){
- const elements=new Map(),saved=new Map();if(initial)saved.set('corbac-case-v1',JSON.stringify(initial));
+ const elements=new Map(),saved=new Map(),documentEvents={},windowEvents={};if(initial)saved.set('corbac-case-v1',JSON.stringify(initial));
  function node(tag='div'){return {tag,children:[],dataset:{},value:'',hidden:false,disabled:false,style:{setProperty(){}},classList:{values:new Set(),toggle(k,on){if(on)this.values.add(k);else this.values.delete(k)}},listeners:{},setAttribute(){},addEventListener(t,f){this.listeners[t]=f},append(...x){this.children.push(...x)},replaceChildren(...x){this.children=x},querySelectorAll(tag){return this.children.flatMap(c=>typeof c==='object'?[...(c.tag===tag?[c]:[]),...(c.querySelectorAll?.(tag)||[])]:[])},focus(){},select(){},scrollIntoView(){}}}
  const el=id=>{if(!elements.has(id))elements.set(id,node());return elements.get(id)};
- const ctx=vm.createContext({EnqueteEngine:E,document:{getElementById:el,createElement:node,createTextNode:s=>s},crypto:{getRandomValues(a){a[0]=42}},Uint32Array,URL,location:{href:'https://example.org/enquete.html',hash:'#'+hash},window:{history:{replaceState(){}}},localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v)},Option:function(text,value){return Object.assign(node('option'),{textContent:text,value})},navigator:{clipboard:{async writeText(){}}},matchMedia:()=>({matches:true})});
- vm.runInContext(fs.readFileSync('js/games/enquete.js','utf8'),ctx);return {el,saved};
+ const ctx=vm.createContext({EnqueteEngine:E,document:{getElementById:el,createElement:node,createTextNode:s=>s,addEventListener(t,f){documentEvents[t]=f}},crypto:{getRandomValues(a){a[0]=42}},Uint32Array,URL,location:{href:'https://example.org/enquete.html',hash:'#'+hash},window:{history:{replaceState(){}},addEventListener(t,f){windowEvents[t]=f}},localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v)},Option:function(text,value){return Object.assign(node('option'),{textContent:text,value})},navigator:{clipboard:{async writeText(){}}},matchMedia:()=>({matches:true})});
+ vm.runInContext(fs.readFileSync('js/games/enquete.js','utf8'),ctx);return {el,saved,documentEvents,windowEvents};
 }
 test('interface : placement, annulation, accusation, sauvegarde et clé invalide',()=>{
- const a=app(),p=E.generate(42);assert.equal(a.el('board').children.length,36);assert.equal(a.el('clues').children.length,p.clues.length);
+ const a=app(),p=E.generate(42);assert.equal(a.el('board').children.length,36);assert.equal(a.el('clues').children.length,p.clues.filter(c=>!c.fixed).length);
  a.el('accuse').listeners.click();assert.match(a.el('gameStatus').textContent,/Reconstitue/);
  p.answer.forEach((pos,i)=>{a.el('suspects').children[i].listeners.click();a.el('board').children[pos.r*6+pos.c].listeners.click()});
  a.el('check').listeners.click();assert.match(a.el('gameStatus').textContent,/concordent/);
@@ -88,4 +88,89 @@ test('V150 : Indice retire les erreurs sans déduction, correction annulable pui
 test('V150 : walkthrough complet du niveau E4 demandé, avec le raisonnement pour B1',()=>{
  const key='E4-05LLJ0E-18U5KQF',a=app({hash:key}),p=E.generate(E.parse(key),'E4');a.el('solution').listeners.click();const guide=E.walkthrough(p);
  assert.ok(guide.solved);assert.equal(a.el('solutionSteps').children.length,32);const step=guide.steps.find(s=>s.subject==='Orme le Sadida'&&s.removedText==='B1');assert.ok(step);assert.match(step.text,/Sélène la Sram ne peut être qu’en A1, B2/);assert.deepEqual(guide.domains,p.answer.map(p=>[p.r*6+p.c]));
+});
+
+
+test('V152 : KO indépendant du suspect, brouillons retirés, sauvegarde et annulation complète',()=>{
+ const a=app(),p=E.generate(42),pos=p.answer[0],n=pos.r*6+pos.c,state=()=>JSON.parse(a.saved.get('corbac-case-v1'));
+ a.el('suspects').children[1].listeners.click();a.el('board').children[n].listeners.contextmenu({preventDefault(){}});
+ a.el('suspects').children[2].listeners.click();a.el('board').children[n].listeners.contextmenu({preventDefault(){}});const before=state();
+ assert.equal(a.el('suspects').children.length,7);a.el('suspects').children[6].listeners.click();a.el('board').children[n].listeners.click();
+ assert.deepEqual(state().excluded,[n]);assert.ok(state().placed.every(v=>v===null));assert.ok(state().notes.every(notes=>!notes.includes(n)));assert.ok(a.el('board').children[n].classList.values.has('marked-empty'));
+ const restored=app({initial:state()});assert.ok(restored.el('board').children[n].classList.values.has('marked-empty'));
+ a.el('suspects').children[0].listeners.click();a.el('board').children[n].listeners.click();assert.equal(state().placed[0],null);assert.match(a.el('gameStatus').textContent,/marquée vide/);
+ a.el('undo').listeners.click();assert.deepEqual(state(),before);assert.equal(a.el('board').children[n].classList.values.has('marked-empty'),false);
+ a.el('suspects').children[6].listeners.click();a.el('board').children[n].listeners.click();a.el('board').children[n].listeners.click();assert.deepEqual(state().excluded,[]);
+ a.el('undo').listeners.click();assert.deepEqual(state().excluded,[n]);a.el('reset').listeners.click();assert.deepEqual(state().excluded,[]);a.el('undo').listeners.click();assert.deepEqual(state().excluded,[n]);
+ a.el('caseKey').value=E.key(7);a.el('keyForm').listeners.submit({preventDefault(){}});assert.deepEqual(state().excluded,[]);
+});
+
+test('V152 : pas de KO sur un suspect, un décor ou le corps ; annotations sans effet sur Solution',()=>{
+ const a=app(),p=E.generate(42),pos=p.answer[0],n=pos.r*6+pos.c,state=()=>JSON.parse(a.saved.get('corbac-case-v1'));
+ a.el('board').children[n].listeners.click();a.el('suspects').children[6].listeners.click();a.el('board').children[n].listeners.click();assert.deepEqual(state().excluded,[]);assert.deepEqual(state().placed[0],pos);
+ const d=p.decor[0];a.el('board').children[d.r*6+d.c].listeners.click();a.el('board').children[p.victim.r*6+p.victim.c].listeners.click();assert.deepEqual(state().excluded,[]);
+ const free=p.answer[1];a.el('board').children[free.r*6+free.c].listeners.click();const before=state();a.el('solution').listeners.click();assert.deepEqual(state(),before);
+ const markup=fs.readFileSync('enquete.html','utf8');assert.match(markup,/<div class="map-controls"><div id="suspects"[^>]+><\/div><div id="board"/);
+});
+
+
+function mouse(button,buttons){return {button,buttons,preventDefault(){}}}
+function freeCells(p){return Array.from({length:36},(_,n)=>n).filter(n=>!p.decor.some(d=>d.r*6+d.c===n)&&p.victim.r*6+p.victim.c!==n)}
+test('V153 : glisser les KO, interpoler les cases, repasser sans basculer et annuler tout le geste',()=>{
+ const a=app(),p=E.generate(42),free=freeCells(p),row=Math.floor(free[0]/6),cells=free.filter(n=>Math.floor(n/6)===row),start=cells[0],end=cells.at(-1),state=()=>JSON.parse(a.saved.get('corbac-case-v1'));
+ a.el('suspects').children[6].listeners.click();a.el('board').children[start].listeners.mousedown(mouse(2,2));a.el('board').children[end].listeners.mouseenter(mouse(2,2));a.el('board').children[start].listeners.mouseenter(mouse(2,2));assert.deepEqual(state().excluded.slice().sort((a,b)=>a-b),cells);
+ a.documentEvents.mouseup();a.el('board').children[start].listeners.contextmenu({preventDefault(){}});assert.deepEqual(state().excluded.slice().sort((a,b)=>a-b),cells);
+ a.el('undo').listeners.click();assert.deepEqual(state().excluded,[]);
+});
+test('V153 : brouillons au clic droit, ajout uniforme puis effacement uniforme',()=>{
+ const a=app(),p=E.generate(42),free=freeCells(p),row=Math.floor(free[0]/6),cells=free.filter(n=>Math.floor(n/6)===row),state=()=>JSON.parse(a.saved.get('corbac-case-v1'));
+ a.el('board').children[cells[1]].listeners.contextmenu({preventDefault(){}});const before=state();
+ a.el('board').children[cells[0]].listeners.mousedown(mouse(2,2));a.el('board').children[cells.at(-1)].listeners.mouseenter(mouse(2,2));a.documentEvents.mouseup();a.el('board').children[cells.at(-1)].listeners.contextmenu({preventDefault(){}});assert.deepEqual(state().notes[0].slice().sort((a,b)=>a-b),cells);
+ a.el('undo').listeners.click();assert.deepEqual(state(),before);
+ a.el('board').children[cells[1]].listeners.mousedown(mouse(2,2));a.el('board').children[cells.at(-1)].listeners.mouseenter(mouse(2,2));a.documentEvents.mouseup();a.el('board').children[cells.at(-1)].listeners.contextmenu({preventDefault(){}});assert.deepEqual(state().notes[0],[]);a.el('undo').listeners.click();assert.deepEqual(state(),before);
+});
+test('V153 : arrêt après relâchement ou perte de focus, sans nouveau marquage',()=>{
+ const a=app(),p=E.generate(42),cells=freeCells(p),state=()=>JSON.parse(a.saved.get('corbac-case-v1'));a.el('suspects').children[6].listeners.click();
+ a.el('board').children[cells[0]].listeners.mousedown(mouse(2,2));a.documentEvents.mouseup();a.el('board').children[cells[1]].listeners.mouseenter(mouse(2,2));assert.deepEqual(state().excluded,[cells[0]]);
+ a.el('board').children[cells[2]].listeners.mousedown(mouse(2,2));a.windowEvents.blur();a.el('board').children[cells[3]].listeners.mouseenter(mouse(2,2));assert.deepEqual(state().excluded,[cells[0],cells[2]]);
+});
+test('V154 : le maintien gauche ne déplace rien et ne nettoie pas les brouillons',()=>{
+ const a=app(),p=E.generate(42),free=freeCells(p),start=free[0],end=free.at(-1),state=()=>JSON.parse(a.saved.get('corbac-case-v1'));
+ a.el('suspects').children[1].listeners.click();a.el('board').children[end].listeners.contextmenu({preventDefault(){}});a.el('suspects').children[0].listeners.click();a.el('board').children[start].listeners.click();const before=state();
+ a.el('board').children[start].listeners.mousedown(mouse(0,1));a.el('board').children[end].listeners.mouseenter(mouse(0,1));a.documentEvents.mouseup();assert.deepEqual(state(),before);
+ a.el('suspects').children[6].listeners.click();a.el('board').children[end].listeners.mousedown(mouse(0,1));a.el('board').children[start].listeners.mouseenter(mouse(0,1));a.documentEvents.mouseup();assert.deepEqual(state(),before);
+});
+
+test('V153 : rappel masqué, cases cochées stables au rechargement et aides renumérotées',()=>{
+ const a=app(),p=E.generate(42),input=a.el('clues').children[0].querySelectorAll('input')[0];input.checked=true;input.listeners.change();const saved=JSON.parse(a.saved.get('corbac-case-v1'));
+ assert.equal(saved.checks[0],false);assert.equal(saved.checks[1],true);const restored=app({initial:saved});assert.equal(restored.el('clues').children[0].querySelectorAll('input')[0].checked,true);
+ assert.equal(a.el('clues').children.length,p.clues.length-1);
+ for(const step of E.walkthrough(p).steps)if(step.context.type==='unary'||step.context.type==='pair')assert.equal(step.title,'Témoignage n°'+p.clues.slice(0,step.context.clue+1).filter(c=>!c.fixed).length);
+});
+
+
+test('V154 : glisser hors du plan puis revenir ne relie pas les cases au clic droit',()=>{
+ const a=app(),p=E.generate(42),free=freeCells(p),start=free[0],end=free.at(-1),state=()=>JSON.parse(a.saved.get('corbac-case-v1'));
+ a.el('suspects').children[6].listeners.click();a.el('board').children[start].listeners.mousedown(mouse(2,2));a.el('board').listeners.mouseleave();a.el('board').children[end].listeners.mouseenter(mouse(2,2));a.documentEvents.mouseup();assert.deepEqual(state().excluded,[start,end]);
+});
+
+
+function nodeText(node){return (node.textContent||'')+(node.children||[]).map(n=>typeof n==='object'?nodeText(n):n).join(' ')}
+test('V154 : indice sans position déjà marquée, sans suspect déjà placé et sans déduction répétée',()=>{
+ const p=E.generate(42),notes=p.answer.map(a=>[a.r*6+a.c]),a=app({initial:{key:p.key,placed:Array(6).fill(null),notes,excluded:[],checks:[]}});
+ a.el('hint').listeners.click();assert.equal(a.el('hintSteps').children.length,0);assert.match(a.el('hintMessage').textContent,/marquages couvrent déjà/);
+ const initial={key:p.key,placed:p.answer.map((a,i)=>i<2?a:null),notes:p.answer.map((a,i)=>i===2?[a.r*6+a.c]:[]),excluded:[],checks:[]},b=app({initial});
+ const plan=E.hintPlan(p,{placements:initial.placed,notes:initial.notes,excluded:[]});assert.ok(plan.steps.length>0);assert.ok(!plan.correction);b.el('hint').listeners.click();const step=plan.steps[0],proposal=b.el('hintSteps').children[0].children.at(-1).textContent;
+ assert.ok(step.suspect!==0&&step.suspect!==1&&step.suspect!==2);assert.ok(step.newPositions.every(n=>!initial.notes[step.suspect].includes(n)));assert.ok(proposal.startsWith('Nouvelles possibilités à marquer'));
+});
+test('V154 : brouillon faux retiré avec raison, sans nouvelle proposition, puis annulation exacte',()=>{
+ const p=E.generate(42),full=E.walkthrough(p),step=full.steps.find(s=>s.removed.some(n=>!p.decor.some(d=>d.r*6+d.c===n)&&p.victim.r*6+p.victim.c!==n)),wrong=step.removed[0],notes=Array.from({length:6},()=>[]);notes[step.suspect]=[wrong];
+ const a=app({initial:{key:p.key,placed:Array(6).fill(null),notes,excluded:[],checks:[]}}),before=JSON.parse(a.saved.get('corbac-case-v1'));a.el('hint').listeners.click();
+ const after=JSON.parse(a.saved.get('corbac-case-v1'));assert.ok(!after.notes[step.suspect].includes(wrong));assert.match(a.el('hintMessage').textContent,/Marquage corrigé/);const text=nodeText(a.el('hintSteps'));assert.match(text,/Brouillon retiré/);assert.doesNotMatch(text,/Nouvelles possibilités à marquer/);assert.ok(text.includes(step.text));
+ a.el('undo').listeners.click();assert.deepEqual(JSON.parse(a.saved.get('corbac-case-v1')),before);
+});
+test('V154 : KO faux retiré et expliqué, KO correct conservé et correction annulable',()=>{
+ const p=E.generate(42),wrong=p.answer[0].r*6+p.answer[0].c,valid=freeCells(p).find(n=>!p.answer.some(a=>a.r*6+a.c===n)),a=app({initial:{key:p.key,placed:Array(6).fill(null),notes:Array.from({length:6},()=>[]),excluded:[wrong,valid],checks:[]}}),before=JSON.parse(a.saved.get('corbac-case-v1'));
+ a.el('hint').listeners.click();assert.deepEqual(JSON.parse(a.saved.get('corbac-case-v1')).excluded,[valid]);const text=nodeText(a.el('hintSteps'));assert.match(text,/KO retiré/);assert.ok(text.includes(p.names[0]));assert.doesNotMatch(text,/Nouvelles possibilités à marquer/);
+ a.el('undo').listeners.click();assert.deepEqual(JSON.parse(a.saved.get('corbac-case-v1')),before);
 });
