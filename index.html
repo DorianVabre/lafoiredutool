@@ -47,7 +47,7 @@
    <form id="huntForm"><label for="huntPosition">Position actuelle</label><input id="huntPosition" placeholder="Ex. [-16,-24]" autocomplete="off" required aria-describedby="huntPositionHelp"><p id="huntPositionHelp">Tu peux coller les coordonnées du jeu.</p>
    <div class="hunt-pad" role="group" aria-label="Direction de l’indice">
     <button type="button" data-hunt-direction="6" aria-label="Nord" aria-pressed="false" title="Nord">↑</button>
-    <button type="button" data-hunt-direction="4" aria-label="Ouest" aria-pressed="false" title="Ouest">←</button><span aria-hidden="true">✦</span><button type="button" data-hunt-direction="0" aria-label="Est" aria-pressed="false" title="Est">→</button>
+    <button type="button" data-hunt-direction="4" aria-label="Ouest" aria-pressed="false" title="Ouest">←</button><button id="huntCompass" type="button" disabled aria-label="Rose des vents" title="Rose des vents">✦</button><button type="button" data-hunt-direction="0" aria-label="Est" aria-pressed="false" title="Est">→</button>
     <button type="button" data-hunt-direction="2" aria-label="Sud" aria-pressed="false" title="Sud">↓</button>
    </div><button id="huntLoad" type="submit">Rechercher les indices</button></form>
    <p id="huntStatus" role="status" aria-live="polite">Choisis une direction pour charger les indices.</p>

@@ -5,9 +5,10 @@ function app(fetch){
  const el=id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id)};
  const arrows=[0,2,4,6].map(n=>Object.assign(element(),{dataset:{huntDirection:String(n)}}));
  const document={getElementById:el,querySelectorAll:()=>arrows,createElement:element};
- const ctx=vm.createContext({document,fetch,URLSearchParams,AbortController,setTimeout,clearTimeout,navigator:{clipboard:{async writeText(v){copies.push(v)}}}});
+ const window={location:{href:"index.html"}};
+ const ctx=vm.createContext({window,document,fetch,URLSearchParams,AbortController,setTimeout,clearTimeout,navigator:{clipboard:{async writeText(v){copies.push(v)}}}});
  vm.runInContext(fs.readFileSync('js/tools/trajets-engine.js','utf8'),ctx);vm.runInContext(fs.readFileSync('js/tools/chasse.js','utf8'),ctx);
- return {el,copies,async load(){el('huntPosition').value='[-16,-24]';await arrows[0].listeners.click()}};
+ return {el,copies,arrows,window,async load(){el('huntPosition').value='[-16,-24]';await arrows[0].listeners.click()}};
 }
 const row=(x,y,id,name)=>({posX:x,posY:y,pois:[{id,name:{fr:name}}]});
 test('indices : plus proche, filtre direction/distance, accents, copie et étape suivante',async()=>{
@@ -22,4 +23,18 @@ test('une réponse arrivée après modification de position ne doit pas afficher
 });
 test('erreur API : message et bouton de nouvelle tentative',async()=>{
  const a=app(async()=>({ok:false,status:403}));await a.load();assert.match(a.el('huntStatus').textContent,/HTTP 403/);assert.equal(a.el('huntLoad').disabled,false);assert.deepEqual(a.copies,[]);
+});
+
+
+test('V144 : rose inerte avant le code complet, erreur puis nouvelle séquence, accès en un clic',async()=>{
+ const a=app(async()=>{throw Error('Aucun appel attendu sans position')});
+ const rose=a.el('huntCompass');assert.equal(rose.disabled,true);
+ rose.listeners.click();rose.listeners.click();rose.listeners.click();assert.equal(a.window.location.href,'index.html');
+ async function press(values){for(const value of values)await a.arrows.find(b=>Number(b.dataset.huntDirection)===value).listeners.click()}
+ await press([6,6,2,2,4,0,4]);assert.equal(rose.disabled,true);
+ await press([6,0]);assert.equal(rose.disabled,true);
+ await press([6,6,2,2,4,0,4]);assert.equal(rose.disabled,true);
+ await press([0]);assert.equal(rose.disabled,false);assert.equal(a.window.location.href,'index.html');
+ await press([6]);assert.equal(rose.disabled,false);
+ rose.listeners.click();assert.equal(a.window.location.href,'enquete.html');
 });

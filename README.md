@@ -1,4 +1,4 @@
-# La Foire du Tool — V142
+# La Foire du Tool — V150
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -236,3 +236,43 @@ Un clic sur le bouton du son rend le focus à la piste pendant la partie et le d
 ## V142 — Chasse au trésor
 
 Nouvelle page dans Autres, sous Trajets et zaaps : API DofusDB, coordonnées collables, croix directionnelle, indices filtrés sans accents et copie automatique de /travel. Affichage de la distance, copie manuelle de secours et bouton Indice trouvé pour reprendre la destination au prochain indice. Les Phorreurs restent à repérer en jeu.
+
+
+## V143 — Une nouvelle surprise
+
+Ajout d’un mini-jeu secret lié à la chasse au trésor : enquêtes de logique aléatoires à solution unique, clés partageables et vérifiées, sauvegarde locale et annulation des placements. Le format de clé E1 fige le générateur pour reproduire les mêmes niveaux.
+
+
+## V144 — Accès secret révisé
+
+La rose des vents reste inerte, sans animation, avant la séquence directionnelle secrète. Une fois déverrouillée, un seul clic ouvre le mini-jeu.
+
+
+## V145 — Brouillons et décors d’enquête
+
+Mode Brouillon : plusieurs cases possibles par suspect, plusieurs suspects par case, sauvegarde et annulation communes aux placements. Six décors illustrés originaux bloquent des cases et servent de repères aux nouveaux témoignages. Les nouvelles affaires utilisent des clés E2 ; les clés E1 conservent leur enquête d’origine.
+
+
+## V146 — Relations entre suspects et saisie directe
+
+Nouvelles clés E3 : indices rééquilibrés (deux repères de décor maximum), distances en PM par le plus court chemin sans diagonale autour des obstacles fixes, et lignes de vue entre suspects. Le corps ne bloque pas la vue ; les décors et les autres suspects la bloquent. Le calcul PM ignore les autres suspects et le tacle. Géométrie centre à centre, coins seulement effleurés autorisés ; adaptation à notre grille plane, sans prétendre reproduire les différences de hauteur du jeu. Références techniques consultées : [LosDetector](https://github.com/Emudofus/Dofus/blob/master2/com/ankamagames/jerakine/map/LosDetector.as) et [Dofus1Line](https://github.com/Emudofus/Dofus/blob/master2/com/ankamagames/jerakine/utils/display/Dofus1Line.as). Clés E1/E2 conservées. Brouillons au clic droit (Maj+clic ou N / Maj+Entrée au clavier), boutons de mode retirés. Suspects sur des jetons ronds colorés avec noms contrastés.
+
+
+## V147 — Déductions sans suppositions
+
+Nouvelles clés E4 : deux indices maximum par famille (PM, vue, direction, proximité, salle, moitié de plan, ligne, colonne ou décor), au moins quatre familles dont PM et vue ; dédoublonnage des indices par leur sens (contraintes équivalentes), puis contrôle par un moteur de propagation sans branchement ni accès à la réponse. Il élimine les cases incompatibles, croise les relations deux à deux et applique la règle des lignes/colonnes jusqu’au point fixe. Si le niveau ne se résout pas ainsi, ajout d’un indice utile ; suppression des indices dont ce raisonnement peut se passer. Les indices de vue sont propagés prudemment tant que les tiers ne sont pas placés. La preuve finale doit placer les six suspects ; les clés E1 à E3 restent identiques. Pour bénéficier de la garantie, lancer une Nouvelle affaire (E4).
+
+
+## V148 — Salles aux formes variables
+
+Nouvelles clés E5 : salles connexes de tailles et contours variables, noms de salles variés dans les indices de présence ou d’exclusion. Les bordures du plan suivent la carte des salles ; le survol indique leur nom. La scène du crime, le coupable et les indices utilisent cette même carte. Les limites des salles restent franchissables et transparentes. Résolution sans suppositions, dédoublonnage et limite de deux indices par famille conservés. Clés E1 à E4 inchangées.
+
+
+## V149 — Plan allégé
+
+Suppression de la phrase de légende sous le plan. Les consignes de placement et de brouillon ainsi que les règles de l’enquête restent disponibles.
+
+
+## V150 — Brouillons nettoyés et aides de résolution
+
+Un placement grise sa ligne et sa colonne et retire les brouillons incompatibles. Annuler restaure placements et notes. Consigne raccourcie et navigation personnalisée au clavier retirée. Indice retire d’abord les placements confirmés faux et s’arrête, puis propose une déduction expliquée au clic suivant. Solution affiche les éliminations successives, les positions finales et le coupable, sans remplir le plan. Les aides s’adaptent aux éditions précédentes ; si un ancien niveau dépasse la propagation simple, cela est signalé. Clés et niveaux inchangés.

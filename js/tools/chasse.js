@@ -46,8 +46,19 @@
   }catch(error){if(id===revision)status('Impossible de charger les indices ('+(error.name==='AbortError'?'délai dépassé':error.message)+'). Réessaie ou consulte DofusDB.');}
   finally{clearTimeout(timer);if(id===revision)el('huntLoad').disabled=false}
  }
+ const compass=el('huntCompass'),secretSequence='6,6,2,2,4,0,4,0';
+ let compassReady=false,compassInputs=[];
+ if(compass)compass.disabled=true;
+ function compassDirection(value){
+  if(compassReady)return;
+  compassInputs.push(value);compassInputs=compassInputs.slice(-8);
+  if(compassInputs.join(',')!==secretSequence)return;
+  compassReady=true;
+  if(compass){compass.disabled=false;compass.classList.toggle('is-ready',true)}
+ }
+ compass?.addEventListener('click',()=>{if(compassReady)window.location.href='enquete.html'});
  el('huntForm').addEventListener('submit',load);
- document.querySelectorAll('[data-hunt-direction]').forEach(b=>b.addEventListener('click',()=>{direction=Number(b.dataset.huntDirection);document.querySelectorAll('[data-hunt-direction]').forEach(a=>{a.classList.toggle('active',a===b);a.setAttribute('aria-pressed',String(a===b))});return load()}));
+ document.querySelectorAll('[data-hunt-direction]').forEach(b=>b.addEventListener('click',()=>{direction=Number(b.dataset.huntDirection);compassDirection(direction);document.querySelectorAll('[data-hunt-direction]').forEach(a=>{a.classList.toggle('active',a===b);a.setAttribute('aria-pressed',String(a===b))});return load()}));
  el('huntPosition').addEventListener('input',invalidate);
  el('huntClue').addEventListener('input',()=>{clearResult();el('huntNext').disabled=true;render()});
  el('huntClue').addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();const q=normalize(el('huntClue').value),matches=choices.filter(c=>normalize(c.name).includes(q)),exact=matches.find(c=>normalize(c.name)===q);if(exact||matches.length===1)choose(exact||matches[0])});
