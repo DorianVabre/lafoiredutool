@@ -438,3 +438,6 @@ button.mode-title-icon{padding:0;border:0;background:transparent;line-height:1.2
 
 /* V165 : protecteurs de ressources et XP des sessions de récolte. */
 .farm-harvest{margin:18px 0;padding:14px;border:1px solid #405743;border-radius:10px;background:#142019}.farm-harvest summary{cursor:pointer;font-weight:600}.farm-harvest>label{display:grid;gap:6px;margin:12px 0;max-width:420px}.farm-harvest-resource{border-top:1px solid #354838;margin-top:14px;padding-top:8px}.farm-harvest-resource h4{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;margin:8px 0}.farm-harvest-resource h4 img{width:30px;height:30px;object-fit:contain}.farm-harvest-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.farm-harvest-fields label{display:grid;gap:5px;font-size:12px}.farm-harvest-fields input{width:100%;min-width:0}.farm-harvest-summary{color:#c6dfa8;font-size:12px;margin:8px 0;line-height:1.5}.farm-harvest-preview{display:block}.farm-job-summary{padding:12px;margin:14px 0;background:#243927;border-radius:9px}.farm-harvest a{color:#b8eb72}@media(max-width:400px){.farm-harvest-fields{grid-template-columns:1fr}}
+
+/* V171 : débit XP de l’activité et total discret dans chaque session. */
+.farm-xp-metric{grid-column:1/-1}.farm-session-xp{color:#9eb49e;font-size:11px}

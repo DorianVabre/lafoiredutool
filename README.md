@@ -1,4 +1,4 @@
-# La Foire du Tool — V167
+# La Foire du Tool — V171
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -363,3 +363,23 @@ Règles, sources, exceptions et limites dans [data/farm-rendements.json](data/fa
 ## V167 — Réserve et saisie des jauges
 
 Les pourcentages de la réserve occupent toute la largeur de leur carte et peuvent revenir à la ligne, y compris avec trois jauges à 100 % et le témoin de fécondité. Flèches numériques natives rétablies sur les jauges. Le déplacement de la carte est désactivé dès l’appui dans un champ et pendant son édition, puis rétabli sans déverrouiller les montures d’un plan actif. Version V167 dans tous les footers.
+
+
+## V168 — Texte de l’estimation d’XP
+
+Phrase explicative du farm raccourcie : « XP estimée à partir du rendement moyen, après retrait des sacs. » Version V168 dans tous les footers.
+
+
+## V169 — Affichage du rendement de récolte
+
+Format simplifié : « Récolte moyenne 17 (7-27) - 10 XP/récolte de base ». Version V169 dans tous les footers.
+
+
+## V170 — Résumé d’XP compact
+
+Aperçu et historique des récoltes : une ligne « XP totale = X (y de [Blé], z de [Orge]) », noms copiables et contributions par ressource. Les valeurs indisponibles restent signalées sans fabriquer de total complet. Version V170 dans tous les footers.
+
+
+## V171 — XP par heure des activités
+
+Le cumul d’XP par métier est remplacé par un indicateur compact XP / heure, dans l’activité sélectionnée et sa carte. Calcul pondéré : somme des XP / somme des durées des sessions dont l’XP est entièrement estimée ; anciennes sessions sans XP et estimations incomplètes exclues. L’historique affiche seulement l’XP totale en petit après les récoltes. Le détail par ressource reste dans l’aperçu de saisie. Version V171 dans tous les footers.
