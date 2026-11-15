@@ -4,7 +4,7 @@ for(const [name,file,fn,scope,selector] of [['unitaire','craft.js','updateNodes'
  test(name+' : passer à un autre prix ou à une horloge conserve le champ et le clic',()=>{
   const source=fs.readFileSync(path.join(__dirname,'../js/tools',file),'utf8').replace(/\r\n/g,'\n'),start=source.indexOf('function '+fn+'()'),end=source.indexOf(file==='craft.js'?'\nfunction renderDetail(':'\n\n',start);
   const listeners={},input={addEventListener:(type,cb)=>listeners[type]=cb},area={querySelectorAll:s=>s===selector?[input]:[]};let renders=0;
-  const ctx=vm.createContext({$:()=>area,rootNodes:[],multi:{items:[]},calculate(){},multiCalculate(){}});
+  const ctx=vm.createContext({$:()=>area,rootNodes:[],multi:{items:[]},calculate(){},multiCalculate(){},singleSyncStocks(){}});
   vm.runInContext(source.slice(start,end),ctx);ctx[fn]();ctx[fn]=()=>renders++;
   const blur=listeners.blur||input.onblur;
   for(const target of [scope+' input',scope+' .price-age'])blur({relatedTarget:{matches:selector=>selector.split(',').includes(target)}});

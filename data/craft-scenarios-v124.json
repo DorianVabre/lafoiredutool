@@ -1,0 +1,11 @@
+{
+  "item": {"id":397,"name":"Huile de Koode","quantity":1},
+  "recipe": [{"id":390,"name":"Huile de Noix","quantity":1},{"id":13730,"name":"Graine de la Discorde","quantity":3}],
+  "source": "https://api.dofusdu.de/dofus3/v1/fr/items/resources/397",
+  "instructions": "Prix fictifs en kamas, hors taxes. Quantité à crafter : 1. Laisser vides les prix et possessions des sous-composants de l’Huile de Noix pour tester son achat direct. Réinitialiser les possessions entre les cas.",
+  "cases": [
+    {"name":"Crafter","prices":{"390":10,"13730":10},"owned":{"390":0,"13730":0},"sell":60,"expected":{"craft":40,"buy":60,"stockValue":0,"resellBuy":null,"best":["craft"],"tradeProfitable":true}},
+    {"name":"Acheter","prices":{"390":10,"13730":10},"owned":{"390":0,"13730":0},"sell":30,"expected":{"craft":40,"buy":30,"stockValue":0,"resellBuy":null,"best":["buy"],"tradeProfitable":false}},
+    {"name":"Revendre le stock puis acheter","prices":{"390":10,"13730":10},"owned":{"390":0,"13730":2},"sell":30,"expected":{"craft":20,"buy":30,"stockValue":20,"resellBuy":10,"best":["resellBuy"],"tradeProfitable":false}}
+  ]
+}

@@ -12,10 +12,11 @@ const PriceDates=(()=>{
  }
  function describe(key,value,now=Date.now()){
   if(!isPrice(value))return null;
-  const saved=dates[key];
-  if(!saved||saved.value!==Number(value)||saved.at>now)return {text:'Date du prix inconnue · à vérifier',old:true,at:null};
+  const saved=dates[key],sales=String(key).startsWith('sales:');
+  if(!saved||saved.value!==Number(value)||saved.at>now)return {text:sales?'Date du relevé inconnue · à vérifier':'Date du prix inconnue · à vérifier',old:true,at:null};
   const days=Math.floor((now-saved.at)/DAY);
-  return {text:days===0?'Prix daté d’aujourd’hui':'Prix daté de '+days+' jour'+(days>1?'s':''),old:days>=7,at:saved.at};
+  const label=sales?'Relevé':'Prix';
+  return {text:days===0?label+' daté d’aujourd’hui':label+' daté de '+days+' jour'+(days>1?'s':''),old:days>=7,at:saved.at};
  }
  return {record,describe};
 })();
@@ -69,7 +70,6 @@ const PriceDates=(()=>{
  scan();
 })();
 
-function craftHelpHTML(){
- const text='Ouvrir "Fabriquer" pour les ingrédients composites. Le moins cher entre crafter et acheter est choisi automatiquement.';
+function craftHelpHTML(text='Ouvrir "Fabriquer" pour les ingrédients composites. Le moins cher entre crafter et acheter est choisi automatiquement.'){
  return `<button type="button" class="craft-help" data-craft-help="${esc(text)}" aria-label="${esc(text)}">?</button>`;
 }

@@ -4,6 +4,15 @@ function app(initial){
  const store=new Map(initial||[]),ctx=vm.createContext({localStorage:{getItem:k=>store.get(k),setItem:(k,v)=>store.set(k,v)}});
  vm.runInContext(code,ctx);return {api:vm.runInContext('PriceDates',ctx),store};
 }
+test('articles vendus : date par objet indépendante du prix HDV, persistante et rappel après sept jours',()=>{
+ const a=app();a.api.record('sales:123',30,NOW);a.api.record('sell:123',100,NOW+DAY);a.api.record('sales:456',0,NOW+DAY);
+ const b=app(a.store);assert.equal(b.api.describe('sales:123',30,NOW+7*DAY).text,'Relevé daté de 7 jours');assert.equal(b.api.describe('sales:123',30,NOW+7*DAY).old,true);assert.equal(b.api.describe('sales:123',30,NOW+7*DAY).at,NOW);
+ assert.equal(b.api.describe('sales:456',0,NOW+DAY).text,'Relevé daté d’aujourd’hui');assert.equal(b.api.describe('sell:123',100,NOW+DAY).text,'Prix daté d’aujourd’hui');
+});
+test('anciens volumes sans date et effacement : pas de date fictive',()=>{
+ const a=app();assert.equal(a.api.describe('sales:123',30,NOW).text,'Date du relevé inconnue · à vérifier');assert.equal(a.api.describe('sales:123','',NOW),null);
+ a.api.record('sales:123',30,NOW);a.api.record('sales:123','',NOW+DAY);assert.equal(a.api.describe('sales:123',30,NOW+DAY).at,null);
+});
 test('prix hérités sans date : restent inconnus sans être datés au chargement',()=>{
  const a=app([['dofusdude-prices','{"123":100}']]);assert.equal(a.api.describe('item:123','100',NOW).at,null);assert.equal(a.api.describe('item:123','100',NOW).old,true);assert.equal(a.store.has(KEY),false);
  assert.equal(a.store.get('dofusdude-prices'),'{"123":100}');assert.equal(a.api.describe('item:123','',NOW),null);

@@ -170,3 +170,33 @@ function breakDraw(){
  $('#breakDetail').querySelectorAll('input').forEach(x=>x.addEventListener('input',update));update();breakLoadRuneIcons(b);
 }
 
+// Entrée du mini-jeu : le marteau et le vase ne touchent pas aux calculs.
+(()=>{
+ if(typeof document.getElementById!=='function'||document.getElementById('breakHammerPickup')?.tagName!=='BUTTON')return;
+ const pickup=document.getElementById('breakHammerPickup'),mode=document.getElementById('breakMode'),hammer=document.createElement('span');
+ hammer.className='break-held-hammer';hammer.textContent='🔨';hammer.hidden=true;hammer.setAttribute('aria-hidden','true');document.body.append(hammer);
+ let held=false,hits=0,opening=false,timer=null,shake=null;
+ function place(x,y){hammer.style.left=x+'px';hammer.style.top=y+'px'}
+ function leave(){
+  held=false;hits=0;opening=false;clearTimeout(timer);timer=null;shake?.cancel();shake=null;
+  hammer.hidden=true;document.body.classList.remove('holding-break-hammer');pickup.setAttribute('aria-pressed','false');pickup.setAttribute('aria-label','Prendre le marteau');
+ }
+ document.addEventListener('pointermove',event=>{if(held)place(event.clientX,event.clientY)});
+ document.addEventListener('click',event=>{
+  if(mode.classList.contains('mode-hidden')){leave();return}
+  if(event.target.closest?.('#breakHammerPickup')){
+   if(held){leave();return}
+   const rect=pickup.getBoundingClientRect();place(event.clientX||rect.left+rect.width/2,event.clientY||rect.top+rect.height/2);
+   held=true;hammer.hidden=false;document.body.classList.add('holding-break-hammer');pickup.setAttribute('aria-pressed','true');pickup.setAttribute('aria-label','Reposer le marteau');return;
+  }
+  if(!held||opening||!event.target.closest?.('#breakSecretVase'))return;
+  hits++;shake?.cancel();
+  const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  if(!reduced)shake=document.body.animate?.([{transform:'translate(0,0)'},{transform:'translate(-6px,3px)'},{transform:'translate(6px,-3px)'},{transform:'translate(-4px,-2px)'},{transform:'translate(4px,2px)'},{transform:'translate(0,0)'}],{duration:240,easing:'ease-out'});
+  if(hits===3){opening=true;timer=setTimeout(()=>{if(held&&!mode.classList.contains('mode-hidden'))window.location.href='concasseur.html'},260)}
+ });
+ document.addEventListener('keydown',event=>{if(event.key==='Escape')leave()});
+ window.addEventListener('blur',leave);
+})();
+if(typeof window!=='undefined'&&window.location?.hash==='#break')switchMode('break');
+

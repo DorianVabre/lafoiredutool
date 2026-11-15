@@ -1,8 +1,10 @@
 // tools/multicraft.js — La Foire du Tool V90
 // Multicraft : état et rendu indépendants du calculateur unitaire.
 const multi={cat:'all',items:[],timer:null,request:0,seq:0,strategy:'auto',inventory:{},overrides:{}};
-try{multi.inventory=JSON.parse(localStorage.getItem('dofus-craft-multi-inventory-v1')||'{}')||{}}catch{}
-const multiSaveInventory=()=>localStorage.setItem('dofus-craft-multi-inventory-v1',JSON.stringify(multi.inventory));
+multi.inventory=SharedStocks.values;
+const multiSaveInventory=()=>{SharedStocks.replace(multi.inventory);multi.inventory=SharedStocks.values;singleSyncStocks()};
+function multiResetStocks(){multi.inventory={};multiSaveInventory();multiCalculate()}
+if(typeof document.getElementById==='function')document.getElementById('multiResetStocks')?.addEventListener('click',multiResetStocks);
 const MODE_INTROS={
  single:{title:'Calculateur de craft',description:'Recherche un objet, renseigne les prix de ses ingrédients et compare avec son prix en HDV.'},
  multi:{title:'Calculateur multicraft',description:'Ajoute plusieurs recettes, compare les coûts de craft et d’achat, puis prépare une liste d’achats cumulée en tenant compte de tes possessions.'},
@@ -14,7 +16,8 @@ const MODE_INTROS={
  drop:{title:'Calculateur de taux de drop',description:'Calcule ton multiplicateur de butin avec la prospection, le challenge, l’Almanax et Ankama Shield.'},
  scroll:{title:'Optimiseur de parchotage',description:'Choisis une caractéristique, renseigne ton niveau actuel et les prix des parchemins pour trouver la combinaison la moins chère jusqu’à 100.'}
 };
-function switchMode(mode){for(const name of ['single','multi','break','ledger','scroll','farm','fm','drop','travel']){$('#'+name+'Mode').classList.toggle('mode-hidden',mode!==name)}for(const [name,id] of [['single','tabSingle'],['multi','tabMulti'],['break','tabBreak'],['ledger','tabLedger'],['scroll','tabScroll'],['farm','tabFarm'],['fm','tabFm'],['drop','tabDrop'],['travel','tabTravel']])$('#'+id).classList.toggle('active',mode===name);$('#pageModeTitle').textContent=MODE_INTROS[mode].title;if(mode==='farm'){const corn=document.createElement('a');corn.href='mais.html';corn.className='secret-corn-link';corn.textContent='🌽';corn.title='???';corn.setAttribute('aria-label','Découvrir le mini-jeu secret du maïs');$('#pageModeTitle').append(' ',corn)}$('#pageModeDescription').textContent=MODE_INTROS[mode].description;}
+const MODE_TITLE_ICONS={single:'🔨',multi:'🛠️',break:'🏺',ledger:'💰',scroll:'📜',fm:'✨',travel:'🧭',drop:'🎲'};
+function switchMode(mode){if(mode==='single'&&selected&&rootNodes.length)updateNodes();if(mode==='multi')multiRender();for(const name of ['single','multi','break','ledger','scroll','farm','fm','drop','travel']){$('#'+name+'Mode').classList.toggle('mode-hidden',mode!==name)}for(const [name,id] of [['single','tabSingle'],['multi','tabMulti'],['break','tabBreak'],['ledger','tabLedger'],['scroll','tabScroll'],['farm','tabFarm'],['fm','tabFm'],['drop','tabDrop'],['travel','tabTravel']])$('#'+id).classList.toggle('active',mode===name);$('#pageModeTitle').textContent=MODE_INTROS[mode].title;if(mode==='farm'){const corn=document.createElement('a');corn.href='mais.html';corn.className='secret-corn-link';corn.textContent='🌽';corn.title='???';corn.setAttribute('aria-label','Découvrir le mini-jeu secret du maïs');$('#pageModeTitle').append(' ',corn)}else{const icon=document.createElement(mode==='break'?'button':'span');icon.className='mode-title-icon';icon.textContent=MODE_TITLE_ICONS[mode];if(mode==='break'){icon.type='button';icon.id='breakSecretVase';icon.setAttribute('aria-label','Vase')}else icon.setAttribute('aria-hidden','true');$('#pageModeTitle').append(icon)}$('#pageModeDescription').textContent=MODE_INTROS[mode].description;}
 $('#tabSingle').onclick=()=>switchMode('single');$('#tabMulti').onclick=()=>switchMode('multi');$('#tabLedger').onclick=()=>switchMode('ledger');$('#tabBreak').onclick=()=>switchMode('break');$('#tabScroll').onclick=()=>switchMode('scroll');$('#tabFarm').onclick=()=>switchMode('farm');$('#tabFm').onclick=()=>switchMode('fm');$('#tabDrop').onclick=()=>switchMode('drop');$('#tabTravel').onclick=()=>switchMode('travel');
 async function multiSearch(){const q=$('#multiSearch').value.trim(),id=++multi.request;if(q.length<2){$('#multiStatus').textContent='';$('#multiResults').innerHTML='';return}$('#multiStatus').textContent='Recherche en cours…';$('#multiResults').innerHTML='';try{const ep=multi.cat==='all'?'/items/search':'/items/'+multi.cat+'/search';const data=await get(ep+'?'+new URLSearchParams({query:q,limit:'50'}));if(id!==multi.request)return;const rows=Array.isArray(data)?data:data.items||data.results||[];$('#multiStatus').textContent=rows.length+' résultat(s)';$('#multiResults').innerHTML=rows.map((x,i)=>`<button class="multi-pick" data-mpick="${i}">${img(x.item_fields||x)?`<img src="${esc(img(x.item_fields||x))}" alt="">`:''}<span>${esc(x.name)}</span><span style="flex:0;color:#b8eb72">＋</span></button>`).join('')||'<div class="multi-empty">Aucun résultat</div>';$('#multiResults').querySelectorAll('[data-mpick]').forEach(b=>b.onclick=()=>multiAdd({...rows[+b.dataset.mpick],_category:multi.cat==='all'?subtype(rows[+b.dataset.mpick].item_subtype||rows[+b.dataset.mpick].item_fields?.type?.name_id):multi.cat}));}catch(e){if(id===multi.request)$('#multiStatus').textContent='Recherche impossible : '+e.message}}
 $('#multiSearch').addEventListener('input',()=>{clearTimeout(multi.timer);multi.timer=setTimeout(multiSearch,350)});document.querySelectorAll('[data-mcat]').forEach(b=>b.onclick=()=>{multi.cat=b.dataset.mcat;document.querySelectorAll('[data-mcat]').forEach(x=>x.classList.toggle('active',x===b));multiSearch()});
@@ -200,6 +203,7 @@ function multiShoppingRender(rows,preserveFocus=false){
   for(const row of rows){
    const tr=[...el.querySelectorAll('tr[data-shopping-id]')].find(x=>x.dataset.shoppingId===String(row.id));
    if(!tr)continue;
+   tr.classList.toggle('shopping-settled',row.remaining===0);
    const remain=tr.querySelector('[data-shopping-remaining]');
    const cost=tr.querySelector('[data-shopping-cost]');
    if(remain)remain.textContent=fmtNum(row.remaining);
@@ -208,7 +212,7 @@ function multiShoppingRender(rows,preserveFocus=false){
   return;
  }
  el.className='';
- el.innerHTML=rows.length?`<table class="multi-shopping"><thead><tr><th>Ressource / objet</th><th>Besoin</th><th>Possédés</th><th>À acheter</th><th>Coût restant</th></tr></thead><tbody>${rows.map(r=>`<tr data-shopping-id="${esc(r.id)}"><td>${r.image?`<img src="${esc(r.image)}" alt="">`:''}${itemNameHTML(r.name)}</td><td>${fmtNum(r.need)}</td><td><input data-mowned-final="${esc(r.id)}" type="number" min="0" step="1" value="${r.owned}" aria-label="Quantité possédée de ${esc(r.name)}"></td><td data-shopping-remaining>${fmtNum(r.remaining)}</td><td data-shopping-cost>${r.cost===null?'Prix manquant':fmt(r.cost)}</td></tr>`).join('')}</tbody></table>`:'<div class="multi-empty">Aucun achat à prévoir ou aucune recette sélectionnée.</div>';
+ el.innerHTML=rows.length?`<table class="multi-shopping"><thead><tr><th>Ressource / objet</th><th>Besoin</th><th>Possédés</th><th>À acheter</th><th>Coût restant</th></tr></thead><tbody>${rows.map(r=>`<tr data-shopping-id="${esc(r.id)}" class="${r.remaining===0?'shopping-settled':''}"><td>${r.image?`<img src="${esc(r.image)}" alt="">`:''}${itemNameHTML(r.name)}</td><td>${fmtNum(r.need)}</td><td><input data-mowned-final="${esc(r.id)}" type="number" min="0" step="1" value="${r.owned}" aria-label="Quantité possédée de ${esc(r.name)}"></td><td data-shopping-remaining>${fmtNum(r.remaining)}</td><td data-shopping-cost>${r.cost===null?'Prix manquant':fmt(r.cost)}</td></tr>`).join('')}</tbody></table>`:'<div class="multi-empty">Aucun achat à prévoir ou aucune recette sélectionnée.</div>';
  el.querySelectorAll('[data-mowned-final]').forEach(input=>input.oninput=()=>{
   multi.inventory[input.dataset.mownedFinal]=Math.max(0,Math.floor(Number(input.value)||0));
   multiSaveInventory();
@@ -320,7 +324,7 @@ const MultiSessions=(()=>{
    try{const previous=sessions,next=sessions.filter(s=>s.id!==b.dataset.sessionDelete);MultiSessions.write(next);sessions=next;render();setUndo(()=>{MultiSessions.write(previous);sessions=previous;render();message('Suppression annulée.');});message('Session supprimée.')}catch{message('Impossible de supprimer la session : stockage indisponible.')}
   });
  }
- function refresh(){document.querySelectorAll('[name="multiStrategy"]').forEach(input=>input.checked=input.value===multi.strategy);multiRender()}
+ function refresh(){document.querySelectorAll('[name="multiStrategy"]').forEach(input=>input.checked=input.value===multi.strategy);multiSaveInventory();multiRender()}
  el('multiSessionForm').addEventListener('submit',event=>{
   event.preventDefault();const title=el('multiSessionName').value.trim();
   if(!title){message('Donne un titre à ta session.');return}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr">
+<head>
+ <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+ <title>Le concasseur — La Foire du Tool</title><link rel="icon" type="image/png" href="data/corbac.png">
+ <link rel="stylesheet" href="css/concasseur.css">
+ <script src="js/games/concasseur-engine.js" defer></script><script src="js/games/concasseur.js" defer></script>
+</head>
+<body>
+ <main class="crush-shell">
+  <nav class="top-nav"><a href="index.html#break">← Retour au brisage</a><span><img src="data/corbac.png" width="28" height="28" alt="">La Foire du Tool</span></nav>
+  <header class="game-heading"><div><p class="eyebrow">Atelier clandestin · 60 secondes</p><h1>Le concasseur <span aria-hidden="true">🏺</span></h1><p>Du très haut niveau. Du très mauvais timing. Des Chachas à épargner.</p></div><div class="game-controls"><button id="soundToggle" type="button" aria-pressed="true">Son activé</button><button id="pauseGame" type="button" disabled>Pause</button></div></header>
+  <div class="hud" aria-label="Score de la partie"><div><small>Score</small><strong id="gameScore">0</strong></div><div><small>Série</small><strong id="gameCombo">0 <span>×1</span></strong></div><div><small>Temps restant</small><strong id="gameTime">60 s</strong></div><div><small>Record</small><strong id="gameBest">—</strong></div></div>
+  <div class="game-layout">
+   <section class="highway-panel" aria-label="Pistes du concasseur">
+    <div class="board-caption"><span><i></i> Zone de frappe en bas</span><span id="paceLabel">Le calme avant la casse</span></div>
+    <div id="laneLegend" class="lane-legend" aria-label="Un équipement par colonne"></div>
+    <div id="gameBoard" class="game-board" tabindex="0" aria-label="Cinq pistes. Cliquer quand l’objet atteint le cercle, ou utiliser D, F, Espace, J, K.">
+     <div class="hit-line" aria-hidden="true"></div><div class="lanes">
+      <button class="lane" type="button" data-lane="0" style="--lane:#b8eb72" aria-label="Frapper la piste 1, touche D"><span class="note-layer"></span><span class="lane-feedback" aria-hidden="true"></span><span class="target-ring" aria-hidden="true">✦</span><kbd>D</kbd></button>
+      <button class="lane" type="button" data-lane="1" style="--lane:#7dd7bf" aria-label="Frapper la piste 2, touche F"><span class="note-layer"></span><span class="lane-feedback" aria-hidden="true"></span><span class="target-ring" aria-hidden="true">✦</span><kbd>F</kbd></button>
+      <button class="lane" type="button" data-lane="2" style="--lane:#e6c36b" aria-label="Frapper la piste 3, touche Espace"><span class="note-layer"></span><span class="lane-feedback" aria-hidden="true"></span><span class="target-ring" aria-hidden="true">✦</span><kbd>Espace</kbd></button>
+      <button class="lane" type="button" data-lane="3" style="--lane:#d5a4eb" aria-label="Frapper la piste 4, touche J"><span class="note-layer"></span><span class="lane-feedback" aria-hidden="true"></span><span class="target-ring" aria-hidden="true">✦</span><kbd>J</kbd></button>
+      <button class="lane" type="button" data-lane="4" style="--lane:#8dbcf7" aria-label="Frapper la piste 5, touche K"><span class="note-layer"></span><span class="lane-feedback" aria-hidden="true"></span><span class="target-ring" aria-hidden="true">✦</span><kbd>K</kbd></button>
+     </div>
+     <div id="countdown" class="countdown" hidden aria-live="polite">3</div>
+     <div id="gameOverlay" class="game-overlay"><div class="overlay-card">
+      <div id="introContent"><span class="hero-hammer" aria-hidden="true">🔨</span><p class="eyebrow">Pas de pitié. Sauf pour les chats.</p><h2>Visez le cercle.<br>Pas le Chacha.</h2><p>Chaque équipement a sa colonne. Frappez au passage dans le cercle et variez les pistes pour remonter les coefficients. Les Chachas s’invitent partout !</p><div class="intro-tags"><span>5 pistes fixes</span><span>60 secondes</span><span>Chacha : −250</span></div></div>
+      <div id="resultsContent" hidden><p class="eyebrow" id="resultBadge">Partie terminée</p><h2>Le marteau a chauffé.</h2><strong id="finalScore" class="final-score">0</strong><p>points</p><div id="resultStats" class="result-stats"></div></div>
+      <div id="pauseContent" hidden><span class="hero-hammer" aria-hidden="true">⏸</span><h2>Le concasseur souffle.</h2><p>Votre partie est en pause.</p></div>
+      <button id="startGame" type="button" class="primary">Entrer dans la cadence</button><button id="resumeGame" type="button" class="primary" hidden>Reprendre</button>
+      <p class="keyboard-hint">Souris ou <kbd>D</kbd> <kbd>F</kbd> <kbd>Espace</kbd> <kbd>J</kbd> <kbd>K</kbd> · P / Échap : pause</p>
+     </div></div>
+    </div>
+    <div class="board-footer"><span><b>Parfait</b> au centre du cercle · gardez la série</span><span>Frappe à vide : −25 · objet raté : −60</span></div>
+   </section>
+   <aside class="coefficient-panel"><div class="coefficient-heading"><div><p class="eyebrow">Variez les plaisirs</p><h2>Coefficients</h2></div><span>en direct</span></div><p class="coefficient-help">Le même objet perd <b>24 points</b> de coefficient. Chacun des autres en regagne <b>7</b>.</p><div id="coefficientList"></div><div class="cat-warning"><img src="data/concasseur/chacha.png" width="44" height="44" alt="Chacha"><div><strong>Laissez-les passer.</strong><p>Un miaulement, −250 points et la série est cassée.</p></div></div><p class="coefficient-footnote">De 20 % à 220 % · coefficients propres à cette partie.</p></aside>
+  </div>
+  <p id="gameStatus" class="game-status" role="status" aria-live="polite">Prêt à faire pleuvoir les runes ?</p>
+  <footer>Mini-jeu communautaire · Visuels DOFUS © Ankama · DofusDude</footer>
+ </main>
+ <span id="hammerCursor" class="hammer-cursor" hidden aria-hidden="true">🔨</span>
+</body>
+</html>
