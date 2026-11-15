@@ -52,6 +52,6 @@ test('les passages interactifs sont signalés et les zaaps absents du graphe ref
 });
 test('navigation : historique dans Rentabilité, ordre demandé, trajet dans Autres',()=>{
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8'),groups=[...html.matchAll(/<div class="mode-group"><div class="mode-group-title">([^<]+)<\/div><div class="mode-group-links">([\s\S]*?)<\/div><\/div>/g)];
- const ids=name=>[...groups.find(g=>g[1]===name)[2].matchAll(/id="([^"]+)"/g)].map(m=>m[1]);assert.deepEqual(ids('Rentabilité'),['tabFarm','tabLedger','tabBreak']);assert.deepEqual(ids('Autres'),['tabTravel','tabDrop']);
+ const ids=name=>[...groups.find(g=>g[1]===name)[2].matchAll(/id="([^"]+)"/g)].map(m=>m[1]);assert.deepEqual(ids('Rentabilité'),['tabFarm','tabLedger','tabBreak']);assert.deepEqual(ids('Autres'),['tabTravel','tabHunt','tabDrop']);
  assert.equal((html.match(/id="tabLedger"/g)||[]).length,1);
 });

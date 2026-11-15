@@ -1,4 +1,4 @@
-# La Foire du Tool — V141
+# La Foire du Tool — V142
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -231,3 +231,8 @@ Chaque équipement conserve une colonne fixe, identifiée par son icône et son 
 ## V141 — Clavier du concasseur après réglage du son
 
 Un clic sur le bouton du son rend le focus à la piste pendant la partie et le décompte. D/F/Espace/J/K restent prioritaires pendant le jeu, même si un bouton a le focus ; Espace ne réactive plus le son et son maintien ne fait pas défiler la page.
+
+
+## V142 — Chasse au trésor
+
+Nouvelle page dans Autres, sous Trajets et zaaps : API DofusDB, coordonnées collables, croix directionnelle, indices filtrés sans accents et copie automatique de /travel. Affichage de la distance, copie manuelle de secours et bouton Indice trouvé pour reprendre la destination au prochain indice. Les Phorreurs restent à repérer en jeu.
