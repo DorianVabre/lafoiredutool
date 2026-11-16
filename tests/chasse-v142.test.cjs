@@ -55,3 +55,9 @@ test('V144 : rose inerte avant le code complet, erreur puis nouvelle séquence, 
  await press([6]);assert.equal(rose.disabled,false);
  rose.listeners.click();assert.equal(a.window.location.href,'enquete.html');
 });
+
+test('V186 : flèche et distance pour les quatre directions, conservées après copie puis masquées à la saisie',async()=>{
+ for(const [direction,x,y,arrow,name] of [[0,-13,-24,'→','est'],[2,-16,-21,'↓','sud'],[4,-19,-24,'←','ouest'],[6,-16,-27,'↑','nord']]){
+ const a=app(async()=>({ok:true,json:async()=>({total:1,data:[row(x,y,1,'Étoile')]})}));a.el('huntPosition').value='[-16,-24]';await a.arrows.find(b=>Number(b.dataset.huntDirection)===direction).listeners.click();await a.el('huntChoices').children[0].listeners.click();assert.equal(a.el('huntArrow').textContent,arrow);assert.equal(a.el('huntMapCount').textContent,'3 maps');assert.equal(a.el('huntDistance').hidden,false);assert.equal(a.el('huntDistance').attributes['aria-label'],'3 maps vers le '+name);assert.equal(a.el('huntPosition').value,'['+x+','+y+']');a.el('huntClue').listeners.input();assert.equal(a.el('huntDistance').hidden,true);
+ }
+});

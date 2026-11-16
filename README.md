@@ -1,4 +1,8 @@
-# La Foire du Tool — V185
+# La Foire du Tool — V186
+
+## V186 — Direction et distance de chasse visibles
+
+Grande flèche verte et nombre de maps au-dessus du résultat de chasse, conservés lors du passage automatique à la position suivante. Liste des indices affichée intégralement, sans défilement interne sur ordinateur ni mobile.
 
 ## V185 — Suppression des indices
 
