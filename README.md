@@ -1,4 +1,20 @@
-# La Foire du Tool — V192
+# La Foire du Tool — V196
+
+## V196 — Réduction du suivi et alerte visible
+
+Bouton de réduction remplacé par un petit − dans le coin du suivi. Badge rouge ! affiché quand une action est attendue, y compris dans le suivi réduit.
+
+## V195 — Affichage des durées du plan
+
+Signe + déplacé de la durée cumulée vers l’incrément dans le tableau des actions d’élevage. Calculs inchangés.
+
+## V194 — Jauges compactes et icônes harmonisées
+
+Activation et désactivation indiquées par + et −. Icônes d’origine reprises (éclair, goutte, cœur, étoile) ; résumé des jauges sur deux lignes : sérénité et XP, puis endurance, maturité et amour. Affichage uniquement.
+
+## V193 — Actions et jauges du suivi d’élevage
+
+Actions illustrées : retrait rouge, ajout vert, hausse/baisse de sérénité par flèches violettes et symboles des autres jauges. Résumé par enclos des jauges à reprendre après chaque étape, avec mini-jauges ON/OFF, dans le suivi et le plan.
 
 ## V192 — Crédits communs
 
