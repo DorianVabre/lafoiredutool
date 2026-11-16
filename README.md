@@ -2,6 +2,14 @@
 
 ## V199 — Contrôles dans le thème du site
 
+Stratégies d’élevage sélectionnables par boutons enfoncés/relâchés, à sélection unique. Titre centré et mis en valeur ; quatre paliers soulignés d’un trait fin et regroupés sous « Vitesse ». Intitulé « Objectif » avec le même trait fin au-dessus du sélecteur Fécondité/Niveau. Rangée dédiée avec cible et unité en mode XP, adaptée aux petits écrans.
+
+Cœur coloré dans le tri de la réserve. Objectif XP explicitement distingué du plafond de niveau 200 ; la cible de niveau 100 est une valeur par défaut configurable, pas une limite du moteur.
+
+Fiche compactée : niveau et XP côte à côte, icônes alignées avec les noms des jauges et cœur coloré dans le rappel d’accessibilité.
+
+Fiches des montures éditables depuis la réserve ou les enclos : nom, espèce/robe avec sélecteur illustré, jauges, capacité et niveau/XP. Limites de saisie conservées ; modification des montures suivies après mise en pause.
+
 Contrôles harmonisés sur toutes les pages : cases à cocher vertes, barres de défilement sombres et suppression des flèches numériques sur les champs de grands nombres. Flèches conservées sur les stocks possédés et les petites valeurs bornées (niveaux, minutes, pourcentages).
 
 ## V198 — Sélecteur illustré et limites de saisie

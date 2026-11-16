@@ -5,3 +5,5 @@
 - Mettre à jour la version dans package.json et le titre du README.md à chaque itération, avec une courte description des changements dans le README.
 
 - Mettre également à jour la version affichée dans le footer de chaque page à chaque itération livrée.
+
+- Consigne utilisateur actuelle : rester en V199 tant que l’utilisateur ne demande pas explicitement de changer de version.

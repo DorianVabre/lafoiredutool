@@ -57,3 +57,11 @@ test('V198 : quatrième fiche après trois saisies pour deux places bascule sur 
  }
  assert.match(a.node('#breedBatchDialog').innerHTML,/monture 4/);assert.equal(a.node('#breedBatchDestination').value,'reserve');assert.equal(a.node('#breedBatchCapacityWarning').hidden,true);assert.equal(a.node('#breedBatchFinishWarning').hidden,true);assert.equal(a.node('#breedBatchFinish').title,'');assert.match(a.node('#breedBatchDialog').innerHTML,/<option value="pen-0"\s+disabled>/);
 });
+
+test('V199 : fiche éditable depuis la réserve, saisie conservée au focus et sélection de robe',async()=>{
+ const a=app();a.api.createMany([draft()]);a.boot();const id=a.api.read().reserve[0].id;
+ await a.handlers.click({target:{closest:()=>({dataset:{details:id}})}});const dialog=a.node('#breedMountDetails');assert.equal(dialog.open,true);assert.match(dialog.innerHTML,/data-field="serenity"/);assert.match(dialog.innerHTML,/data-field="trait"/);assert.match(dialog.innerHTML,/data-field="xp"/);assert.match(dialog.innerHTML,/data-pick-mount=/);
+ const t={id:'',type:'number',value:'25000',min:'0',max:'20000',step:'1',dataset:{mountId:id,field:'maturity'},checkValidity:()=>true};a.ctx.document.activeElement=t;dialog.contains=target=>target===t;const html=dialog.innerHTML;a.handlers.input({target:t});assert.equal(t.value,'20000');assert.equal(a.api.read().reserve[0].maturity,20000);assert.equal(dialog.innerHTML,html);
+ a.handlers.input({target:{id:'',value:'Nouvelle DD',dataset:{mountId:id,field:'name'}}});assert.equal(a.api.read().reserve[0].name,'Nouvelle DD');
+ await a.handlers.click({target:{closest:()=>({dataset:{pickMount:id}})}});const type=vm.runInContext('BREEDING_MOUNTS[0]',a.ctx);await a.handlers.click({target:{closest:()=>({dataset:{mountType:String(type.id)}})}});assert.equal(a.api.read().reserve[0].mountId,type.id);assert.equal(a.node('#breedMountDetails').open,true);
+});
