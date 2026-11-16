@@ -1,4 +1,8 @@
-# La Foire du Tool — V198
+# La Foire du Tool — V199
+
+## V199 — Contrôles dans le thème du site
+
+Contrôles harmonisés sur toutes les pages : cases à cocher vertes, barres de défilement sombres et suppression des flèches numériques sur les champs de grands nombres. Flèches conservées sur les stocks possédés et les petites valeurs bornées (niveaux, minutes, pourcentages).
 
 ## V198 — Sélecteur illustré et limites de saisie
 
