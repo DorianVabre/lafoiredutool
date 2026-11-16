@@ -6,8 +6,8 @@ const EnqueteEngine=(()=>{
  function rng(seed){let n=seed>>>0;return()=>{n+=0x6D2B79F5;let t=n;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
  function shuffle(a,random){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
  function checksum(seed){return (Math.imul(seed^0x8f42ac19,2654435761)>>>0).toString(36).toUpperCase().padStart(7,'0')}
- function key(seed,version='E8'){return version+'-'+(seed>>>0).toString(36).toUpperCase().padStart(7,'0')+'-'+checksum(seed>>>0)}
- function parse(value){const m=String(value).trim().toUpperCase().match(/^(E[12345678])-([0-9A-Z]{7})-([0-9A-Z]{7})$/);if(!m)return null;const seed=parseInt(m[2],36);return seed<=4294967295&&key(seed,m[1])===m[0]?seed:null}
+ function key(seed,version='E9'){return version+'-'+(seed>>>0).toString(36).toUpperCase().padStart(7,'0')+'-'+checksum(seed>>>0)}
+ function parse(value){const m=String(value).trim().toUpperCase().match(/^(E[123456789])-([0-9A-Z]{7})-([0-9A-Z]{7})$/);if(!m)return null;const seed=parseInt(m[2],36);return seed<=4294967295&&key(seed,m[1])===m[0]?seed:null}
  function permutations(a){if(!a.length)return [[]];return a.flatMap((x,i)=>permutations(a.filter((_,j)=>j!==i)).map(p=>[x,...p]))}
  const perms=permutations([0,1,2,3,4,5]);
  // Une solution est indexée par suspect : {r,c}. Les permutations imposent une personne par ligne et colonne.
@@ -160,10 +160,10 @@ const EnqueteEngine=(()=>{
  }
  function fourth(seed,attempt=0,edition='E4'){
   const source=(seed+Math.imul(attempt,0x9e3779b9))>>>0;
-  const base=['E5','E6','E7','E8'].includes(edition)?irregular(source):decorated(source),random=rng(source^0x478ace91),blocked=base.clues.find(c=>c.fixed),pool=[];
+  const base=['E5','E6','E7','E8','E9'].includes(edition)?irregular(source):decorated(source),random=rng(source^0x478ace91),blocked=base.clues.find(c=>c.fixed),pool=[];
   const roomAt=(r,c)=>room(r,c,base.roomMap),roomNames=base.rooms;
-  const solve=clues=>deduce(clues,{comfortable:['E6','E7','E8'].includes(edition)});
-  if(['E5','E6','E7','E8'].includes(edition)){
+  const solve=clues=>deduce(clues,{comfortable:['E6','E7','E8','E9'].includes(edition)});
+  if(['E5','E6','E7','E8','E9'].includes(edition)){
    const irregularCount=base.rooms.filter((_,id)=>{const cells=base.roomMap.flatMap((v,n)=>v===id?[n]:[]),rows=cells.map(n=>Math.floor(n/6)),cols=cells.map(n=>n%6);return (Math.max(...rows)-Math.min(...rows)+1)*(Math.max(...cols)-Math.min(...cols)+1)!==cells.length}).length;
    if(irregularCount<2){if(attempt<63)return fourth(seed,attempt+1,edition);throw Error('Contours de salles insuffisamment variés')}
   }
@@ -178,19 +178,19 @@ const EnqueteEngine=(()=>{
    pool.push({text,axis:'both',indices:[i,j],pair:test,kind,signature,partial:true,...extra,test:s=>test(s[i],s[j])});
   }
   // Les décors bloquent leur case : distance jusqu'à une case libre voisine.
-  const contact=['E7','E8'].includes(edition)?base.decor.map(d=>{const adjacent=Array.from({length:36},(_,n)=>n).filter(n=>!blocked.blocked.has(n)&&Math.abs(Math.floor(n/6)-d.r)+Math.abs(n%6-d.c)===1);return distances.map(row=>Math.min(...adjacent.map(n=>row[n])))}):null;
-  const newKinds=edition==='E8'?['diagonal','closer','equidistant','range']:['diagonal','closer','equidistant'];
+  const contact=['E7','E8','E9'].includes(edition)?base.decor.map(d=>{const adjacent=Array.from({length:36},(_,n)=>n).filter(n=>!blocked.blocked.has(n)&&Math.abs(Math.floor(n/6)-d.r)+Math.abs(n%6-d.c)===1);return distances.map(row=>Math.min(...adjacent.map(n=>row[n])))}):null;
+  const newKinds=['E8','E9'].includes(edition)?['diagonal','closer','equidistant','range']:['diagonal','closer','equidistant'];
   for(let i=0;i<6;i++){
    const p=base.answer[i],name=names[i];
    unary(i,name+' se trouve dans la moitié '+(p.r<3?'nord':'sud')+' du manoir.',a=>(a.r<3)===(p.r<3),'half');
    unary(i,name+' se trouve dans la moitié '+(p.c<3?'ouest':'est')+' du manoir.',a=>(a.c<3)===(p.c<3),'half');
    unary(i,name+' est dans : '+roomNames[roomAt(p.r,p.c)]+'.',a=>roomAt(a.r,a.c)===roomAt(p.r,p.c),'room');
-   if(['E5','E6','E7','E8'].includes(edition)){const excluded=(roomAt(p.r,p.c)+1+Math.floor(random()*3))%4;unary(i,name+' ne se trouve pas dans : '+roomNames[excluded]+'.',a=>roomAt(a.r,a.c)!==excluded,'room')}
+   if(['E5','E6','E7','E8','E9'].includes(edition)){const excluded=(roomAt(p.r,p.c)+1+Math.floor(random()*3))%4;unary(i,name+' ne se trouve pas dans : '+roomNames[excluded]+'.',a=>roomAt(a.r,a.c)!==excluded,'room')}
    unary(i,name+' est sur la ligne '+(p.r+1)+'.',a=>a.r===p.r,'row');
    unary(i,name+' est dans la colonne '+String.fromCharCode(65+p.c)+'.',a=>a.c===p.c,'column');
    const landmark=base.decor[i],distance=Math.abs(p.r-landmark.r)+Math.abs(p.c-landmark.c);
    unary(i,name+' est à '+distance+' case'+(distance>1?'s':'')+' de « '+landmark.name+' » à vol de tofu (sans diagonale, obstacles ignorés).',a=>Math.abs(a.r-landmark.r)+Math.abs(a.c-landmark.c)===distance,'decor');
-   if(['E7','E8'].includes(edition))for(let a=0;a<base.decor.length;a++)for(let b=a+1;b<base.decor.length;b++){
+   if(['E7','E8','E9'].includes(edition))for(let a=0;a<base.decor.length;a++)for(let b=a+1;b<base.decor.length;b++){
     const da=contact[a][cell(p)],db=contact[b][cell(p)];if(Number.isFinite(da)&&da===db)unary(i,name+' est à autant de PM du contact de « '+base.decor[a].name+' » que de « '+base.decor[b].name+' ».',q=>Number.isFinite(contact[a][cell(q)])&&contact[a][cell(q)]===contact[b][cell(q)],'equidistant',{landmarks:[base.decor[a],base.decor[b]]});
    }
    for(let j=i+1;j<6;j++){
@@ -200,13 +200,13 @@ const EnqueteEngine=(()=>{
     if(Math.abs(p.r-q.r)===1)pair(i,j,name+' et '+other+' sont sur deux lignes consécutives.',(a,b)=>Math.abs(a.r-b.r)===1,'adjacent');
     if(Math.abs(p.c-q.c)===1)pair(i,j,name+' et '+other+' sont sur deux colonnes consécutives.',(a,b)=>Math.abs(a.c-b.c)===1,'adjacent');
     const distance=distances[cell(p)][cell(q)];if(Number.isFinite(distance))pair(i,j,name+' est à '+distance+' PM de '+other+'.',(a,b)=>distances[cell(a)][cell(b)]===distance,'pm');
-    if(['E7','E8'].includes(edition)){
+    if(['E7','E8','E9'].includes(edition)){
      if(Math.abs(p.r-q.r)===Math.abs(p.c-q.c))pair(i,j,name+' et '+other+' sont sur une même diagonale.',(a,b)=>a.r!==b.r&&Math.abs(a.r-b.r)===Math.abs(a.c-b.c),'diagonal');
      for(let a=0;a<base.decor.length;a++){const dp=contact[a][cell(p)],dq=contact[a][cell(q)];if(!Number.isFinite(dp)||!Number.isFinite(dq)||dp===dq)continue;const near=dp<dq;
       pair(i,j,(near?name:other)+' est plus proche du contact de « '+base.decor[a].name+' » que '+(near?other:name)+' (en PM).',(p,q)=>Number.isFinite(contact[a][cell(p)])&&Number.isFinite(contact[a][cell(q)])&&(near?contact[a][cell(p)]<contact[a][cell(q)]:contact[a][cell(p)]>contact[a][cell(q)]),'closer',{landmark:base.decor[a],nearer:near?i:j});
      }
     }
-    if(edition==='E8'){
+    if(['E8','E9'].includes(edition)){
      const po=Math.abs(p.r-q.r)+Math.abs(p.c-q.c);
      // Bornes incluses et toutes deux restrictives sur une grille où deux suspects sont à 2–10 PO.
      for(let minRange=3;minRange<9;minRange++)for(let maxRange=minRange+1;maxRange<=Math.min(minRange+3,9);maxRange++)if(po>=minRange&&po<=maxRange){
@@ -224,37 +224,40 @@ const EnqueteEngine=(()=>{
     };pool.push(los);
    }
   }
-  const unique=[...new Map(pool.map(c=>[c.signature,c])).values()].filter(c=>!['E6','E7','E8'].includes(edition)||!c.unary||Array.from({length:36},(_,n)=>n).filter(n=>!blocked.blocked.has(n)&&c.unary(point(n))).length<=6),ordered=shuffle(unique,random);
+  const unique=[...new Map(pool.map(c=>[c.signature,c])).values()].filter(c=>!['E6','E7','E8','E9'].includes(edition)||!c.unary||Array.from({length:36},(_,n)=>n).filter(n=>!blocked.blocked.has(n)&&c.unary(point(n))).length<=6),ordered=shuffle(unique,random);
   let clues=[blocked];
+  const numericalKinds=['pm','range','decor'];
+  const canAdd=c=>!clues.includes(c)&&clues.filter(v=>v.kind===c.kind).length<(edition==='E9'?1:2)&&(edition!=='E9'||!numericalKinds.includes(c.kind)||clues.filter(v=>numericalKinds.includes(v.kind)).length<2);
   // Semer des familles différentes ; compléter seulement par des faits qui font progresser la propagation.
-  for(const kind of (['E5','E6','E7','E8'].includes(edition)?['pm','pm','los','decor','room']:['pm','pm','los','decor'])){const c=ordered.find(c=>c.kind===kind&&!clues.includes(c));if(c)clues.push(c)}
+  const initialKinds=edition==='E9'?['pm','los','room',source%2?'range':'decor']:['E5','E6','E7','E8'].includes(edition)?['pm','pm','los','decor','room']:['pm','pm','los','decor'];
+  for(const kind of initialKinds){const c=ordered.find(c=>c.kind===kind&&canAdd(c));if(c)clues.push(c)}
   let proof=solve(clues);
-  if(['E7','E8'].includes(edition)){
-   const preferred=newKinds[source%newKinds.length],candidates=ordered.filter(c=>newKinds.includes(c.kind)).sort((a,b)=>Number(b.kind===preferred)-Number(a.kind===preferred));
+  if(['E7','E8','E9'].includes(edition)){
+   const preferred=newKinds[source%newKinds.length],candidates=ordered.filter(c=>newKinds.includes(c.kind)&&(edition!=='E9'||canAdd(c))).sort((a,b)=>Number(b.kind===preferred)-Number(a.kind===preferred));
    for(const c of candidates){const next=solve(clues.concat(c));if(next.domains.reduce((n,d)=>n+d.length,0)<proof.domains.reduce((n,d)=>n+d.length,0)){clues.push(c);proof=next;break}}
   }
   while(!proof.solved){
    const before=proof.domains.reduce((n,d)=>n+d.length,0);
    let chosen=null,nextProof=null;
    for(const candidate of [...ordered.filter(c=>c.kind!=='row'&&c.kind!=='column'),...ordered.filter(c=>c.kind==='row'||c.kind==='column')]){
-    if(clues.includes(candidate)||clues.filter(c=>c.kind===candidate.kind).length>=2)continue;
+    if(!canAdd(candidate))continue;
     const next=solve(clues.concat(candidate));if(next.domains.reduce((n,d)=>n+d.length,0)<before){chosen=candidate;nextProof=next;break}
    }
    if(!chosen){if(attempt<63)return fourth(seed,attempt+1,edition);throw Error('Aucune combinaison de déduction disponible')}clues.push(chosen);proof=nextProof;
   }
   // Un indice retiré uniquement si les règles de déduction résolvent encore le niveau, sans supposition.
-  for(const c of shuffle(clues.filter(c=>!c.fixed),random)){if(['E7','E8'].includes(edition)&&newKinds.includes(c.kind)&&clues.filter(c=>newKinds.includes(c.kind)).length===1)continue;const next=clues.filter(v=>v!==c);if(solve(next).solved)clues=next}
+  for(const c of shuffle(clues.filter(c=>!c.fixed),random)){if(['E7','E8','E9'].includes(edition)&&newKinds.includes(c.kind)&&clues.filter(c=>newKinds.includes(c.kind)).length===1)continue;const next=clues.filter(v=>v!==c);if(solve(next).solved)clues=next}
   const families=new Set(clues.filter(c=>c.kind).map(c=>c.kind));
-  if(families.size<4||!families.has('pm')||!families.has('los')||['E5','E6','E7','E8'].includes(edition)&&!families.has('room')){if(attempt<63)return fourth(seed,attempt+1,edition);throw Error('Diversité des indices insuffisante')}
+  if(families.size<4||!families.has('pm')||!families.has('los')||['E5','E6','E7','E8','E9'].includes(edition)&&!families.has('room')){if(attempt<63)return fourth(seed,attempt+1,edition);throw Error('Diversité des indices insuffisante')}
   proof=solve(clues);
   const resolved=proof.domains.map(d=>point(d[0]));
   if(!proof.solved||!clues.every(c=>c.test(resolved)))throw Error('Preuve de déduction invalide');
-  if(['E6','E7','E8'].includes(edition)){const size=c=>Array.from({length:36},(_,n)=>n).filter(n=>!blocked.blocked.has(n)&&c.unary(point(n))).length;clues=clues.filter(c=>c.fixed).concat(clues.filter(c=>c.unary).sort((a,b)=>size(a)-size(b)),clues.filter(c=>!c.fixed&&!c.unary))}
+  if(['E6','E7','E8','E9'].includes(edition)){const size=c=>Array.from({length:36},(_,n)=>n).filter(n=>!blocked.blocked.has(n)&&c.unary(point(n))).length;clues=clues.filter(c=>c.fixed).concat(clues.filter(c=>c.unary).sort((a,b)=>size(a)-size(b)),clues.filter(c=>!c.fixed&&!c.unary))}
   proof=solve(clues);
-  if(['E7','E8'].includes(edition)&&!proof.trace.some(step=>clues.some(c=>newKinds.includes(c.kind)&&c.text===step.reason))){if(attempt<63)return fourth(seed,attempt+1,edition);throw Error('Aucun nouveau témoignage utile')}
+  if(['E7','E8','E9'].includes(edition)&&!proof.trace.some(step=>clues.some(c=>newKinds.includes(c.kind)&&c.text===step.reason))){if(attempt<63)return fourth(seed,attempt+1,edition);throw Error('Aucun nouveau témoignage utile')}
   return {...base,seed,key:key(seed,edition),clues,deduction:proof};
  }
- function generate(seed,version='E8'){return version==='E8'?fourth(seed,0,'E8'):version==='E7'?fourth(seed,0,'E7'):version==='E6'?fourth(seed,0,'E6'):version==='E5'?fourth(seed,0,'E5'):version==='E4'?fourth(seed):third(seed,version)}
+ function generate(seed,version='E9'){return version==='E9'?fourth(seed,0,'E9'):version==='E8'?fourth(seed,0,'E8'):version==='E7'?fourth(seed,0,'E7'):version==='E6'?fourth(seed,0,'E6'):version==='E5'?fourth(seed,0,'E5'):version==='E4'?fourth(seed):third(seed,version)}
  // Adaptation des témoignages des anciennes éditions, sans modifier leurs niveaux ni leurs clés.
  function explanationClues(puzzle){
   const point=n=>({r:Math.floor(n/6),c:n%6}),blocked=new Set((puzzle.decor||[]).concat(puzzle.victim).map(p=>p.r*6+p.c));
@@ -274,7 +277,7 @@ const EnqueteEngine=(()=>{
   }).concat(puzzle.clues.some(c=>c.blocked)?[]:[{fixed:true,blocked,text:'Les cases occupées par le corps et le décor sont exclues.',test:s=>s.every(p=>!blocked.has(p.r*6+p.c))}]);
  }
  function walkthrough(puzzle,placements=[],{candidates=null,excluded=[]}={}){
-  const clues=explanationClues(puzzle),proof=deduce(clues,{explain:true,placements,comfortable:/^E[678]-/.test(puzzle.key),candidates,excluded}),coordinate=n=>String.fromCharCode(65+n%6)+(Math.floor(n/6)+1),list=ns=>ns.map(coordinate).join(', ');
+  const clues=explanationClues(puzzle),proof=deduce(clues,{explain:true,placements,comfortable:/^E[6789]-/.test(puzzle.key),candidates,excluded}),coordinate=n=>String.fromCharCode(65+n%6)+(Math.floor(n/6)+1),list=ns=>ns.map(coordinate).join(', ');
   let number=0;const visibleNumbers=clues.map(c=>c.fixed?null:++number);
   const steps=proof.trace.map(step=>{
    const name=puzzle.names[step.suspect],ctx=step.context;let title,text;

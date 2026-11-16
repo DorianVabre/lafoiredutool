@@ -1,4 +1,8 @@
-# La Foire du Tool — V202
+# La Foire du Tool — V203
+
+## V203 — Témoignages plus variés
+
+Les nouvelles affaires E9 comportent au maximum un témoignage de chaque type, et deux distances chiffrées au total en regroupant PM, fourchettes de PO et distances à vol de tofu. La déduction sans supposition, la diversité des familles et la solution unique sont conservées. Les anciennes clés E1 à E8 reproduisent toujours leurs enquêtes ; cliquer sur « Nouvelle affaire » pour appliquer ces limites.
 
 ## V202 — Portée minimale et maximale dans l’enquête
 

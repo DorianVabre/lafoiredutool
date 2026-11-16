@@ -6,13 +6,13 @@ test('V202 : les clés E7 conservent leur plan et tous leurs témoignages',()=>{
   const p=E.generate(r.seed,r.version),data={key:p.key,answer:p.answer,victim:p.victim,decor:p.decor,rooms:p.rooms,roomMap:p.roomMap,clues:p.clues.map(c=>({text:c.text,kind:c.kind,axis:c.axis,signature:c.signature}))};
   assert.equal(crypto.createHash('sha256').update(JSON.stringify(data)).digest('hex'),r.sha256,'E7 '+r.seed);assert.equal(E.parse(p.key),r.seed);
  }
- assert.match(E.key(42),/^E8-/);assert.equal(E.parse(E.key(4294967295)),4294967295);assert.equal(E.parse(E.key(0,'E9')),null);
+ assert.match(E.key(42,'E8'),/^E8-/);assert.equal(E.parse(E.key(4294967295)),4294967295);assert.equal(E.parse(E.key(0,'E10')),null);
 });
 
 test('E8 : les deux bornes de PO sont incluses, indépendantes des obstacles et de la ligne de vue',()=>{
  let tested=0,detour=false,hidden=false;const bounds=new Set();
  for(let seed=0;seed<12;seed++){
-  const p=E.generate(seed),free=Array.from({length:36},(_,n)=>n).filter(n=>!p.clues[0].blocked.has(n));
+  const p=E.generate(seed,'E8'),free=Array.from({length:36},(_,n)=>n).filter(n=>!p.clues[0].blocked.has(n));
   for(const c of p.clues.filter(c=>c.kind==='range')){
    tested++;assert.ok(c.minRange>=3&&c.minRange<c.maxRange&&c.maxRange<=9);assert.match(c.text,new RegExp('entre '+c.minRange+' et '+c.maxRange+' PO'));
    for(let a=0;a<36;a++)for(let b=0;b<36;b++){
@@ -33,8 +33,8 @@ test('E8 : les deux bornes de PO sont incluses, indépendantes des obstacles et 
 test('E8 : portée utile dans le raisonnement, familles variées, solution unique et reproductible sans supposition',()=>{
  const seen=new Set();let usefulRange=0;
  for(let i=0;i<40;i++){
-  const seed=i===39?4294967295:Math.imul(i,104729)>>>0,p=E.generate(seed),w=E.walkthrough(p),reverse=E.deduce(p.clues,{comfortable:true,reverse:true});
-  assert.equal(p.key,E.key(seed));assert.equal(E.parse(p.key),seed);assert.ok(w.solved&&reverse.solved,'seed '+seed);assert.deepEqual(w.domains,p.answer.map(p=>[cell(p)]));assert.deepEqual(w.domains,reverse.domains);assert.deepEqual(E.solutions(p.clues),[p.answer]);
+  const seed=i===39?4294967295:Math.imul(i,104729)>>>0,p=E.generate(seed,'E8'),w=E.walkthrough(p),reverse=E.deduce(p.clues,{comfortable:true,reverse:true});
+  assert.equal(p.key,E.key(seed,'E8'));assert.equal(E.parse(p.key),seed);assert.ok(w.solved&&reverse.solved,'seed '+seed);assert.deepEqual(w.domains,p.answer.map(p=>[cell(p)]));assert.deepEqual(w.domains,reverse.domains);assert.deepEqual(E.solutions(p.clues),[p.answer]);
   const counts={};for(const c of p.clues){assert.ok(c.test(p.answer));if(c.kind){counts[c.kind]=(counts[c.kind]||0)+1;seen.add(c.kind)}}
   assert.ok(Object.values(counts).every(n=>n<=2));assert.ok(counts.pm&&counts.los&&counts.room);assert.ok(Object.keys(counts).length>=4);assert.equal(new Set(p.clues.filter(c=>!c.fixed).map(c=>c.signature)).size,p.clues.length-1);
   assert.ok(w.steps.some(s=>p.clues.some(c=>['diagonal','closer','equidistant','range'].includes(c.kind)&&s.reason===c.text)));

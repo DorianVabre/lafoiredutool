@@ -171,11 +171,12 @@ test('V187 : point indépendant, aperçu, chargement annulable, écrasement et r
  a.el('saveCheckpoint').listeners.click();assert.ok(state().checkpoint.placed.every(p=>p===null));a.el('caseKey').value=E.key(7);a.el('keyForm').listeners.submit({preventDefault(){}});assert.equal(a.el('checkpointControl').hidden,true);assert.equal(state().checkpoint,null);assert.equal(a.el('saveCheckpoint').textContent,'Mettre un point de sauvegarde');
 });
 
-test('V202 : reprise des affaires E6/E7 conservée, Nouvelle affaire en E8 avec PO et solution complète',()=>{
- for(const edition of ['E6','E7']){
+test('V203 : reprise des affaires E6/E7/E8 conservée, Nouvelle affaire en E9 avec quotas et solution complète',()=>{
+ for(const edition of ['E6','E7','E8']){
   const p=E.generate(42,edition),initial={key:p.key,placed:p.answer.map((p,i)=>i===0?p:null),notes:Array.from({length:6},()=>[]),excluded:[]},a=app({initial,hash:p.key});assert.equal(a.el('caseKey').value,p.key);assert.deepEqual(JSON.parse(a.saved.get('corbac-case-v1')).placed[0],p.answer[0]);assert.equal(a.el('clues').children.length,p.clues.filter(c=>!c.fixed).length);
-  a.el('newCase').listeners.click();assert.match(a.el('caseKey').value,/^E8-/);assert.equal(a.el('investigation').hidden,true);a.el('start').listeners.click();a.el('solution').listeners.click();assert.equal(a.el('solutionPanel').hidden,false);assert.equal(a.el('solutionSteps').children.length,E.walkthrough(E.generate(42,'E8')).steps.length);assert.equal(JSON.parse(a.saved.get('corbac-case-v1')).solutionViewed,true);
+  a.el('newCase').listeners.click();assert.match(a.el('caseKey').value,/^E9-/);assert.equal(a.el('investigation').hidden,true);a.el('start').listeners.click();a.el('solution').listeners.click();assert.equal(a.el('solutionPanel').hidden,false);assert.equal(a.el('solutionSteps').children.length,E.walkthrough(E.generate(42,'E9')).steps.length);assert.equal(JSON.parse(a.saved.get('corbac-case-v1')).solutionViewed,true);
+  const clues=E.generate(42).clues.filter(c=>!c.fixed);assert.equal(new Set(clues.map(c=>c.kind)).size,clues.length);assert.ok(clues.filter(c=>/\d+ (?:PM|PO|cases?)\b/.test(c.text)).length<=2);
  }
- const a=app({hash:E.key(1)}),p=E.generate(1),texts=()=>a.el('clues').children.map(li=>li.children[0].children[1].textContent);assert.deepEqual(texts(),p.clues.filter(c=>!c.fixed).map(c=>c.text));assert.ok(texts().some(text=>/entre \d+ et \d+ PO/.test(text)));
+ const a=app({hash:E.key(1,'E8')}),p=E.generate(1,'E8'),texts=()=>a.el('clues').children.map(li=>li.children[0].children[1].textContent);assert.deepEqual(texts(),p.clues.filter(c=>!c.fixed).map(c=>c.text));assert.ok(texts().some(text=>/entre \d+ et \d+ PO/.test(text)));
  const b=app({initial:JSON.parse(a.saved.get('corbac-case-v1')),hash:p.key});assert.deepEqual(b.el('clues').children.map(li=>li.children[0].children[1].textContent),texts());
 });
