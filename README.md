@@ -1,4 +1,36 @@
-# La Foire du Tool — V177
+# La Foire du Tool — V185
+
+## V185 — Suppression des indices
+
+Suppression du bouton Indice, de son panneau et de la logique de conseils et corrections automatiques. La solution complète et le marquage discret de sa consultation sont conservés.
+
+## V184 — Indices liés au plan du joueur
+
+Chaque indice propose une seule déduction depuis les placements, brouillons et KO actuels, sans exploiter des étapes intermédiaires non reportées. Sans changement du plan, le bouton conserve la même piste. Le déroulé complet de Solution reste inchangé.
+
+## V183 — Titre du glossaire
+
+Ajout de « Glossaire : » en gras avant les définitions PM, ligne de vue et directions.
+
+## V182 — Contexte et contrôles de l’enquête
+
+Rapport reformulé en un paragraphe de contexte et de principe, avec les deux règles clés en gras rouge, puis un paragraphe « Contrôles : » consacré aux interactions.
+
+## V181 — Intitulés de règles harmonisés
+
+« Les directions » apparaît également en gras et en rouge, comme « PM : » et « Ligne de vue : ».
+
+## V180 — Couleur des intitulés de règles
+
+Rouge réservé aux intitulés « PM : », « Ligne de vue : » et « Les directions » ; explications dans la couleur habituelle.
+
+## V179 — Rapport du Corbac clarifié
+
+Consignes de placement simplifiées ; règles PM et ligne de vue séparées et mises en valeur en rouge clair. La précision sur les directions rejoint ce bloc de règles.
+
+## V178 — Lisibilité du temps de victoire
+
+Texte du résultat et du temps en vert sombre sur fond doré, avec ou sans consultation de la solution.
 
 ## V177 — Enquête chronométrée
 

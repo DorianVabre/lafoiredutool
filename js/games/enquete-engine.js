@@ -260,34 +260,7 @@ const EnqueteEngine=(()=>{
   });
   return {steps,solved:proof.solved,domains:proof.domains};
  }
- // Les annotations compatibles servent de point de départ ; seules les éliminations prouvées retirent un brouillon.
- function hintPlan(puzzle,{placements=[],notes=[],excluded=[]}={}){
-  const cell=p=>p.r*6+p.c,coord=n=>String.fromCharCode(65+n%6)+(Math.floor(n/6)+1),answers=puzzle.answer.map(cell),occupied=new Set(answers);
-  const validKO=excluded.filter(n=>!occupied.has(n)),wrongKO=excluded.filter(n=>occupied.has(n));
-  const fixed=new Set((puzzle.decor||[]).concat(puzzle.victim).map(cell)),candidates=puzzle.names.map((_,i)=>{
-   if(placements[i])return [cell(placements[i])];
-   const free=Array.from({length:36},(_,n)=>n).filter(n=>!fixed.has(n)&&!validKO.includes(n)&&!placements.some(p=>p&&(p.r===Math.floor(n/6)||p.c===n%6)));
-   const marked=notes[i]||[];return marked.includes(answers[i])?free.filter(n=>marked.includes(n)):free;
-  });
-  const guide=walkthrough(puzzle,placements,{candidates,excluded:validKO});
-  if(wrongKO.length){
-   const n=wrongKO[0],i=answers.indexOf(n);let proof=guide.steps.find(s=>s.suspect===i&&s.after.length===1);
-   if(!proof)proof=walkthrough(puzzle,placements).steps.find(s=>s.suspect===i&&s.after.length===1);
-   return {correction:{type:'ko',cells:[n],title:'Corriger une case KO',text:'Le KO en '+coord(n)+' exclut une case occupée par '+puzzle.names[i]+'. '+(proof?proof.text:'La vérification de la solution confirme que cette case n’est pas vide.')},steps:[],solved:guide.solved};
-  }
-  for(const step of guide.steps){
-   if(placements[step.suspect])continue;
-   const wrong=(notes[step.suspect]||[]).filter(n=>step.removed.includes(n));
-   if(wrong.length)return {correction:{type:'notes',suspect:step.suspect,cells:wrong,title:step.title,text:step.text,subject:step.subject},steps:[],solved:guide.solved};
-  }
-  const steps=guide.steps.filter(s=>!placements[s.suspect]).map(s=>({...s,newPositions:s.after.filter(n=>!(notes[s.suspect]||[]).includes(n)&&!validKO.includes(n))})).filter(s=>s.newPositions.length);
-  // Une seule case peut déjà rester grâce aux placements et KO du joueur, sans nouvelle élimination.
-  for(let i=0;i<6;i++)if(!placements[i]&&candidates[i].length===1&&!(notes[i]||[]).includes(candidates[i][0])){
-   const n=candidates[i][0];steps.unshift({suspect:i,title:'Une seule case disponible',subject:puzzle.names[i],text:'Tes placements corrects, les cases KO validées et les cases occupées par le décor ne laissent qu’une seule case disponible pour '+puzzle.names[i]+'.',after:[n],removed:[],newPositions:[n]});
-  }
-  return {steps,solved:guide.solved};
- }
- return {generate,solutions,key,parse,room,pmDistance,lineOfSight,deduce,walkthrough,hintPlan};
+ return {generate,solutions,key,parse,room,pmDistance,lineOfSight,deduce,walkthrough};
 
 
 

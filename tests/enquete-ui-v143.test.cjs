@@ -75,14 +75,9 @@ test('V150 : ligne/colonne grisées, brouillons incompatibles nettoyés et annul
  a.el('undo').listeners.click();assert.deepEqual(JSON.parse(a.saved.get('corbac-case-v1')),before);assert.ok(a.el('board').children.every(b=>!b.classList.values.has('line-taken')));
 });
 
-test('V150 : Indice retire les erreurs sans déduction, correction annulable puis indice au clic suivant',()=>{
- const a=app(),p=E.generate(42),wrong=p.answer[1];a.el('board').children[wrong.r*6+wrong.c].listeners.click();
- a.el('hint').listeners.click();let state=JSON.parse(a.saved.get('corbac-case-v1'));assert.equal(state.placed[0],null);assert.match(a.el('hintMessage').textContent,/incorrect retiré/);assert.equal(a.el('hintSteps').children.length,0);
- a.el('undo').listeners.click();state=JSON.parse(a.saved.get('corbac-case-v1'));assert.deepEqual(state.placed[0],wrong);
- a.el('hint').listeners.click();assert.equal(a.el('hintSteps').children.length,0);a.el('hint').listeners.click();assert.equal(a.el('hintSteps').children.length,1);assert.match(a.el('hintMessage').textContent,/étape 1/);
- const before=a.saved.get('corbac-case-v1');a.el('solution').listeners.click();assert.equal(a.el('solutionPanel').hidden,false);assert.equal(a.el('solutionSteps').children.length,E.walkthrough(p).steps.length);assert.equal(a.el('solutionFinal').children[0].children.length,6);assert.deepEqual(JSON.parse(a.saved.get('corbac-case-v1')),{...JSON.parse(before),solutionViewed:true});
- a.el('solution').listeners.click();assert.equal(a.el('solutionPanel').hidden,true);
- a.el('caseKey').value=E.key(7);a.el('keyForm').listeners.submit({preventDefault(){}});assert.equal(a.el('solutionPanel').hidden,true);assert.equal(a.el('hintPanel').hidden,true);
+test('Solution : déroulé complet, consultation mémorisée et fermeture au changement de clé',()=>{
+ const a=app(),p=E.generate(42),before=a.saved.get('corbac-case-v1');a.el('solution').listeners.click();assert.equal(a.el('solutionPanel').hidden,false);assert.equal(a.el('solutionSteps').children.length,E.walkthrough(p).steps.length);assert.equal(a.el('solutionFinal').children[0].children.length,6);assert.deepEqual(JSON.parse(a.saved.get('corbac-case-v1')),{...JSON.parse(before),solutionViewed:true});
+ a.el('solution').listeners.click();assert.equal(a.el('solutionPanel').hidden,true);a.el('caseKey').value=E.key(7);a.el('keyForm').listeners.submit({preventDefault(){}});assert.equal(a.el('solutionPanel').hidden,true);
 });
 
 test('V150 : walkthrough complet du niveau E4 demandé, avec le raisonnement pour B1',()=>{
@@ -156,25 +151,6 @@ test('V154 : glisser hors du plan puis revenir ne relie pas les cases au clic dr
 
 
 function nodeText(node){return (node.textContent||'')+(node.children||[]).map(n=>typeof n==='object'?nodeText(n):n).join(' ')}
-test('V154 : indice sans position déjà marquée, sans suspect déjà placé et sans déduction répétée',()=>{
- const p=E.generate(42),notes=p.answer.map(a=>[a.r*6+a.c]),a=app({initial:{key:p.key,placed:Array(6).fill(null),notes,excluded:[],checks:[]}});
- a.el('hint').listeners.click();assert.equal(a.el('hintSteps').children.length,0);assert.match(a.el('hintMessage').textContent,/marquages couvrent déjà/);
- const initial={key:p.key,placed:p.answer.map((a,i)=>i<2?a:null),notes:p.answer.map((a,i)=>i===2?[a.r*6+a.c]:[]),excluded:[],checks:[]},b=app({initial});
- const plan=E.hintPlan(p,{placements:initial.placed,notes:initial.notes,excluded:[]});assert.ok(plan.steps.length>0);assert.ok(!plan.correction);b.el('hint').listeners.click();const step=plan.steps[0],proposal=b.el('hintSteps').children[0].children.at(-1).textContent;
- assert.ok(step.suspect!==0&&step.suspect!==1&&step.suspect!==2);assert.ok(step.newPositions.every(n=>!initial.notes[step.suspect].includes(n)));assert.ok(proposal.startsWith('Nouvelles possibilités à marquer'));
-});
-test('V154 : brouillon faux retiré avec raison, sans nouvelle proposition, puis annulation exacte',()=>{
- const p=E.generate(42),full=E.walkthrough(p),step=full.steps.find(s=>s.removed.some(n=>!p.decor.some(d=>d.r*6+d.c===n)&&p.victim.r*6+p.victim.c!==n)),wrong=step.removed[0],notes=Array.from({length:6},()=>[]);notes[step.suspect]=[wrong];
- const a=app({initial:{key:p.key,placed:Array(6).fill(null),notes,excluded:[],checks:[]}}),before=JSON.parse(a.saved.get('corbac-case-v1'));a.el('hint').listeners.click();
- const after=JSON.parse(a.saved.get('corbac-case-v1'));assert.ok(!after.notes[step.suspect].includes(wrong));assert.match(a.el('hintMessage').textContent,/Marquage corrigé/);const text=nodeText(a.el('hintSteps'));assert.match(text,/Brouillon retiré/);assert.doesNotMatch(text,/Nouvelles possibilités à marquer/);assert.ok(text.includes(step.text));
- a.el('undo').listeners.click();assert.deepEqual(JSON.parse(a.saved.get('corbac-case-v1')),before);
-});
-test('V154 : KO faux retiré et expliqué, KO correct conservé et correction annulable',()=>{
- const p=E.generate(42),wrong=p.answer[0].r*6+p.answer[0].c,valid=freeCells(p).find(n=>!p.answer.some(a=>a.r*6+a.c===n)),a=app({initial:{key:p.key,placed:Array(6).fill(null),notes:Array.from({length:6},()=>[]),excluded:[wrong,valid],checks:[]}}),before=JSON.parse(a.saved.get('corbac-case-v1'));
- a.el('hint').listeners.click();assert.deepEqual(JSON.parse(a.saved.get('corbac-case-v1')).excluded,[valid]);const text=nodeText(a.el('hintSteps'));assert.match(text,/KO retiré/);assert.ok(text.includes(p.names[0]));assert.doesNotMatch(text,/Nouvelles possibilités à marquer/);
- a.el('undo').listeners.click();assert.deepEqual(JSON.parse(a.saved.get('corbac-case-v1')),before);
-});
-
  test('départ masqué, temps figé et ponctuation persistante après Solution',()=>{
  const a=app({start:false}),p=E.generate(42);assert.equal(a.el('investigation').hidden,true);assert.equal(a.el('timer').textContent,'00:00');a.el('solution').listeners.click();assert.equal(JSON.parse(a.saved.get('corbac-case-v1')).solutionViewed,false);a.el('start').listeners.click();assert.equal(a.el('investigation').hidden,false);
  a.el('solution').listeners.click();a.el('solution').listeners.click();
@@ -182,3 +158,4 @@ test('V154 : KO faux retiré et expliqué, KO correct conservé et correction an
  assert.match(a.el('ending').children[1].textContent,/Vous avez réussi\. Temps : \d+:\d{2}\./);const saved=JSON.parse(a.saved.get('corbac-case-v1'));assert.ok(saved.finishedAt>=saved.startedAt);
  const b=app({initial:saved,start:false});assert.equal(b.el('ending').hidden,false);assert.equal(b.el('ending').children[1].textContent,a.el('ending').children[1].textContent);
  });
+
