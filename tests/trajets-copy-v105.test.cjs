@@ -1,14 +1,15 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const root=path.join(__dirname,'..');
-function app({deny=false}={}){
+function app({deny=false,minimap=false}={}){
  const elements=new Map(),copies=[];
  function element(id=''){
-  return {id,value:id==='travelWorld'?'1':'',hidden:false,textContent:'',children:[],dataset:{},listeners:{},classList:{toggle(){}},
+  return {id,attributes:{},setAttribute(k,v){this.attributes[k]=String(v)},getBoundingClientRect(){return {left:0,top:0,width:640,height:360}},value:id==='travelWorld'?'1':'',hidden:false,textContent:'',children:[],dataset:{},listeners:{},classList:{toggle(){}},
    addEventListener(type,fn){this.listeners[type]=fn},replaceChildren(...items){this.children=items},append(...items){this.children.push(...items)},focus(){this.focused=true},select(){this.selected=true},setSelectionRange(start,end){this.selection=[start,end]}};
  }
  const document={getElementById(id){if(!elements.has(id))elements.set(id,element(id));return elements.get(id)},createElement(){return element()},createTextNode(text){return {textContent:text}}};
- const ctx=vm.createContext({document,navigator:{clipboard:{async writeText(value){if(deny)throw Error('Denied');copies.push(value)}}},localStorage:{getItem(){return null},setItem(){}}});
- for(const file of ['data/trajets-3.7.13.17.js','js/tools/trajets-engine.js','js/tools/trajets.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx);
+ if(minimap)document.createElementNS=(_,tag)=>element(tag);
+ const ctx=vm.createContext({window:{},document,navigator:{clipboard:{async writeText(value){if(deny)throw Error('Denied');copies.push(value)}}},localStorage:{getItem(){return null},setItem(){}}});
+ for(const file of ['data/trajets-3.7.13.17.js','js/tools/trajets-engine.js','js/tools/minimap.js','js/tools/trajets.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx);
  const el=id=>document.getElementById(id);
  async function calculate(value){el('travelCoordinates').value=value;await el('travelForm').listeners.submit({preventDefault(){}});await Promise.resolve()}
  return {el,copies,calculate};
@@ -36,4 +37,8 @@ test('icône du zaap : copie seulement /zaap, suit le zaap sélectionné et gard
 });
 test('copie /zaap refusée : sélectionne uniquement le préfixe /zaap pour Ctrl+C',async()=>{
  const a=app({deny:true});await a.calculate('-4,0');await a.el('travelCopyZaapOnly').listeners.click();const input=a.el('travelCombinedCommand');assert.equal(input.value.slice(...input.selection),'/zaap -2,0');assert.match(a.el('travelCopyStatus').textContent,/\/zaap sélectionnée/);
+});
+
+test('V189 : minimap partagée, destination au clic et carte masquée dans les autres mondes',async()=>{
+ const a=app({minimap:true});await a.calculate('[-6,-3]');const map=a.el('travelMinimap');assert.ok(map.children.some(n=>n.id==='image'));assert.ok(map.children.some(n=>n.attributes['data-map-cell']==='destination'));assert.ok(map.children.some(n=>n.attributes['data-map-grid']==='lines'));a.el('travelMapZoomIn').listeners.click();a.el('travelCoordinates').value='[-6,-3]';a.el('travelCoordinates').listeners.input();a.el('travelMapCenter').listeners.click();const e={button:0,pointerId:1,clientX:320,clientY:180};map.listeners.pointermove(e);const hover=map.children.find(n=>n.attributes['data-map-hover']==='true');assert.equal(hover.children.find(n=>n.attributes['data-map-tooltip']==='true').textContent,'[-6,-3]');map.listeners.pointerdown(e);map.listeners.pointerup(e);assert.equal(a.el('travelCoordinates').value,'[-6,-3]');assert.equal(a.el('travelResult').hidden,true);a.el('travelWorld').value='2';a.el('travelWorld').listeners.change();assert.equal(a.el('travelMapPanel').hidden,true);a.el('travelWorld').value='1';a.el('travelWorld').listeners.change();assert.equal(a.el('travelMapPanel').hidden,false);
 });

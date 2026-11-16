@@ -1,4 +1,8 @@
-# La Foire du Tool — V188
+# La Foire du Tool — V189
+
+## V189 — Minimap dans Trajets et zaaps
+
+Minimap partagée avec la chasse : zoom, glissement, coordonnées au survol et clic pour choisir la destination. Repères du zaap conseillé et de la destination dans le Monde des Douze. Carte masquée pour les autres mondes.
 
 ## V188 — Aperçu et commandes de sauvegarde
 

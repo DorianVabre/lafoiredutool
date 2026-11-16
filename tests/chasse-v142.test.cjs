@@ -9,7 +9,7 @@ function app(fetch,options={}){
  const window={location:{href:"index.html"}};
  const storage=options.storage||new Map();
  const ctx=vm.createContext({window,document,fetch,URLSearchParams,AbortController,setTimeout,clearTimeout,localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},navigator:{clipboard:{async writeText(v){if(options.writeText)await options.writeText(v);copies.push(v)}}}});
- vm.runInContext(fs.readFileSync('js/tools/trajets-engine.js','utf8'),ctx);vm.runInContext(fs.readFileSync('js/tools/chasse.js','utf8'),ctx);
+ vm.runInContext(fs.readFileSync('js/tools/trajets-engine.js','utf8'),ctx);vm.runInContext(fs.readFileSync('js/tools/minimap.js','utf8'),ctx);vm.runInContext(fs.readFileSync('js/tools/chasse.js','utf8'),ctx);
  return {el,copies,arrows,window,storage,async load(){el('huntPosition').value='[-16,-24]';await arrows[0].listeners.click()}};
 }
 const row=(x,y,id,name)=>({posX:x,posY:y,pois:[{id,name:{fr:name}}]});

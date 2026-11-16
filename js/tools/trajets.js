@@ -5,11 +5,13 @@
  const el=id=>document.getElementById(id),key='la-foire-du-tool-trajets-v1';
  let engine=null,pending=null,current=null,target=null,request=0,copyRequest=0,zaapCommand='',excluded=new Set();
  try{const saved=JSON.parse(localStorage.getItem(key)||'null');if(Array.isArray(saved?.excluded))excluded=new Set(saved.excluded.filter(Number.isSafeInteger));if(typeof saved?.destination==='string')el('travelCoordinates').value=saved.destination}catch{}
+ const minimap=window.DofusMinimap({prefix:'travel',position:()=>DofusRoutes.parseCoordinates(el('travelCoordinates').value),selectPosition:position=>{el('travelCoordinates').value='['+position.x+','+position.y+']';invalidate();save()}});
+ function updateMap(){const visible=Number(el('travelWorld').value)===1;el('travelMapPanel').hidden=!visible;if(visible)minimap.update()}
  const coord=n=>'['+n[3]+','+n[4]+']';
  const area=n=>engine.data.areas[n[5]]||'Zone inconnue';
  function message(text){el('travelStatus').textContent=text}
  function save(){try{localStorage.setItem(key,JSON.stringify({destination:el('travelCoordinates').value,excluded:[...excluded]}))}catch{}}
- function clear(){target=null;current=null;copyRequest++;zaapCommand='';el('travelCopyZaapOnly').hidden=true;el('travelCombinedCommand').value='';el('travelResult').hidden=true;el('travelCopyStatus').textContent=''}
+ function clear(){minimap.clearLeg();target=null;current=null;copyRequest++;zaapCommand='';el('travelCopyZaapOnly').hidden=true;el('travelCombinedCommand').value='';el('travelResult').hidden=true;el('travelCopyStatus').textContent=''}
  async function copyCommand(automatic=false,zaapOnly=false){
   const input=el('travelCombinedCommand'),value=zaapOnly?zaapCommand:input.value,id=++copyRequest;
   if(!value||el('travelCommands').hidden)return;
@@ -27,11 +29,12 @@
   return pending;
  }
  function render(indices,chosen){
-  target=indices;current=engine.search(indices,excluded);
+  minimap.clearLeg();updateMap();target=indices;current=engine.search(indices,excluded);
   copyRequest++;zaapCommand='';el('travelCopyZaapOnly').hidden=true;el('travelCombinedCommand').value='';el('travelResult').hidden=false;el('travelCommands').hidden=true;el('travelAlternatives').replaceChildren();el('travelCopyStatus').textContent='';
   el('travelTargetLabel').textContent=coord(engine.data.nodes[indices[0]]);
   if(!current.options.length){el('travelBestZaap').textContent='Aucun trajet trouvé';el('travelSteps').textContent='—';message(engine.data.zaaps.every(z=>excluded.has(engine.data.nodes[z.node][0]))?'Sélectionne au moins un zaap dans « Zaaps à utiliser ».':'Aucun des zaaps sélectionnés ne rejoint cette destination avec les accès pris en compte. Un passage particulier peut être nécessaire.');el('travelInteractionNote').textContent='';return}
   const option=current.options.find(z=>z.node===chosen)||current.options[0],zn=engine.data.nodes[option.node],route=current.route(option.node),n=engine.data.nodes[route.path[route.path.length-1]];
+  if(Number(el('travelWorld').value)===1&&zn[2]===1)minimap.setLeg({x:zn[3],y:zn[4]},{x:n[3],y:n[4]});
   el('travelTargetLabel').textContent=area(n)+' '+coord(n);
   el('travelBestZaap').textContent=option.name+' '+coord(zn);el('travelSteps').textContent=option.steps+' changement'+(option.steps>1?'s':'')+' de map';
   zaapCommand='/zaap '+zn[3]+','+zn[4];el('travelCopyZaapOnly').hidden=false;
@@ -54,7 +57,8 @@
   }catch(error){message('Impossible de calculer le trajet. '+error.message+' Réessaie dans un instant.')}finally{if(id===request)el('travelSubmit').disabled=false}
  }
  form.addEventListener('submit',calculate);
- function invalidate(){request++;clear();message('');el('travelSubmit').disabled=false}
+ el('travelMapPanel').hidden=Number(el('travelWorld').value)!==1;
+ function invalidate(){request++;clear();updateMap();message('');el('travelSubmit').disabled=false}
  el('travelCoordinates').addEventListener('input',invalidate);el('travelWorld').addEventListener('change',invalidate);
  el('travelAllZaaps').addEventListener('click',()=>{if(!engine)return;excluded.clear();settings();save();if(target!==null)render(target)});
  el('travelNoZaaps').addEventListener('click',()=>{if(!engine)return;excluded=new Set(engine.data.zaaps.map(z=>engine.data.nodes[z.node][0]));settings();save();if(target!==null)render(target)});

@@ -1,6 +1,6 @@
 {
   "name": "la-foire-du-tool",
-  "version": "188.0.0",
+  "version": "189.0.0",
   "private": true,
   "scripts": {
     "pretest": "node scripts/build-test-fixture.cjs",
