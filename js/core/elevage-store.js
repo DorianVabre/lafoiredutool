@@ -25,6 +25,22 @@ const BreedingStore=(()=>{
  function moveMany(mountIds,target){return edit(s=>{const ids=[...new Set(mountIds)],destination=target==='reserve'?s.reserve:s.pens.find(p=>p.id===target)?.mounts;if(!ids.length||!destination)throw Error('Monture ou destination introuvable.');for(const id of ids)if(!locate(s,id))throw Error('Une monture à déplacer est introuvable.');const incoming=ids.filter(id=>!destination.some(m=>m.id===id));if(target!=='reserve'&&destination.length+incoming.length>10)throw Error('Cet enclos ne peut pas dépasser 10 montures.');if(!incoming.length)return;unlock(s,running(s).filter(({run})=>run.plan.penIds.includes(target)||run.plan.initialPens.some(p=>p.mounts.some(m=>incoming.includes(m.id)))));for(const id of incoming)transfer(s,id,target)})}
  function move(mountId,target){return moveMany([mountId],target)}
  function create(target='reserve'){return edit(s=>{const destination=target==='reserve'?s.reserve:s.pens.find(p=>p.id===target)?.mounts;if(!destination)throw Error('Destination inconnue.');if(target!=='reserve'&&destination.length>=10)throw Error('Enclos plein.');if(running(s).some(({run})=>run.plan.penIds.includes(target)))throw Error('Arrête le suivi de cet enclos avant d’ajouter une monture.');destination.push({id:id(),species:'dragodinde',name:'Monture '+(all(s).length+1),serenity:0,endurance:0,maturity:0,love:0,trait:'none',xp:0,targetLevel:100})})}
+ function createMany(mounts,target='reserve'){return edit(s=>{
+  if(!Array.isArray(mounts)||!mounts.length)throw Error('Aucune monture à enregistrer.');
+  const index=s.pens.findIndex(p=>p.id===target),destination=target==='reserve'?s.reserve:s.pens[index]?.mounts;
+  if(!destination)throw Error('Destination inconnue.');
+  if(target!=='reserve'){
+   if(s.level<[1,40,80,120,160,200][index])throw Error('Cet enclos n’est pas encore débloqué.');
+   if(destination.length+mounts.length>10)throw Error('Pas assez de places dans cet enclos pour toutes les montures.');
+   if(running(s).some(({run})=>run.plan.penIds.includes(target)))throw Error('Arrête le suivi de cet enclos avant d’ajouter des montures.');
+  }
+  const additions=mounts.map((m,i)=>{
+   for(const k of ['endurance','maturity','love','serenity'])if(!Number.isInteger(m[k])||m[k]<(k==='serenity'?-5000:0)||m[k]>(k==='serenity'?5000:20000))throw Error('Jauges de monture invalides.');
+   if(!Number.isInteger(m.xp??0)||(m.xp??0)<0||(m.xp??0)>867582)throw Error('XP de monture invalide.');
+   if(!['none','amoureuse','endurante','sage'].includes(m.trait??'none'))throw Error('Capacité invalide.');
+   return {id:id(),species:['dragodinde','muldo','volkorne'].includes(m.species)?m.species:'dragodinde',mountId:m.mountId,name:String(m.name||'Monture '+(all(s).length+i+1)).trim().slice(0,60),serenity:m.serenity,endurance:m.endurance,maturity:m.maturity,love:m.love,trait:m.trait||'none',xp:m.xp||0,targetLevel:100};
+  });destination.push(...additions);
+ })}
  function start(plan,now=Date.now()){return edit(s=>{const key=runKey(plan.mode);if(s[key]&&!s[key].completed)throw Error('Arrête ce suivi avant d’en lancer un autre du même mode.');if(running(s).some(({run})=>run.plan.penIds.some(id=>plan.penIds.includes(id))))throw Error('Un enclos sélectionné est déjà utilisé par l’autre suivi.');
    for(const p of plan.initialPens){const actual=s.pens.find(x=>x.id===p.id);const clean=x=>JSON.stringify({fuel:x.fuel,mounts:x.mounts});if(!actual||clean(actual)!==clean(p))throw Error('Jauges ou montures modifiées : recalcule le plan.');}
    s[key]={plan,index:0,elapsed:0,lastAt:now,paused:false,waiting:true,completed:false};for(const p of s.pens)if(plan.penIds.includes(p.id))p.active=[];
@@ -39,5 +55,5 @@ const BreedingStore=(()=>{
  function removeMany(mountIds){return edit(s=>{const ids=new Set(mountIds);if(!ids.size)throw Error('Sélectionne au moins une monture.');const removed=[...ids].map(id=>all(s).find(m=>m.id===id));if(removed.some(m=>!m))throw Error('Une monture sélectionnée est introuvable.');unlock(s,running(s).filter(({run})=>run.plan.initialPens.some(p=>p.mounts.some(m=>ids.has(m.id)))));s.reserve=s.reserve.filter(m=>!ids.has(m.id));for(const p of s.pens)p.mounts=p.mounts.filter(m=>!ids.has(m.id));delete s.lastDeleted;delete s.lastDeletedBatch;if(removed.length===1)s.lastDeleted=removed[0];else s.lastDeletedBatch=removed})}
  function remove(mountId){return removeMany([mountId])}
  function restore(){return edit(s=>{const removed=s.lastDeletedBatch||(s.lastDeleted?[s.lastDeleted]:[]);const existing=new Set(all(s).map(m=>m.id));for(const m of removed)if(!existing.has(m.id)){s.reserve.push(m);existing.add(m.id)}delete s.lastDeleted;delete s.lastDeletedBatch})}
- return {KEY,keys,read,write,edit,all,tick,advance,move,moveMany,create,start,ack,pause,remove,removeMany,restore,stop:(mode='fertility')=>edit(s=>stopState(s,mode))};
+ return {KEY,keys,read,write,edit,all,tick,advance,move,moveMany,create,createMany,start,ack,pause,remove,removeMany,restore,stop:(mode='fertility')=>edit(s=>stopState(s,mode))};
 })();

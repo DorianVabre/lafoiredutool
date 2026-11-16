@@ -1,4 +1,14 @@
-# La Foire du Tool — V196
+# La Foire du Tool — V198
+
+## V198 — Sélecteur illustré et limites de saisie
+
+Sélection multiple : défilement de la réserve conservé. Destination conservée tant que les montures déjà saisies tiennent dans l’enclos ; petit avertissement orange à côté de « Destination du lot » et sur le bouton « Terminer », avec tooltip, si la fiche actuelle ferait dépasser la capacité. Bascule sur la réserve dès que le lot déjà saisi dépasse les places disponibles, ou à la validation d’un lot trop grand.
+
+Saisie multiple : sélection de la monture via la même modale illustrée et filtrable que dans les enclos, ouverte au-dessus de la fiche. Champs numériques d’élevage ramenés automatiquement à leurs bornes pendant la saisie (jauges 0–20 000, sérénité −5 000–5 000, réserves 0–200 000, niveaux 1–200 et XP selon leur plafond).
+
+## V197 — Ajout rapide de plusieurs montures
+
+Gestion des montures renommée et bouton pleine largeur de saisie en série : trois jauges accessibles par Tab, robe, nom, sérénité, capacité et niveau. Continuer ouvre la monture suivante ; Terminer enregistre tout le lot dans la réserve ou un enclos disponible, avec vérification atomique des places, du déblocage et des suivis actifs.
 
 ## V196 — Réduction du suivi et alerte visible
 
