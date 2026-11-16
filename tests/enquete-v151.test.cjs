@@ -1,7 +1,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),E=require('../js/games/enquete-engine.js');
 test('E6 : parcours à six candidats maximum par témoignage, sans supposition et avec des indices variés',()=>{
  for(let i=0;i<100;i++){
-  const seed=Math.imul(i,104729)>>>0,p=E.generate(seed),w=E.walkthrough(p),reverse=E.deduce(p.clues,{comfortable:true,reverse:true});
+  const seed=Math.imul(i,104729)>>>0,p=E.generate(seed,'E6'),w=E.walkthrough(p),reverse=E.deduce(p.clues,{comfortable:true,reverse:true});
   assert.match(p.key,/^E6-/);assert.equal(E.parse(p.key),seed);assert.ok(w.solved&&reverse.solved);assert.deepEqual(w.domains,reverse.domains);assert.deepEqual(w.domains,p.answer.map(a=>[a.r*6+a.c]));
   const facts=w.steps.filter(s=>s.context.type==='unary'||s.context.type==='pair');assert.ok(facts.length>0);
   for(const step of facts){assert.ok(step.after.length<=6);if(step.context.type==='pair')assert.ok(step.context.otherDomain.length<=6)}
@@ -14,7 +14,7 @@ test('E6 : parcours à six candidats maximum par témoignage, sans supposition e
 test('E6 : moins de grandes listes à croiser, tout en conservant les recoupements',()=>{
  let broadOld=0,relations=0;
  for(let seed=0;seed<10;seed++){
-  const old=E.walkthrough(E.generate(seed,'E5')),current=E.walkthrough(E.generate(seed));
+  const old=E.walkthrough(E.generate(seed,'E5')),current=E.walkthrough(E.generate(seed,'E6'));
   broadOld+=old.steps.filter(s=>(s.context.type==='unary'||s.context.type==='pair')&&(s.after.length>6||s.context.otherDomain?.length>6)).length;
   assert.equal(current.steps.filter(s=>(s.context.type==='unary'||s.context.type==='pair')&&(s.after.length>6||s.context.otherDomain?.length>6)).length,0);
   relations+=current.steps.filter(s=>s.context.type==='pair').length;
@@ -23,7 +23,7 @@ test('E6 : moins de grandes listes à croiser, tout en conservant les recoupemen
 });
 test('E6 partageable ; E1 à E5 conservent leur édition',()=>{
  for(const seed of [0,42,4294967295]){
-  const p=E.generate(seed),q=E.generate(E.parse(p.key));assert.deepEqual(q.clues.map(c=>c.text),p.clues.map(c=>c.text));assert.deepEqual(q.roomMap,p.roomMap);
+  const p=E.generate(seed,'E6'),q=E.generate(E.parse(p.key),'E6');assert.deepEqual(q.clues.map(c=>c.text),p.clues.map(c=>c.text));assert.deepEqual(q.roomMap,p.roomMap);
   for(const version of ['E1','E2','E3','E4','E5'])assert.equal(E.generate(seed,version).key,E.key(seed,version));
  }
 });

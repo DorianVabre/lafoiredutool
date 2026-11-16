@@ -95,7 +95,7 @@
  document.addEventListener?.('mouseup',finishGesture);window.addEventListener?.('blur',finishGesture);
  $('board').addEventListener('mouseleave',()=>{if(gesture)gesture.last=null});
  $('board').addEventListener('dragstart',event=>event.preventDefault());
- function open(seed,restore,version='E6'){
+ function open(seed,restore,version='E8'){
   finishGesture();startedAt=Number.isFinite(restore?.startedAt)&&restore.startedAt>0?restore.startedAt:null;finishedAt=startedAt!==null&&Number.isFinite(restore?.finishedAt)&&restore.finishedAt>=startedAt?restore.finishedAt:null;solutionViewed=restore?.solutionViewed===true;$('startPanel').hidden=startedAt!==null;$('investigation').hidden=startedAt===null;updateTimer();suppressContext=false;puzzle=E.generate(seed,version);checkpoint=validCheckpoint(restore?.checkpoint)?restore.checkpoint:null;renderCheckpoint();placed=Array(6).fill(null);selected=0;history=[];won=false;excluded=new Set();notes=Array.from({length:6},()=>[]);$('ending').hidden=true;$('solutionPanel').hidden=true;$('solution').textContent='Solution';message('');$('shareStatus').textContent='';$('caseKey').value=puzzle.key;$('caseNumber').textContent=puzzle.key.slice(3,10);
   const url=new URL(location.href);url.hash=puzzle.key;historyReplace(url);
   $('board').replaceChildren();for(let r=0;r<6;r++)for(let c=0;c<6;c++){
@@ -135,8 +135,8 @@
  $('undo').addEventListener('click',()=>{finishGesture();if(!history.length||won)return;const previous=history.pop();placed=previous.placed;notes=previous.notes;excluded=new Set(previous.excluded);message('Dernière action annulée.');paint();save()});
  $('reset').addEventListener('click',()=>{finishGesture();if(won)return;snapshot();placed=Array(6).fill(null);excluded.clear();notes=Array.from({length:6},()=>[]);message('Plan, brouillons et marqueurs KO effacés ; les témoignages cochés sont conservés.');paint();save()});
  $('newCase').addEventListener('click',()=>open(randomSeed()));
- $('keyForm').addEventListener('submit',event=>{event.preventDefault();const seed=E.parse($('caseKey').value);if(seed===null){$('shareStatus').textContent='Clé invalide ou version inconnue. Copie la clé complète E1-…, E2-…, E3-…, E4-…, E5-… ou E6-…';return}open(seed,null,$('caseKey').value.trim().slice(0,2).toUpperCase());$('shareStatus').textContent='Affaire ouverte. Cette clé reproduit le même plan et les mêmes témoignages.'});
+ $('keyForm').addEventListener('submit',event=>{event.preventDefault();const seed=E.parse($('caseKey').value);if(seed===null){$('shareStatus').textContent='Clé invalide ou version inconnue. Copie la clé complète E1-…, E2-…, E3-…, E4-…, E5-…, E6-…, E7-… ou E8-…';return}open(seed,null,$('caseKey').value.trim().slice(0,2).toUpperCase());$('shareStatus').textContent='Affaire ouverte. Cette clé reproduit le même plan et les mêmes témoignages.'});
  $('copyCase').addEventListener('click',async()=>{const key=puzzle.key;try{await navigator.clipboard.writeText(key);$('shareStatus').textContent='Clé copiée. Partage-la : tes amis joueront la même affaire, sans tes placements.'}catch{$('caseKey').value=key;$('caseKey').focus();$('caseKey').select();$('shareStatus').textContent='Utilise Ctrl+C pour copier la clé sélectionnée.'}});
  let saved;try{saved=JSON.parse(localStorage.getItem('corbac-case-v1')||'null')}catch{}
- const shared=E.parse(location.hash.slice(1)),stored=E.parse(saved?.key);const source=shared!==null?location.hash.slice(1):stored!==null?saved.key:null;open(shared??stored??randomSeed(),source?.trim().toUpperCase()===saved?.key?.trim().toUpperCase()?saved:null,source?.trim().slice(0,2).toUpperCase()||'E6');
+ const shared=E.parse(location.hash.slice(1)),stored=E.parse(saved?.key);const source=shared!==null?location.hash.slice(1):stored!==null?saved.key:null;open(shared??stored??randomSeed(),source?.trim().toUpperCase()===saved?.key?.trim().toUpperCase()?saved:null,source?.trim().slice(0,2).toUpperCase()||'E8');
 })();

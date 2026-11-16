@@ -7,7 +7,7 @@ test('80 niveaux : solution unique, grille légale et seul coupable avec la vict
  for(let i=0;i<80;i++){
   const p=E.generate(Math.imul(i,104729)>>>0),solutions=E.solutions(p.clues);
   assert.equal(solutions.length,1,'seed '+p.seed);assert.deepEqual(solutions[0],p.answer);assert.equal(new Set(p.answer.map(x=>x.r)).size,6);assert.equal(new Set(p.answer.map(x=>x.c)).size,6);
-  assert.equal(p.answer.filter(x=>E.room(x.r,x.c)===p.crimeRoom).length,1);assert.equal(E.room(p.victim.r,p.victim.c),p.crimeRoom);assert.notDeepEqual(p.victim,p.answer[p.killer]);assert.ok(p.clues.length>=6&&p.clues.length<=24);
+  assert.equal(p.answer.filter(x=>E.room(x.r,x.c,p.roomMap)===p.crimeRoom).length,1);assert.equal(E.room(p.victim.r,p.victim.c,p.roomMap),p.crimeRoom);assert.notDeepEqual(p.victim,p.answer[p.killer]);assert.ok(p.clues.length>=6&&p.clues.length<=24);
  }
 });
 test('des clés distinctes proposent des affaires variées',()=>{

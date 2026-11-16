@@ -1,0 +1,92 @@
+[
+  {
+    "version": "E1",
+    "seed": 0,
+    "sha256": "c9456fbc39a79db928e21d158101f06f1587256e9a2ac8e9f27c8556726fde83"
+  },
+  {
+    "version": "E1",
+    "seed": 42,
+    "sha256": "10b55aea6abb7112d0cc05844eb4219d8906655ac3ae9b6c90e2dc47e98f9719"
+  },
+  {
+    "version": "E1",
+    "seed": 4294967295,
+    "sha256": "9d364a1f18c817642273d7d4e8d2b0eb12e8c03272a142e7a2c2d09b09641ce3"
+  },
+  {
+    "version": "E2",
+    "seed": 0,
+    "sha256": "bc700bcca2728da1be78fa403fe78432fd8a5f0ab9094a0834471e00300715cc"
+  },
+  {
+    "version": "E2",
+    "seed": 42,
+    "sha256": "67bb17da12e86c6a1f810c1e839df46ae95a66e93c90082bf405da7119c8c20a"
+  },
+  {
+    "version": "E2",
+    "seed": 4294967295,
+    "sha256": "63c4991c3967cf7057210d60c01520604032acf962c6392369551e9186990794"
+  },
+  {
+    "version": "E3",
+    "seed": 0,
+    "sha256": "912a9a2af6a64c8f31043a8b6605c3567bb6758f89eb1939e895c9632671de9f"
+  },
+  {
+    "version": "E3",
+    "seed": 42,
+    "sha256": "7df1a409e95f91b02979a5a48c8a9af88937a8eb5faa354ffebcfe9de63bfa97"
+  },
+  {
+    "version": "E3",
+    "seed": 4294967295,
+    "sha256": "ee7b82f186b233c8ca6a38f0e9e92c4b0f8c3fa57a3c47aad04c7c5995bac1d2"
+  },
+  {
+    "version": "E4",
+    "seed": 0,
+    "sha256": "1eff8af30f7e8a768a4ea4b68728fd5203530ece308e78a0dca7c43a4e159d01"
+  },
+  {
+    "version": "E4",
+    "seed": 42,
+    "sha256": "433701b51f2eec514d8feaa7f6c121d1b9e13e8bd96f0589861dac69aa372f32"
+  },
+  {
+    "version": "E4",
+    "seed": 4294967295,
+    "sha256": "8329eb2f26c64e16a4eb48dbeee343a6157dfb1830dbc3a75d3f98e6bb187e56"
+  },
+  {
+    "version": "E5",
+    "seed": 0,
+    "sha256": "28de56c1671654f7db6b05ec6f5ec1a94e2bbb9547804471127c42047b8ee3f6"
+  },
+  {
+    "version": "E5",
+    "seed": 42,
+    "sha256": "86d057edf76bdfc43e8361f9c780edec46236089a548bdc74f88200f7cc4060a"
+  },
+  {
+    "version": "E5",
+    "seed": 4294967295,
+    "sha256": "35811bdc88eb15898793b02389075e00440401d02fbb66e17523c2ac730ab1ac"
+  },
+  {
+    "version": "E6",
+    "seed": 0,
+    "sha256": "3218f2ecff326a5f13f73fa33b1956c129bb24cafe94634abf7498fadba28e71"
+  },
+  {
+    "version": "E6",
+    "seed": 42,
+    "sha256": "5b34f7a84eac92b96cbac87c0341a67c7142843b3af1afb7a0768d8008c9b202"
+  },
+  {
+    "version": "E6",
+    "seed": 4294967295,
+    "sha256": "9487bbd359ab831e757e41e12bebf69c7fdd1672f78088c39289a8d2d6ed5bb3"
+  }
+]

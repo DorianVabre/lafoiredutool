@@ -1,4 +1,12 @@
-# La Foire du Tool — V200
+# La Foire du Tool — V202
+
+## V202 — Portée minimale et maximale dans l’enquête
+
+Les nouvelles affaires E8 peuvent proposer une portée entre deux suspects, avec une PO minimale et maximale incluses. La portée ignore les obstacles et ne garantit pas la ligne de vue. Ces témoignages participent à la déduction et à la solution détaillée, avec les autres familles d’indices. Glossaire complété. Les anciennes clés E1 à E7 conservent exactement leurs enquêtes ; utiliser « Nouvelle affaire » pour passer à E8.
+
+## V201 — Nouveaux témoignages d’enquête
+
+Nouvelles affaires E7 : diagonale non orientée entre suspects, comparaison de proximité et équidistance au contact des décors, en PM. Les trajets vers les décors s’arrêtent sur une case libre voisine. Nouvelles familles intégrées au générateur et au déroulé de solution, avec diversité, unicité et déduction sans supposition conservées. Anciennes clés E1 à E6 inchangées ; lancer une Nouvelle affaire pour utiliser E7. Glossaire complété.
 
 ## V200 — Suivi d’élevage par lot
 

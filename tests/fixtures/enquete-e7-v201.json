@@ -1,0 +1,37 @@
+[
+  {
+    "version": "E7",
+    "seed": 0,
+    "sha256": "9f1a362a44be3c4742e1026eb7d0fa6f932a2a67727d222fba1adc9cd4fba5d1"
+  },
+  {
+    "version": "E7",
+    "seed": 1,
+    "sha256": "081387e5551d70ae6147f0f4ca736b2cef8e85a555a525021df989e2a60219aa"
+  },
+  {
+    "version": "E7",
+    "seed": 2,
+    "sha256": "dadf5dba4989ad8fe42b77030c77b80a7972bab7a53cbae35d4241b40aeb60fe"
+  },
+  {
+    "version": "E7",
+    "seed": 7,
+    "sha256": "ee93216f79fcd4fb62601f3073706f007fcd5b06d8ba636868898261b7fa40c8"
+  },
+  {
+    "version": "E7",
+    "seed": 42,
+    "sha256": "be73ec8f7cf93795a5544e5713a58581561d3f4e128f774486d9ea1263a249a6"
+  },
+  {
+    "version": "E7",
+    "seed": 104729,
+    "sha256": "88338133652c584a12eab982a93a1d995b6fe2e771876d8585fc908605d063e5"
+  },
+  {
+    "version": "E7",
+    "seed": 4294967295,
+    "sha256": "3304b8a5ec56835e61b2d56c396adac8eb6a92da3a43bb91b2ade07aaaa1a977"
+  }
+]
