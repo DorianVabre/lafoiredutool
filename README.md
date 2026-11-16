@@ -1,4 +1,4 @@
-# La Foire du Tool — V173
+# La Foire du Tool — V176
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
@@ -397,3 +397,20 @@ Barème local des 200 niveaux dans [data/elevage-xp.json](data/elevage-xp.json),
 ## V173 — Cible XP commune et réduction des suivis
 
 Cible du plan XP placée à côté de la stratégie : niveau de 1 à 200 ou XP totale de 0 à 867 582, sauvegardée et appliquée à toutes les montures des enclos sélectionnés. Les cartes conservent les valeurs actuelles ; la cible du suivi reste figée au lancement. Les anciens suivis gardent leurs objectifs. Bouton Réduire présent dans chaque fenêtre développée, même sur la page Élevage ; réduction indépendante maintenue au rafraîchissement, et bouton Détails pour rouvrir. Version V173 dans tous les footers.
+
+
+## V174 — Minimap de chasse et étape automatique
+
+Minimap du Monde des Douze dans la chasse : fond de carte DofusDB chargé à la consultation, grille, position actuelle, destination et dernier trajet, zoom, déplacement par glissement et coordonnées au clic. Géométrie publique relevée le 16/11/2026 dans [data/chasse-minimap.json](data/chasse-minimap.json), source [API DofusDB](https://api.dofusdb.fr/worlds?id=1) ; tuiles DOFUS © Ankama diffusées par DofusDB. Le fond reste externe ; son indisponibilité ne bloque pas la recherche.
+
+Case Étape suivante automatique cochée par défaut et préférence mémorisée : choisir un indice copie /travel, met la position à jour après une copie réussie, puis attend la direction suivante. La dernière commande reste accessible. Case décochée : validation manuelle conservée. Copie refusée : commande et bouton manuel disponibles, sans déplacement automatique de la position. Les réponses et copies devenues obsolètes ne modifient pas la saisie courante. Version V174 dans tous les footers.
+
+
+## V175 — Cases de la minimap plus lisibles
+
+Bouton Rechercher les indices supprimé : les flèches chargent les indices et permettent de réessayer en cas d’erreur. Grille de minimap contrastée à tous les zooms, rectangles de position actuelle et de destination. Survol : contour de la case et tooltip de coordonnées, sans recharger les tuiles. Le tooltip disparaît à la sortie de la carte et pendant le glissement ; le contour de la position choisie reste visible. Version V175 dans tous les footers.
+
+
+## V176 — Zoom initial de la minimap
+
+Zoom de départ augmenté de deux crans (0,4 → 0,8). Version V176 dans tous les footers.
