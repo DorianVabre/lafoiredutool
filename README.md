@@ -1,4 +1,12 @@
-# La Foire du Tool — V186
+# La Foire du Tool — V188
+
+## V188 — Aperçu et commandes de sauvegarde
+
+Placements définitifs entourés d’un jeton rond dans l’aperçu pour les distinguer des brouillons. Boutons de sauvegarde regroupés sur une ligne séparée sous les autres actions.
+
+## V187 — Point de sauvegarde de l’enquête
+
+Sauvegarde manuelle des placements, brouillons et KO, conservée au rechargement. Bouton pour écraser ou charger ce point, avec aperçu de la grille au survol et au focus clavier. Chargement annulable ; chronomètre et consultation de Solution conservés. Point réinitialisé au changement d’affaire.
 
 ## V186 — Direction et distance de chasse visibles
 

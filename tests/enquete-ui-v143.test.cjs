@@ -159,3 +159,14 @@ function nodeText(node){return (node.textContent||'')+(node.children||[]).map(n=
  const b=app({initial:saved,start:false});assert.equal(b.el('ending').hidden,false);assert.equal(b.el('ending').children[1].textContent,a.el('ending').children[1].textContent);
  });
 
+
+test('V187 : point indépendant, aperçu, chargement annulable, écrasement et reprise',()=>{
+ const a=app(),p=E.generate(42),state=()=>JSON.parse(a.saved.get('corbac-case-v1')),pos=p.answer[0],note=p.answer[1],ko=p.answer[2];
+ assert.equal(a.el('checkpointControl').hidden,true);
+ a.el('board').children[pos.r*6+pos.c].listeners.click();a.el('suspects').children[1].listeners.click();a.el('board').children[note.r*6+note.c].listeners.contextmenu({preventDefault(){}});a.el('suspects').children[6].listeners.click();a.el('board').children[ko.r*6+ko.c].listeners.click();
+ a.el('saveCheckpoint').listeners.click();const checkpoint=state().checkpoint;assert.equal(checkpoint.placed[0].r,pos.r);assert.deepEqual(checkpoint.notes[1],[note.r*6+note.c]);assert.deepEqual(checkpoint.excluded,[ko.r*6+ko.c]);assert.equal(a.el('checkpointControl').hidden,false);assert.equal(a.el('saveCheckpoint').textContent,'Écraser la sauvegarde');assert.equal(a.el('checkpointGrid').children.length,36);
+ a.el('reset').listeners.click();assert.deepEqual(state().checkpoint,checkpoint);a.el('solution').listeners.click();const started=state().startedAt;a.el('loadCheckpoint').listeners.click();assert.deepEqual(state().placed,checkpoint.placed);assert.deepEqual(state().notes,checkpoint.notes);assert.deepEqual(state().excluded,checkpoint.excluded);assert.equal(state().solutionViewed,true);assert.equal(state().startedAt,started);
+ a.el('undo').listeners.click();assert.ok(state().placed.every(p=>p===null));assert.deepEqual(state().notes,[[],[],[],[],[],[]]);assert.deepEqual(state().excluded,[]);
+ const b=app({initial:state()});assert.equal(b.el('checkpointControl').hidden,false);b.el('loadCheckpoint').listeners.click();const restored=JSON.parse(b.saved.get('corbac-case-v1'));assert.deepEqual(restored.placed,checkpoint.placed);assert.deepEqual(restored.notes,checkpoint.notes);assert.deepEqual(restored.excluded,checkpoint.excluded);
+ a.el('saveCheckpoint').listeners.click();assert.ok(state().checkpoint.placed.every(p=>p===null));a.el('caseKey').value=E.key(7);a.el('keyForm').listeners.submit({preventDefault(){}});assert.equal(a.el('checkpointControl').hidden,true);assert.equal(state().checkpoint,null);assert.equal(a.el('saveCheckpoint').textContent,'Mettre un point de sauvegarde');
+});

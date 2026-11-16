@@ -1,6 +1,7 @@
 (()=>{'use strict';
  const E=EnqueteEngine,$=id=>document.getElementById(id),glyphs=['☽','⚔','♠','❀','⌛','➶'],colors=['#334842','#34434b','#3e4835','#4b3e38'],suspectColors=['#d6b9ff','#ffb9a3','#f2d773','#bde88e','#9ed8ff','#ffbadb'];
  let puzzle,placed=Array(6).fill(null),selected=0,history=[],won=false,notes=Array.from({length:6},()=>[]),excluded=new Set(),gesture=null,suppressContext=false;
+ let checkpoint=null;
  let startedAt=null,finishedAt=null,solutionViewed=false;
  const elapsed=()=>startedAt===null?0:Math.max(0,(finishedAt??Date.now())-startedAt);
  function formatTime(ms){const seconds=Math.floor(ms/1000);return String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0')}
@@ -11,8 +12,29 @@
  function randomSeed(){const n=new Uint32Array(1);crypto.getRandomValues(n);return n[0]}
  function message(s){$('gameStatus').textContent=s}
  function checkedClues(){const flags=Array(puzzle.clues.length).fill(false);$('clues').querySelectorAll('input').forEach(input=>{flags[Number(input.dataset.clue)]=input.checked===true});return flags}
- function save(){try{localStorage.setItem('corbac-case-v1',JSON.stringify({key:puzzle.key,placed,notes,excluded:[...excluded],checks:checkedClues(),startedAt,finishedAt,solutionViewed}))}catch{}}
- function snapshot(){history.push({placed:placed.map(p=>p?{...p}:null),notes:notes.map(a=>a.slice()),excluded:[...excluded]});if(history.length>100)history.shift()}
+ function save(){try{localStorage.setItem('corbac-case-v1',JSON.stringify({key:puzzle.key,placed,notes,excluded:[...excluded],checks:checkedClues(),startedAt,finishedAt,solutionViewed,checkpoint}))}catch{}}
+ function gridState(){return {placed:placed.map(p=>p?{...p}:null),notes:notes.map(a=>a.slice()),excluded:[...excluded]}}
+ function snapshot(){history.push(gridState());if(history.length>100)history.shift()}
+ function restoreGrid(state){placed=state.placed.map(p=>p?{...p}:null);notes=state.notes.map(a=>a.slice());excluded=new Set(state.excluded)}
+ function validCheckpoint(state){
+  const cell=n=>Number.isInteger(n)&&n>=0&&n<36&&!blocked(Math.floor(n/6),n%6);
+  return state&&Array.isArray(state.placed)&&state.placed.length===6&&state.placed.every(p=>p===null||p&&Number.isInteger(p.r)&&Number.isInteger(p.c)&&p.r>=0&&p.r<6&&p.c>=0&&p.c<6&&cell(p.r*6+p.c))&&Array.isArray(state.notes)&&state.notes.length===6&&state.notes.every(a=>Array.isArray(a)&&a.every(cell))&&Array.isArray(state.excluded)&&state.excluded.every(cell);
+ }
+ function renderCheckpoint(){
+  $('saveCheckpoint').textContent=checkpoint?'Écraser la sauvegarde':'Mettre un point de sauvegarde';$('checkpointControl').hidden=!checkpoint;$('checkpointGrid').replaceChildren();if(!checkpoint)return;
+  for(let n=0;n<36;n++){
+   const r=Math.floor(n/6),c=n%6,who=checkpoint.placed.findIndex(p=>p&&p.r===r&&p.c===c),decor=puzzle.decor?.find(p=>p.r===r&&p.c===c),body=puzzle.victim.r===r&&puzzle.victim.c===c,marks=checkpoint.notes.map((a,i)=>a.includes(n)?i:-1).filter(i=>i>=0),cell=document.createElement('span');
+   cell.className='checkpoint-cell';cell.style.setProperty('--room',colors[roomAt(r,c)]);const coord=String.fromCharCode(65+c)+(r+1);cell.title=coord+' · '+puzzle.rooms[roomAt(r,c)];
+   if(who>=0){const token=document.createElement('span');token.className='checkpoint-token';token.textContent=glyphs[who];token.style.setProperty('--suspect',suspectColors[who]);cell.append(token);cell.title+=' · '+puzzle.names[who]+' · placement définitif'}
+   else if(body)cell.textContent='☠';
+   else if(decor){const img=document.createElement('img');img.src='data/enquete/'+decor.icon+'.svg';img.alt=decor.name;cell.append(img)}
+   else if(checkpoint.excluded.includes(n))cell.textContent='∅';
+   else for(const i of marks){const mark=document.createElement('span');mark.textContent=glyphs[i];mark.style.setProperty('color',suspectColors[i]);cell.append(mark)}
+   $('checkpointGrid').append(cell);
+  }
+ }
+ $('saveCheckpoint').addEventListener('click',()=>{finishGesture();if(startedAt===null||won)return;checkpoint=gridState();renderCheckpoint();save();message('Point de sauvegarde enregistré.')});
+ $('loadCheckpoint').addEventListener('click',()=>{finishGesture();if(!checkpoint||startedAt===null||won)return;snapshot();restoreGrid(checkpoint);paint();save();message('Grille sauvegardée restaurée. Tu peux annuler ce chargement.')});
  function pruneNotes(){notes=notes.map((a,i)=>placed[i]?[]:a.filter(n=>!placed.some(p=>p&&(p.r===Math.floor(n/6)||p.c===n%6))))}
  function paint(){
   $('board').querySelectorAll('button').forEach(b=>{const r=Number(b.dataset.row),c=Number(b.dataset.col),who=placed.findIndex(p=>p?.r===r&&p.c===c),body=puzzle.victim.r===r&&puzzle.victim.c===c,decor=puzzle.decor?.find(p=>p.r===r&&p.c===c),cellNotes=notes.map((a,i)=>a.includes(r*6+c)?i:-1).filter(i=>i>=0);
@@ -29,7 +51,7 @@
   });
   $('suspects').querySelectorAll('button').forEach((b,i)=>{const empty=i===6,active=empty?selected==='ko':i===selected;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));b.title=empty?'Marquer ou retirer une case vide (KO)':puzzle.names[i]+' · '+(placed[i]?'Placé en '+String.fromCharCode(65+placed[i].c)+(placed[i].r+1):'À placer')});
   $('noteHelp').textContent='Clic gauche : placer · clic droit : brouillon.';
-  $('undo').disabled=!history.length||won;$('reset').disabled=won;$('check').disabled=won;$('accuse').disabled=won;
+  $('saveCheckpoint').disabled=won;$('loadCheckpoint').disabled=won;$('undo').disabled=!history.length||won;$('reset').disabled=won;$('check').disabled=won;$('accuse').disabled=won;
  }
  function blocked(r,c){return (puzzle.victim.r===r&&puzzle.victim.c===c)||Boolean(puzzle.decor?.some(p=>p.r===r&&p.c===c))}
  function place(r,c,draft=false,options={}){
@@ -74,7 +96,7 @@
  $('board').addEventListener('mouseleave',()=>{if(gesture)gesture.last=null});
  $('board').addEventListener('dragstart',event=>event.preventDefault());
  function open(seed,restore,version='E6'){
-  finishGesture();startedAt=Number.isFinite(restore?.startedAt)&&restore.startedAt>0?restore.startedAt:null;finishedAt=startedAt!==null&&Number.isFinite(restore?.finishedAt)&&restore.finishedAt>=startedAt?restore.finishedAt:null;solutionViewed=restore?.solutionViewed===true;$('startPanel').hidden=startedAt!==null;$('investigation').hidden=startedAt===null;updateTimer();suppressContext=false;puzzle=E.generate(seed,version);placed=Array(6).fill(null);selected=0;history=[];won=false;excluded=new Set();notes=Array.from({length:6},()=>[]);$('ending').hidden=true;$('solutionPanel').hidden=true;$('solution').textContent='Solution';message('');$('shareStatus').textContent='';$('caseKey').value=puzzle.key;$('caseNumber').textContent=puzzle.key.slice(3,10);
+  finishGesture();startedAt=Number.isFinite(restore?.startedAt)&&restore.startedAt>0?restore.startedAt:null;finishedAt=startedAt!==null&&Number.isFinite(restore?.finishedAt)&&restore.finishedAt>=startedAt?restore.finishedAt:null;solutionViewed=restore?.solutionViewed===true;$('startPanel').hidden=startedAt!==null;$('investigation').hidden=startedAt===null;updateTimer();suppressContext=false;puzzle=E.generate(seed,version);checkpoint=validCheckpoint(restore?.checkpoint)?restore.checkpoint:null;renderCheckpoint();placed=Array(6).fill(null);selected=0;history=[];won=false;excluded=new Set();notes=Array.from({length:6},()=>[]);$('ending').hidden=true;$('solutionPanel').hidden=true;$('solution').textContent='Solution';message('');$('shareStatus').textContent='';$('caseKey').value=puzzle.key;$('caseNumber').textContent=puzzle.key.slice(3,10);
   const url=new URL(location.href);url.hash=puzzle.key;historyReplace(url);
   $('board').replaceChildren();for(let r=0;r<6;r++)for(let c=0;c<6;c++){
    const b=document.createElement('button');b.type='button';b.className='cell';b.dataset.row=r;b.dataset.col=c;b.classList.toggle('room-edge-right',c<5&&roomAt(r,c)!==roomAt(r,c+1));b.classList.toggle('room-edge-bottom',r<5&&roomAt(r,c)!==roomAt(r+1,c));b.style.setProperty('--room',colors[roomAt(r,c)]);b.addEventListener('mousedown',event=>startGesture(event,r,c));b.addEventListener('mouseenter',event=>continueGesture(event,r,c));
