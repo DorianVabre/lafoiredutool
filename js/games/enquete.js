@@ -1,11 +1,17 @@
 (()=>{'use strict';
  const E=EnqueteEngine,$=id=>document.getElementById(id),glyphs=['☽','⚔','♠','❀','⌛','➶'],colors=['#334842','#34434b','#3e4835','#4b3e38'],suspectColors=['#d6b9ff','#ffb9a3','#f2d773','#bde88e','#9ed8ff','#ffbadb'];
  let puzzle,placed=Array(6).fill(null),selected=0,history=[],won=false,notes=Array.from({length:6},()=>[]),hintState={signature:'',cursor:0},excluded=new Set(),gesture=null,suppressContext=false;
+ let startedAt=null,finishedAt=null,solutionViewed=false;
+ const elapsed=()=>startedAt===null?0:Math.max(0,(finishedAt??Date.now())-startedAt);
+ function formatTime(ms){const seconds=Math.floor(ms/1000);return String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0')}
+ function updateTimer(){$('timer').textContent=formatTime(elapsed())}
+ $('start').addEventListener('click',()=>{if(startedAt!==null)return;startedAt=Date.now();$('startPanel').hidden=true;$('investigation').hidden=false;updateTimer();save()});
+ window.setInterval?.(updateTimer,250);
  const roomAt=(r,c)=>E.room(r,c,puzzle.roomMap);
  function randomSeed(){const n=new Uint32Array(1);crypto.getRandomValues(n);return n[0]}
  function message(s){$('gameStatus').textContent=s}
  function checkedClues(){const flags=Array(puzzle.clues.length).fill(false);$('clues').querySelectorAll('input').forEach(input=>{flags[Number(input.dataset.clue)]=input.checked===true});return flags}
- function save(){try{localStorage.setItem('corbac-case-v1',JSON.stringify({key:puzzle.key,placed,notes,excluded:[...excluded],checks:checkedClues()}))}catch{}}
+ function save(){try{localStorage.setItem('corbac-case-v1',JSON.stringify({key:puzzle.key,placed,notes,excluded:[...excluded],checks:checkedClues(),startedAt,finishedAt,solutionViewed}))}catch{}}
  function snapshot(){history.push({placed:placed.map(p=>p?{...p}:null),notes:notes.map(a=>a.slice()),excluded:[...excluded]});if(history.length>100)history.shift()}
  function pruneNotes(){notes=notes.map((a,i)=>placed[i]?[]:a.filter(n=>!placed.some(p=>p&&(p.r===Math.floor(n/6)||p.c===n%6))))}
  function paint(){
@@ -27,7 +33,7 @@
  }
  function blocked(r,c){return (puzzle.victim.r===r&&puzzle.victim.c===c)||Boolean(puzzle.decor?.some(p=>p.r===r&&p.c===c))}
  function place(r,c,draft=false,options={}){
-  if(won||blocked(r,c))return;const who=placed.findIndex(p=>p?.r===r&&p.c===c),cell=r*6+c;
+  if(startedAt===null||won||blocked(r,c))return;const who=placed.findIndex(p=>p?.r===r&&p.c===c),cell=r*6+c;
   const record=options.record||snapshot;
   if(selected==='ko'){
    if(who>=0){message('Retire le suspect de cette case avant de la marquer vide.');return}
@@ -68,7 +74,7 @@
  $('board').addEventListener('mouseleave',()=>{if(gesture)gesture.last=null});
  $('board').addEventListener('dragstart',event=>event.preventDefault());
  function open(seed,restore,version='E6'){
-  finishGesture();suppressContext=false;puzzle=E.generate(seed,version);placed=Array(6).fill(null);selected=0;history=[];won=false;excluded=new Set();notes=Array.from({length:6},()=>[]);$('ending').hidden=true;$('hintPanel').hidden=true;$('solutionPanel').hidden=true;$('solution').textContent='Solution';hintState={signature:'',cursor:0};message('');$('shareStatus').textContent='';$('caseKey').value=puzzle.key;$('caseNumber').textContent=puzzle.key.slice(3,10);
+  finishGesture();startedAt=Number.isFinite(restore?.startedAt)&&restore.startedAt>0?restore.startedAt:null;finishedAt=startedAt!==null&&Number.isFinite(restore?.finishedAt)&&restore.finishedAt>=startedAt?restore.finishedAt:null;solutionViewed=restore?.solutionViewed===true;$('startPanel').hidden=startedAt!==null;$('investigation').hidden=startedAt===null;updateTimer();suppressContext=false;puzzle=E.generate(seed,version);placed=Array(6).fill(null);selected=0;history=[];won=false;excluded=new Set();notes=Array.from({length:6},()=>[]);$('ending').hidden=true;$('hintPanel').hidden=true;$('solutionPanel').hidden=true;$('solution').textContent='Solution';hintState={signature:'',cursor:0};message('');$('shareStatus').textContent='';$('caseKey').value=puzzle.key;$('caseNumber').textContent=puzzle.key.slice(3,10);
   const url=new URL(location.href);url.hash=puzzle.key;historyReplace(url);
   $('board').replaceChildren();for(let r=0;r<6;r++)for(let c=0;c<6;c++){
    const b=document.createElement('button');b.type='button';b.className='cell';b.dataset.row=r;b.dataset.col=c;b.classList.toggle('room-edge-right',c<5&&roomAt(r,c)!==roomAt(r,c+1));b.classList.toggle('room-edge-bottom',r<5&&roomAt(r,c)!==roomAt(r+1,c));b.style.setProperty('--room',colors[roomAt(r,c)]);b.addEventListener('mousedown',event=>startGesture(event,r,c));b.addEventListener('mouseenter',event=>continueGesture(event,r,c));
@@ -84,14 +90,14 @@
   if(Array.isArray(restore?.placed)&&restore.placed.length===6){const occupied=new Set();placed=restore.placed.map(p=>{if(!p||blocked(p.r,p.c)||!Number.isInteger(p.r)||!Number.isInteger(p.c)||p.r<0||p.r>5||p.c<0||p.c>5||p.r===puzzle.victim.r&&p.c===puzzle.victim.c||occupied.has(p.r+','+p.c))return null;occupied.add(p.r+','+p.c);return {r:p.r,c:p.c}})}
   if(Array.isArray(restore?.notes)&&restore.notes.length===6)notes=restore.notes.map(a=>Array.isArray(a)?[...new Set(a.filter(n=>Number.isInteger(n)&&n>=0&&n<36&&!blocked(Math.floor(n/6),n%6)&&!placed.some(p=>p&&p.r*6+p.c===n)))]:[]);
   if(Array.isArray(restore?.excluded))excluded=new Set(restore.excluded.filter(n=>Number.isInteger(n)&&n>=0&&n<36&&!blocked(Math.floor(n/6),n%6)&&!placed.some(p=>p&&p.r*6+p.c===n)));
-  notes=notes.map(a=>a.filter(n=>!excluded.has(n)));pruneNotes();paint();save();
+  notes=notes.map(a=>a.filter(n=>!excluded.has(n)));pruneNotes();if(finishedAt!==null){won=true;showVictory()}paint();save();
  }
  function historyReplace(url){try{window.history.replaceState(null,'',url)}catch{}}
  function complete(){return placed.every(p=>p&&!blocked(p.r,p.c))&&new Set(placed.map(p=>p.r)).size===6&&new Set(placed.map(p=>p.c)).size===6&&puzzle.clues.every(c=>c.test(placed))}
  function paragraph(parent,text){const p=document.createElement('p');p.textContent=text;parent.append(p);return p}
  function showStep(list,step){const li=document.createElement('li'),title=document.createElement('strong');title.textContent=step.title;li.append(title);paragraph(li,step.text);paragraph(li,step.subject+' : cases éliminées → '+step.removedText+'.');paragraph(li,'Possibilités restantes → '+step.remainingText+'.');list.append(li)}
  $('hint').addEventListener('click',()=>{
-  finishGesture();if(won)return;const wrong=placed.map((p,i)=>p&&(p.r!==puzzle.answer[i].r||p.c!==puzzle.answer[i].c)?i:-1).filter(i=>i>=0);
+  finishGesture();if(startedAt===null||won)return;const wrong=placed.map((p,i)=>p&&(p.r!==puzzle.answer[i].r||p.c!==puzzle.answer[i].c)?i:-1).filter(i=>i>=0);
   $('hintPanel').hidden=false;$('hintSteps').replaceChildren();
   if(wrong.length){snapshot();const errors=wrong.map(i=>({suspect:i,cell:placed[i].r*6+placed[i].c})),removed=wrong.map(i=>puzzle.names[i]+' en '+String.fromCharCode(65+placed[i].c)+(placed[i].r+1));wrong.forEach(i=>{placed[i]=null});const proof=E.walkthrough(puzzle,placed),reasons=errors.map(error=>proof.steps.find(s=>s.suspect===error.suspect&&s.removed.includes(error.cell))?.text||'Ce placement est incompatible avec la solution vérifiée de cette affaire.');pruneNotes();hintState={signature:'',cursor:0};$('hintMessage').textContent='Placement'+(wrong.length>1?'s incorrects retirés : ':' incorrect retiré : ')+removed.join(', ')+'. Pourquoi : '+reasons.join(' ')+' Aucun nouvel indice dévoilé. Clique à nouveau sur Indice pour continuer.';message('Tu peux annuler cette correction.');paint();save();return}
   const plan=E.hintPlan(puzzle,{placements:placed,notes,excluded:[...excluded]});
@@ -108,7 +114,8 @@
 
  });
  $('solution').addEventListener('click',()=>{
-  const panel=$('solutionPanel');panel.hidden=!panel.hidden;$('solution').textContent=panel.hidden?'Solution':'Masquer la solution';if(panel.hidden)return;
+  if(startedAt===null||won)return;
+  const panel=$('solutionPanel');panel.hidden=!panel.hidden;$('solution').textContent=panel.hidden?'Solution':'Masquer la solution';if(panel.hidden)return;solutionViewed=true;save();
   const guide=E.walkthrough(puzzle);$('solutionSteps').replaceChildren();$('solutionFinal').replaceChildren();
   const coord=p=>String.fromCharCode(65+p.c)+(p.r+1);
   $('solutionIntro').textContent='Départ : '+(puzzle.decor||[]).map(p=>p.name+' en '+coord(p)).concat('corps en '+coord(puzzle.victim)).join(' ; ')+'. Ces cases sont exclues. Les brouillons et marqueurs KO du joueur ne servent pas de preuves.';
@@ -117,8 +124,9 @@
   const positions=document.createElement('ul');puzzle.names.forEach((name,i)=>{const li=document.createElement('li');li.textContent=name+' : '+coord(puzzle.answer[i]);positions.append(li)});$('solutionFinal').append(positions);
   paragraph($('solutionFinal'),'Le corps est en '+coord(puzzle.victim)+', dans « '+puzzle.rooms[puzzle.crimeRoom]+' ». '+puzzle.names[puzzle.killer]+' est le seul suspect dans cette salle : c’est le coupable.');
  });
- $('check').addEventListener('click',()=>{if(!placed.every(Boolean)){message('Place les six suspects avant de vérifier.');return}message(complete()?'Tous les témoignages concordent. À toi de désigner le coupable.':'Une contradiction subsiste. Vérifie les lignes, les colonnes et les témoignages.')});
- $('accuse').addEventListener('click',()=>{if(!complete()){message('Reconstitue d’abord toutes les positions : une accusation exige des preuves.');return}if($('accused').value===''){message('Choisis le suspect que tu souhaites accuser.');return}if(Number($('accused').value)!==puzzle.killer){message('Ce suspect n’était pas seul avec Ruel. Observe les limites des salles.');return}won=true;paint();message('Affaire classée.');const ending=$('ending');ending.hidden=false;const title=document.createElement('h2'),text=document.createElement('p');title.textContent='Le silence valait un Dofus.';text.textContent=puzzle.names[puzzle.killer]+' était la seule personne dans la salle « '+puzzle.rooms[puzzle.crimeRoom]+' » avec Ruel. Le Corbac retrouve le Dofus dans une doublure du manteau du coupable. À Astrub, même les alibis ont un prix.';ending.replaceChildren(title,text);ending.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'nearest'})});
+ $('check').addEventListener('click',()=>{if(startedAt===null||won)return;if(!placed.every(Boolean)){message('Place les six suspects avant de vérifier.');return}message(complete()?'Tous les témoignages concordent. À toi de désigner le coupable.':'Une contradiction subsiste. Vérifie les lignes, les colonnes et les témoignages.')});
+ $('accuse').addEventListener('click',()=>{if(startedAt===null||won)return;if(!complete()){message('Reconstitue d’abord toutes les positions : une accusation exige des preuves.');return}if($('accused').value===''){message('Choisis le suspect que tu souhaites accuser.');return}if(Number($('accused').value)!==puzzle.killer){message('Ce suspect n’était pas seul avec Ruel. Observe les limites des salles.');return}won=true;finishedAt=Date.now();updateTimer();paint();save();showVictory()});
+ function showVictory(){message('Affaire classée.');const ending=$('ending');ending.hidden=false;const title=document.createElement('h2'),text=document.createElement('p');title.textContent='Le silence valait un Dofus.';text.textContent=puzzle.names[puzzle.killer]+' était la seule personne dans la salle « '+puzzle.rooms[puzzle.crimeRoom]+' » avec Ruel. Le Corbac retrouve le Dofus dans une doublure du manteau du coupable. À Astrub, même les alibis ont un prix.';const result=document.createElement('p');result.className='victory-time';result.textContent=(solutionViewed?'Vous avez réussi.':'Vous avez réussi !')+' Temps : '+formatTime(elapsed())+'.';ending.replaceChildren(title,result,text);ending.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'nearest'})}
  $('undo').addEventListener('click',()=>{finishGesture();if(!history.length||won)return;const previous=history.pop();placed=previous.placed;notes=previous.notes;excluded=new Set(previous.excluded);$('hintPanel').hidden=true;message('Dernière action annulée.');paint();save()});
  $('reset').addEventListener('click',()=>{finishGesture();if(won)return;snapshot();placed=Array(6).fill(null);excluded.clear();notes=Array.from({length:6},()=>[]);$('hintPanel').hidden=true;message('Plan, brouillons et marqueurs KO effacés ; les témoignages cochés sont conservés.');paint();save()});
  $('newCase').addEventListener('click',()=>open(randomSeed()));

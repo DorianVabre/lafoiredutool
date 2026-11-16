@@ -20,3 +20,5 @@
 .map-controls .board{user-select:none}.map-controls .board img{-webkit-user-drag:none;user-select:none;pointer-events:none}
 
 .site-version{white-space:nowrap;font-size:11px;font-weight:600}
+
+#investigation[hidden],#startPanel[hidden]{display:none}.investigation-clock{text-align:right;margin:18px 0;color:#e6cd94;font-variant-numeric:tabular-nums}.start-panel{text-align:center;padding:65px 24px;border:1px solid #9c906c;border-radius:12px;background:#182521;margin:24px 0}.start-panel p{margin:18px 0;color:#bdcac1}.start-panel button{font-size:18px;padding:14px 35px}.victory-time{font-size:20px;color:#e6cd94;font-variant-numeric:tabular-nums}

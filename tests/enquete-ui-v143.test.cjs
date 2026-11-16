@@ -1,10 +1,10 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),E=require('../js/games/enquete-engine.js');
-function app({initial=null,hash=E.key(42)}={}){
+function app({initial=null,hash=E.key(42),start=true}={}){
  const elements=new Map(),saved=new Map(),documentEvents={},windowEvents={};if(initial)saved.set('corbac-case-v1',JSON.stringify(initial));
  function node(tag='div'){return {tag,children:[],dataset:{},value:'',hidden:false,disabled:false,style:{setProperty(){}},classList:{values:new Set(),toggle(k,on){if(on)this.values.add(k);else this.values.delete(k)}},listeners:{},setAttribute(){},addEventListener(t,f){this.listeners[t]=f},append(...x){this.children.push(...x)},replaceChildren(...x){this.children=x},querySelectorAll(tag){return this.children.flatMap(c=>typeof c==='object'?[...(c.tag===tag?[c]:[]),...(c.querySelectorAll?.(tag)||[])]:[])},focus(){},select(){},scrollIntoView(){}}}
  const el=id=>{if(!elements.has(id))elements.set(id,node());return elements.get(id)};
  const ctx=vm.createContext({EnqueteEngine:E,document:{getElementById:el,createElement:node,createTextNode:s=>s,addEventListener(t,f){documentEvents[t]=f}},crypto:{getRandomValues(a){a[0]=42}},Uint32Array,URL,location:{href:'https://example.org/enquete.html',hash:'#'+hash},window:{history:{replaceState(){}},addEventListener(t,f){windowEvents[t]=f}},localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v)},Option:function(text,value){return Object.assign(node('option'),{textContent:text,value})},navigator:{clipboard:{async writeText(){}}},matchMedia:()=>({matches:true})});
- vm.runInContext(fs.readFileSync('js/games/enquete.js','utf8'),ctx);return {el,saved,documentEvents,windowEvents};
+ vm.runInContext(fs.readFileSync('js/games/enquete.js','utf8'),ctx);if(start)el('start').listeners.click();return {el,saved,documentEvents,windowEvents};
 }
 test('interface : placement, annulation, accusation, sauvegarde et clé invalide',()=>{
  const a=app(),p=E.generate(42);assert.equal(a.el('board').children.length,36);assert.equal(a.el('clues').children.length,p.clues.filter(c=>!c.fixed).length);
@@ -80,7 +80,7 @@ test('V150 : Indice retire les erreurs sans déduction, correction annulable pui
  a.el('hint').listeners.click();let state=JSON.parse(a.saved.get('corbac-case-v1'));assert.equal(state.placed[0],null);assert.match(a.el('hintMessage').textContent,/incorrect retiré/);assert.equal(a.el('hintSteps').children.length,0);
  a.el('undo').listeners.click();state=JSON.parse(a.saved.get('corbac-case-v1'));assert.deepEqual(state.placed[0],wrong);
  a.el('hint').listeners.click();assert.equal(a.el('hintSteps').children.length,0);a.el('hint').listeners.click();assert.equal(a.el('hintSteps').children.length,1);assert.match(a.el('hintMessage').textContent,/étape 1/);
- const before=a.saved.get('corbac-case-v1');a.el('solution').listeners.click();assert.equal(a.el('solutionPanel').hidden,false);assert.equal(a.el('solutionSteps').children.length,E.walkthrough(p).steps.length);assert.equal(a.el('solutionFinal').children[0].children.length,6);assert.equal(a.saved.get('corbac-case-v1'),before);
+ const before=a.saved.get('corbac-case-v1');a.el('solution').listeners.click();assert.equal(a.el('solutionPanel').hidden,false);assert.equal(a.el('solutionSteps').children.length,E.walkthrough(p).steps.length);assert.equal(a.el('solutionFinal').children[0].children.length,6);assert.deepEqual(JSON.parse(a.saved.get('corbac-case-v1')),{...JSON.parse(before),solutionViewed:true});
  a.el('solution').listeners.click();assert.equal(a.el('solutionPanel').hidden,true);
  a.el('caseKey').value=E.key(7);a.el('keyForm').listeners.submit({preventDefault(){}});assert.equal(a.el('solutionPanel').hidden,true);assert.equal(a.el('hintPanel').hidden,true);
 });
@@ -109,7 +109,7 @@ test('V152 : pas de KO sur un suspect, un décor ou le corps ; annotations sans 
  const a=app(),p=E.generate(42),pos=p.answer[0],n=pos.r*6+pos.c,state=()=>JSON.parse(a.saved.get('corbac-case-v1'));
  a.el('board').children[n].listeners.click();a.el('suspects').children[6].listeners.click();a.el('board').children[n].listeners.click();assert.deepEqual(state().excluded,[]);assert.deepEqual(state().placed[0],pos);
  const d=p.decor[0];a.el('board').children[d.r*6+d.c].listeners.click();a.el('board').children[p.victim.r*6+p.victim.c].listeners.click();assert.deepEqual(state().excluded,[]);
- const free=p.answer[1];a.el('board').children[free.r*6+free.c].listeners.click();const before=state();a.el('solution').listeners.click();assert.deepEqual(state(),before);
+ const free=p.answer[1];a.el('board').children[free.r*6+free.c].listeners.click();const before=state();a.el('solution').listeners.click();assert.deepEqual(state(),{...before,solutionViewed:true});
  const markup=fs.readFileSync('enquete.html','utf8');assert.match(markup,/<div class="map-controls"><div id="suspects"[^>]+><\/div><div id="board"/);
 });
 
@@ -174,3 +174,11 @@ test('V154 : KO faux retiré et expliqué, KO correct conservé et correction an
  a.el('hint').listeners.click();assert.deepEqual(JSON.parse(a.saved.get('corbac-case-v1')).excluded,[valid]);const text=nodeText(a.el('hintSteps'));assert.match(text,/KO retiré/);assert.ok(text.includes(p.names[0]));assert.doesNotMatch(text,/Nouvelles possibilités à marquer/);
  a.el('undo').listeners.click();assert.deepEqual(JSON.parse(a.saved.get('corbac-case-v1')),before);
 });
+
+ test('départ masqué, temps figé et ponctuation persistante après Solution',()=>{
+ const a=app({start:false}),p=E.generate(42);assert.equal(a.el('investigation').hidden,true);assert.equal(a.el('timer').textContent,'00:00');a.el('solution').listeners.click();assert.equal(JSON.parse(a.saved.get('corbac-case-v1')).solutionViewed,false);a.el('start').listeners.click();assert.equal(a.el('investigation').hidden,false);
+ a.el('solution').listeners.click();a.el('solution').listeners.click();
+ p.answer.forEach((pos,i)=>{a.el('suspects').children[i].listeners.click();a.el('board').children[pos.r*6+pos.c].listeners.click()});a.el('accused').value=String(p.killer);a.el('accuse').listeners.click();
+ assert.match(a.el('ending').children[1].textContent,/Vous avez réussi\. Temps : \d+:\d{2}\./);const saved=JSON.parse(a.saved.get('corbac-case-v1'));assert.ok(saved.finishedAt>=saved.startedAt);
+ const b=app({initial:saved,start:false});assert.equal(b.el('ending').hidden,false);assert.equal(b.el('ending').children[1].textContent,a.el('ending').children[1].textContent);
+ });

@@ -1,4 +1,8 @@
-# La Foire du Tool — V176
+# La Foire du Tool — V177
+
+## V177 — Enquête chronométrée
+
+Scène et témoignages masqués avant « Commencer », chronomètre sauvegardé et figé à la victoire. La consultation de Solution est mémorisée et modifie discrètement la ponctuation du résultat.
 
 Refonte technique de la V89, sans changement fonctionnel volontaire.
 
