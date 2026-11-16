@@ -128,6 +128,85 @@ const Breeding = (() => {
   const events=[...eventsByTime].sort((a,b)=>a[0]-b[0]).map(([at,entries])=>({at,entries,text:entries.map(x=>x.penName+' : '+x.text).join('\n')}));
   return {multi:true,mode,targetXp:mode==='xp'?targetXp:undefined,penIds:pens.map(p=>p.id),initialPens,events,shopping:[...shopping.values()],cost,seconds,final,strategy,xpPens};
  }
- return {keys,labels,caps,strategies,rate,purchase,plan,planXp,planMany,validate,xpForLevel,levelForXp};
+ // Même tick pour la prévision et le suivi réel : toutes les montures présentes
+ // profitent du gain, mais la réserve n'est consommée qu'une fois par jauge.
+ function tickPen(pen){
+  const snapshot=pen.mounts.map(m=>({m,s:m.serenity}));
+  for(const k of pen.active||[]){
+   const eligible=snapshot.filter(({m,s})=>k==='xp'?m.xp<xpForLevel(200):k==='up'||k==='down'||(m[k]<20000&&(k==='endurance'?s<0:k==='love'?s>=0:Math.abs(s)<=2000)));
+   if(!eligible.length)continue;const gain=Math.min(pen.fuel[k],rate(pen.fuel[k]));pen.fuel[k]-=gain;
+   for(const {m} of eligible){if(k==='up'||k==='down')m.serenity=Math.max(-5000,Math.min(5000,m.serenity+gain*(k==='up'?1:-1)));else if(k==='xp')m.xp=Math.min(xpForLevel(200),m.xp+gain*(m.trait==='sage'?2:1));else m[k]=Math.min(20000,m[k]+gain*((k==='love'&&m.trait==='amoureuse')||(k==='endurance'&&m.trait==='endurante')?2:1))}
+  }
+ }
+ function poolStage(m,mode='fertility',targetXp=xpForLevel(200)){
+  if(mode==='xp')return m.xp>=targetXp?null:'xp';
+  if(full(m))return null;
+  if(m.endurance<20000||m.maturity<20000){if(m.serenity<-2000)return 'upNegative';if(m.serenity>=0&&(m.endurance<20000||m.serenity>2000))return 'downNegative';return 'grow'}
+  return m.serenity<0?'upLove':'love';
+ }
+ // Heuristique de priorité : travail restant, capacités et sérénité comprises.
+ function poolEffort(m,mode='fertility',targetXp=xpForLevel(200)){
+  if(mode==='xp')return Math.max(0,targetXp-m.xp)/(m.trait==='sage'?2:1);
+  let effort=0,s=m.serenity;const end=Math.max(0,20000-m.endurance)/(m.trait==='endurante'?2:1),mat=Math.max(0,20000-m.maturity),love=Math.max(0,20000-m.love)/(m.trait==='amoureuse'?2:1);
+  if(end||mat){if(s<-2000){effort+=-2000-s;s=-2000}if(s>=0&&(end||s>2000)){effort+=s+1;s=-1}effort+=Math.max(end,mat)}
+  if(love){if(s<0)effort-=s;effort+=love}return effort;
+ }
+ function planPool(pens,mounts,catalog,prices,strategy='economy',mode='fertility',targetXp=xpForLevel(200),{sourcePens=[]}={}){
+  if(!Object.prototype.hasOwnProperty.call(strategies,strategy))throw Error('Stratégie inconnue.');
+  if(!['fertility','xp'].includes(mode))throw Error('Mode inconnu.');
+  if(!pens.length||new Set(pens.map(p=>p.id)).size!==pens.length)throw Error('Sélectionne des enclos distincts.');
+  if(!mounts.length)throw Error('Sélectionne au moins une monture pour cet objectif.');
+  if(!Number.isInteger(targetXp)||targetXp<0||targetXp>xpForLevel(200))throw Error('Cible XP invalide.');
+  const clone=x=>JSON.parse(JSON.stringify(x)),initialPens=clone(pens),initialMounts=clone(mounts),allIds=mounts.map(m=>m.id),penIds=pens.map(p=>p.id);
+  if(allIds.some(id=>!id)||new Set(allIds).size!==allIds.length)throw Error('Identités de montures invalides.');
+  for(const p of pens){if(p.mounts.length>10)throw Error('Un enclos ne peut pas dépasser 10 montures.');if(p.mounts.length)validate(p);for(const k of [...keys,'xp'])if(!Number.isInteger(p.fuel[k]??0)||(p.fuel[k]??0)<0||(p.fuel[k]??0)>200000)throw Error('Réserve d’enclos invalide.')}
+  for(const m of mounts){validate({mounts:[m],fuel:Object.fromEntries(keys.map(k=>[k,0]))});if(!Number.isInteger(m.xp)||m.xp<0||m.xp>xpForLevel(200))throw Error('XP de monture invalide.')}
+  const simulated=clone(mounts),byId=new Map(simulated.map(m=>[m.id,m])),names=new Map([...pens.flatMap(p=>p.mounts),...mounts].map(m=>[m.id,m.name])),stage=m=>poolStage(m,mode,targetXp),score=m=>poolEffort(m,mode,targetXp),order=new Map(allIds.map((id,i)=>[id,i]));
+  const waiting=new Map(simulated.filter(m=>stage(m)).map(m=>[m.id,m])),finished=new Set(simulated.filter(m=>!stage(m)).map(m=>m.id)),released=new Set();
+  const work=pens.map(p=>({id:p.id,name:p.name,mounts:[],fuel:{...p.fuel,xp:p.fuel.xp??0},active:[],stage:null,consumed:0,added:0,seconds:0}));
+  const activeFor={xp:['xp'],upNegative:['up'],downNegative:['down'],grow:['endurance','maturity'],upLove:['up'],love:['love']},shopping=new Map(),events=[];let seconds=0,cost=0;
+  const sourceEntries=sourcePens.filter(p=>!penIds.includes(p.id)).map(p=>({penId:p.id,penName:p.name,removeIds:p.mounts.filter(m=>byId.has(m.id)).map(m=>m.id),addIds:[],active:[...(p.active||[])],recharges:[]})).filter(e=>e.removeIds.length);
+  const initialLocations=Object.fromEntries(mounts.map(m=>[m.id,[...pens,...sourcePens].find(p=>p.mounts.some(x=>x.id===m.id))?.id||'reserve']));
+  function demand(p,k){return Math.max(0,...p.mounts.map(m=>k==='xp'?Math.max(0,targetXp-m.xp)/(m.trait==='sage'?2:1):k==='up'?(p.stage==='upNegative'?-2000:0)-m.serenity:k==='down'?m.serenity+1:k==='endurance'?(20000-m.endurance)/(m.trait==='endurante'?2:1):k==='love'?(20000-m.love)/(m.trait==='amoureuse'?2:1):20000-m.maturity))}
+  function schedule(first=false){
+   const before=work.map((p,i)=>({ids:first?pens[i].mounts.map(m=>m.id):p.mounts.map(m=>m.id),active:[...p.active]}));
+   for(const p of work){const keep=[];for(const m of p.mounts){if(stage(m)===p.stage)keep.push(m);else if(stage(m))waiting.set(m.id,m);else finished.add(m.id)}p.mounts=keep;if(!keep.length)p.stage=null}
+   const ordered=()=>[...waiting.values()].sort((a,b)=>score(a)-score(b)||order.get(a.id)-order.get(b.id));
+   // Restaurer d'abord les occupants compatibles dans leur propre enclos,
+   // notamment lorsqu'ils peuvent passer ensemble à la phase suivante.
+   // Sinon le premier enclos vole les occupants du suivant avant son tour.
+   for(let i=0;i<work.length;i++){
+    const p=work[i],residents=ordered().filter(m=>before[i].ids.includes(m.id));
+    if(!p.stage&&residents.length)p.stage=stage(residents[0]);
+    for(const m of residents)if(p.mounts.length<10&&stage(m)===p.stage){p.mounts.push(m);waiting.delete(m.id)}
+   }
+   for(const p of work){const sorted=ordered();if(!p.stage&&sorted.length)p.stage=stage(sorted[0]);for(const m of sorted)if(p.mounts.length<10&&stage(m)===p.stage){p.mounts.push(m);waiting.delete(m.id)}p.active=p.mounts.length?[...activeFor[p.stage]]:[]}
+   const entries=[];
+   if(first)for(const entry of sourceEntries){entry.text='Retirer '+entry.removeIds.map(id=>names.get(id)).join(', ')+' · Mettre en réserve pour ce suivi';entries.push(entry)}
+   for(let i=0;i<work.length;i++){
+    const p=work[i],prior=before[i],ids=p.mounts.map(m=>m.id),removeIds=prior.ids.filter(id=>!ids.includes(id)),addIds=ids.filter(id=>!prior.ids.includes(id)),changed=first||removeIds.length||addIds.length||p.active.join()!==prior.active.join(),recharges=[];
+    for(const k of p.active){const need=Math.ceil(demand(p,k));if(!need)continue;const cap=strategies[strategy].cap??80000,floor=cap===200000?180000:cap===180000?140000:cap===140000?80000:0,current=p.fuel[k];
+     if(strategy==='economy'?(current>0&&(!changed||need<=current||current>=80000)):current>floor)continue;
+     const target=strategy==='economy'?Math.max(current,Math.min(80000,current+Math.max(0,Math.ceil((need-current)/2000))*2000)):Math.max(current,cap);
+     const buy=purchase(current,target,catalog.filter(x=>x.gauge===k),prices);p.fuel[k]=buy.end;cost+=buy.cost;
+     if(buy.items.length){const counts=new Map();for(const x of buy.items){counts.set(x.id,{...x,qty:(counts.get(x.id)?.qty||0)+1});shopping.set(x.id,{...x,unitPrice:prices[x.id],qty:(shopping.get(x.id)?.qty||0)+1})}const added=buy.end-current;recharges.push({gauge:k,added,items:[...counts.values()]});if(k==='xp')p.added+=added}
+    }
+    if(changed||recharges.length){
+     const lines=[];if(removeIds.length)lines.push('Retirer '+removeIds.map(id=>names.get(id)).join(', '));if(addIds.length)lines.push('Ajouter '+addIds.map(id=>names.get(id)).join(', '));const off=prior.active.filter(k=>!p.active.includes(k)),on=p.active.filter(k=>!prior.active.includes(k));if(off.length)lines.push('Désactiver '+off.map(k=>labels[k]).join(' + '));if(on.length)lines.push('Activer '+on.map(k=>labels[k]).join(' + '));
+     entries.push({penId:p.id,penName:p.name,expectedIds:prior.ids,removeIds,addIds,phase:p.stage,waitingFor:Object.fromEntries(removeIds.filter(id=>byId.has(id)&&stage(byId.get(id))).map(id=>[id,stage(byId.get(id))])),active:[...p.active],recharges,text:lines.join(' · ')||(first?'Jauges désactivées':'Recharger les jauges indiquées')});
+    }
+   }
+   const completedIds=[...finished].filter(id=>!released.has(id));completedIds.forEach(id=>released.add(id));
+   if(entries.length||completedIds.length)events.push({at:seconds,entries,completedIds,text:entries.map(e=>e.penName+' : '+e.text).join('\n')});
+  }
+  schedule(true);let ticks=0;
+  while(work.some(p=>p.mounts.length)||waiting.size){
+   if(++ticks>Math.max(100000,simulated.length*100000))throw Error('Simulation interrompue : progression impossible.');
+   for(const p of work)if(p.mounts.length){const before=p.fuel.xp;tickPen(p);p.consumed+=before-p.fuel.xp;p.seconds=seconds+10}
+   seconds+=10;schedule();
+  }
+  return {multi:true,pool:true,mode,targetXp:mode==='xp'?targetXp:undefined,mountIds:allIds,initialMounts,initialLocations,initialPens,penIds,events,shopping:[...shopping.values()],cost,seconds,final:simulated,strategy,xpPens:mode==='xp'?work.map(p=>({penId:p.id,penName:p.name,consumed:p.consumed,added:p.added,seconds:p.seconds})):[],finalPens:work.map(p=>({id:p.id,fuel:p.fuel})),capacity:pens.length*10};
+ }
+ return {keys,labels,caps,strategies,rate,purchase,plan,planXp,planMany,planPool,poolStage,poolEffort,tickPen,validate,xpForLevel,levelForXp};
 })();
 if(typeof module!=='undefined')module.exports=Breeding;

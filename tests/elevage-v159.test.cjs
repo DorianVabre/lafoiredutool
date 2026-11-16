@@ -32,6 +32,6 @@ test('popup compacte hors Élevage, détails disponibles et retour au format com
  const ctx=vm.createContext({document:{body:{append:x=>banner=x},getElementById:id=>id==='breedingAlarmBanner'?banner:id==='breedingMode'?{classList:{contains:()=>hidden}}:null,createElement:create,addEventListener(){}},window:{addEventListener(){}},setInterval:fn=>tick=fn,localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v)}});
  vm.runInContext(fs.readFileSync('js/core/elevage-alarms.js','utf8'),ctx);vm.runInContext("BreedingAlarms.start('a','Enclos 1',[{at:0,text:'Départ'},{at:3600,text:'Retirer'}]);BreedingAlarms.ack('a')",ctx);
  assert.ok(banner.classes.has('breed-alarm-compact'));assert.match(banner.children[1].textContent,/Enclos 1 · \d{2}:\d{2}:\d{2}/);assert.ok(banner.children.some(x=>x.textContent==='Détails'));
- hidden=false;tick();assert.ok(!banner.classes.has('breed-alarm-compact'));
+ hidden=false;tick();assert.ok(banner.classes.has('breed-alarm-compact'));banner.children.find(x=>x.textContent==='Détails').onclick();assert.ok(!banner.classes.has('breed-alarm-compact'));
  vm.runInContext("BreedingAlarms.stop('a')",ctx);assert.equal(vm.runInContext("BreedingAlarms.isComplete('a')",ctx),false);assert.ok(banner.hidden);
 });

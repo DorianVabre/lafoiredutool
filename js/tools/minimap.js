@@ -1,5 +1,5 @@
 // Minimap partagée entre la chasse et les trajets.
-window.DofusMinimap=function createMinimap({prefix='hunt',selectPosition,position,direction=()=>null}){
+(typeof window==='undefined'?globalThis:window).DofusMinimap=function createMinimap({prefix='hunt',selectPosition,position,direction=()=>null}){
   const el=id=>document.getElementById(id.replace(/^hunt/,prefix));
   const svg=el('huntMinimap'),caption=el('huntMapCaption');
   if(!svg||typeof document.createElementNS!=='function')return {update(){},setLeg(){},clearLeg(){}};

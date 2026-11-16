@@ -1,6 +1,20 @@
-# La Foire du Tool — V199
+# La Foire du Tool — V200
+
+## V200 — Suivi d’élevage par lot
+
+Consignes du suivi raccourcies : retrait temporaire sans explication de phase, ajout/reprise sans complément et mention « objectif atteint » seule. Origine et destination conservées pour les transferts.
+
+Corrections du suivi : distinguer les montures réellement sélectionnées des occupants d’enclos en attente de retrait, avec messages nommant la monture et l’enclos bloquants. Conservation des DD dans leur enclos compatible au départ et entre phases afin d’éviter les transferts gratuits. Consignes explicites pour les transferts, attentes temporaires, reprises et objectifs atteints, y compris sur les plans déjà sauvegardés. Les suivis en cours restent conservés ; recalcul après pause pour bénéficier du nouvel ordonnancement.
+
+Confirmation d’une action : suivi automatiquement réduit. En-tête d’enclos compact avec sélection/suppression alignées. Affectation exclusive Fécondité / XP / Aucun depuis les onglets, reprise des anciennes affectations et protection des suivis en cours ; lancement sur les enclos affectés à l’objectif. Tris de la sélection des montures (nom, robe, proximité du but, sérénité, jauges, XP et fécondité) avec sens inversable et préférences séparées par objectif. Niveau requis indiqué uniquement sur les enclos verrouillés.
+
+Suivi : consignes regroupées par enclos, Pause placée avant Arrêter ce suivi, bouton de lancement pleine largeur mis en valeur. Recherche par nom dans la réserve latérale et retrait du champ de renommage des enclos.
+
+Suivi par lot commun de montures : sélection indépendante des enclos, file d’attente, priorité aux fins proches et remplissage par phases compatibles. Version maintenue en V200 pendant la finalisation de cette fonctionnalité.
 
 ## V199 — Contrôles dans le thème du site
+
+Suivi d’élevage par lot commun : choix indépendant des montures (réserve et enclos libres) et des enclos de travail. Priorité au travail restant estimé, remplissage des places par phases compatibles, confirmation des transferts et recharges, progression terminées/en enclos/en attente. Montures en attente réservées au suivi ; celles terminées et retirées redeviennent disponibles pour l’autre objectif. Deux suivis indépendants, modification après pause et recalcul, anciens suivis conservés. Les durées et achats sont une prévision du plan proposé, sans garantie d’optimum global.
 
 Stratégies d’élevage sélectionnables par boutons enfoncés/relâchés, à sélection unique. Titre centré et mis en valeur ; quatre paliers soulignés d’un trait fin et regroupés sous « Vitesse ». Intitulé « Objectif » avec le même trait fin au-dessus du sélecteur Fécondité/Niveau. Rangée dédiée avec cible et unité en mode XP, adaptée aux petits écrans.
 
