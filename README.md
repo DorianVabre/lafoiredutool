@@ -1,4 +1,16 @@
-# La Foire du Tool — V189
+# La Foire du Tool — V192
+
+## V192 — Crédits communs
+
+Mention de Murdoku retirée des crédits communs ; attribution conservée sur la page de l’enquête.
+
+## V191 — Crédits de l’enquête
+
+Retrait des références au dépôt de code décompilé dans les crédits et le README. Aucun changement du moteur de jeu.
+
+## V190 — Sources et crédits centralisés
+
+Crédits complétés pour DofusDB, Dofus Wiki, Dofus pour les Noobs, les références de l’enquête et Google Fonts, avec information sur les appels externes. Sources retirées de la modale XP métier et regroupées en bas de page ; liens vers les crédits depuis les mini-jeux.
 
 ## V189 — Minimap dans Trajets et zaaps
 
@@ -307,7 +319,7 @@ Mode Brouillon : plusieurs cases possibles par suspect, plusieurs suspects par c
 
 ## V146 — Relations entre suspects et saisie directe
 
-Nouvelles clés E3 : indices rééquilibrés (deux repères de décor maximum), distances en PM par le plus court chemin sans diagonale autour des obstacles fixes, et lignes de vue entre suspects. Le corps ne bloque pas la vue ; les décors et les autres suspects la bloquent. Le calcul PM ignore les autres suspects et le tacle. Géométrie centre à centre, coins seulement effleurés autorisés ; adaptation à notre grille plane, sans prétendre reproduire les différences de hauteur du jeu. Références techniques consultées : [LosDetector](https://github.com/Emudofus/Dofus/blob/master2/com/ankamagames/jerakine/map/LosDetector.as) et [Dofus1Line](https://github.com/Emudofus/Dofus/blob/master2/com/ankamagames/jerakine/utils/display/Dofus1Line.as). Clés E1/E2 conservées. Brouillons au clic droit (Maj+clic ou N / Maj+Entrée au clavier), boutons de mode retirés. Suspects sur des jetons ronds colorés avec noms contrastés.
+Nouvelles clés E3 : indices rééquilibrés (deux repères de décor maximum), distances en PM par le plus court chemin sans diagonale autour des obstacles fixes, et lignes de vue entre suspects. Le corps ne bloque pas la vue ; les décors et les autres suspects la bloquent. Le calcul PM ignore les autres suspects et le tacle. Géométrie centre à centre, coins seulement effleurés autorisés ; adaptation à notre grille plane, sans prétendre reproduire les différences de hauteur du jeu. Clés E1/E2 conservées. Brouillons au clic droit (Maj+clic ou N / Maj+Entrée au clavier), boutons de mode retirés. Suspects sur des jetons ronds colorés avec noms contrastés.
 
 
 ## V147 — Déductions sans suppositions
