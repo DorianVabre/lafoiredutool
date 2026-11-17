@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),E=require('../js/games/enquete-engine.js');
-function app({initial=null,hash=E.key(42),start=true}={}){
- const elements=new Map(),saved=new Map(),documentEvents={},windowEvents={};if(initial)saved.set('corbac-case-v1',JSON.stringify(initial));
+function app({initial=null,hash=E.key(42),start=true,storage=[]}={}){
+ const elements=new Map(),saved=new Map(storage),documentEvents={},windowEvents={};if(initial)saved.set('corbac-case-v1',JSON.stringify(initial));
  function node(tag='div'){return {tag,children:[],dataset:{},value:'',hidden:false,disabled:false,style:{setProperty(){}},classList:{values:new Set(),toggle(k,on){if(on)this.values.add(k);else this.values.delete(k)}},listeners:{},setAttribute(){},addEventListener(t,f){this.listeners[t]=f},append(...x){this.children.push(...x)},replaceChildren(...x){this.children=x},querySelectorAll(tag){return this.children.flatMap(c=>typeof c==='object'?[...(c.tag===tag?[c]:[]),...(c.querySelectorAll?.(tag)||[])]:[])},focus(){},select(){},scrollIntoView(){}}}
  const el=id=>{if(!elements.has(id))elements.set(id,node());return elements.get(id)};
  const ctx=vm.createContext({EnqueteEngine:E,document:{getElementById:el,createElement:node,createTextNode:s=>s,addEventListener(t,f){documentEvents[t]=f}},crypto:{getRandomValues(a){a[0]=42}},Uint32Array,URL,location:{href:'https://example.org/enquete.html',hash:'#'+hash},window:{history:{replaceState(){}},addEventListener(t,f){windowEvents[t]=f}},localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v)},Option:function(text,value){return Object.assign(node('option'),{textContent:text,value})},navigator:{clipboard:{async writeText(){}}},matchMedia:()=>({matches:true})});
@@ -156,7 +156,7 @@ function nodeText(node){return (node.textContent||'')+(node.children||[]).map(n=
  a.el('solution').listeners.click();a.el('solution').listeners.click();
  p.answer.forEach((pos,i)=>{a.el('suspects').children[i].listeners.click();a.el('board').children[pos.r*6+pos.c].listeners.click()});a.el('accused').value=String(p.killer);a.el('accuse').listeners.click();
  assert.match(a.el('ending').children[1].textContent,/Vous avez réussi\. Temps : \d+:\d{2}\./);const saved=JSON.parse(a.saved.get('corbac-case-v1'));assert.ok(saved.finishedAt>=saved.startedAt);
- const b=app({initial:saved,start:false});assert.equal(b.el('ending').hidden,false);assert.equal(b.el('ending').children[1].textContent,a.el('ending').children[1].textContent);
+ const b=app({initial:saved,start:false});assert.equal(b.el('ending').hidden,false);assert.equal(b.el('ending').children[1].textContent,a.el('ending').children[1].textContent.replace('réussi.','réussi...'));
  });
 
 
@@ -187,4 +187,13 @@ test('V203 : reprise des affaires E6/E7/E8 conservée, Nouvelle affaire en E9 av
  const free=a.el('board').children.find(b=>!b.disabled&&Number(b.dataset[axis])===(axis==='row'?p.victim.r:p.victim.c));
  assert.ok(free);free.listeners.click();assert.equal(body.classList.values.has('line-taken'),false);assert.ok(a.el('board').children.some(b=>b.classList.values.has('line-taken')));assert.equal(body.disabled,true);a.el('reset').listeners.click();
  }
+});
+
+test('V205 : première réussite, solution et mémoire par affaire avec priorité aux points de suspension',()=>{
+ const p=E.generate(42),solve=a=>{p.answer.forEach((pos,i)=>{a.el('suspects').children[i].listeners.click();a.el('board').children[pos.r*6+pos.c].listeners.click()});a.el('accused').value=String(p.killer);a.el('accuse').listeners.click();return a.el('ending').children[1].textContent};
+ const a=app();assert.match(solve(a),/^Vous avez réussi !/);assert.equal(a.saved.get('corbac-won-v1:'+p.key),'true');
+ const b=app({storage:[...a.saved]});b.el('solution').listeners.click();assert.match(b.el('ending').children[1].textContent,/^Vous avez réussi\.\.\./);
+ for(const solution of [false,true]){const c=app({storage:[...a.saved].filter(([k])=>k!=='corbac-case-v1')});if(solution)c.el('solution').listeners.click();assert.match(solve(c),/^Vous avez réussi\.\.\./)}
+ const d=app();d.el('solution').listeners.click();assert.match(solve(d),/^Vous avez réussi\. Temps/);
+ const other=app({hash:E.key(7),storage:[...a.saved]});assert.equal(other.el('ending').hidden,true);
 });

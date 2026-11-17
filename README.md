@@ -1,4 +1,8 @@
-# La Foire du Tool — V204
+# La Foire du Tool — V205
+
+## V205 — Mémoire des affaires réussies
+
+Les réussites sont mémorisées dans le navigateur par clé d’affaire. Première réussite : « Vous avez réussi ! » ; solution consultée : « Vous avez réussi. » ; affaire déjà réussie : « Vous avez réussi... », prioritaire même avec la solution.
 
 ## V204 — Glossaire et lisibilité de l’enquête
 
