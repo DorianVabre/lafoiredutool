@@ -1,4 +1,8 @@
-# La Foire du Tool — V205
+# La Foire du Tool — V206
+
+## V206 — Brouillons sélectionnés plus visibles
+
+Sélectionner un personnage met ses cases de brouillon en évidence avec un contour épais et un fond teinté à sa couleur. Son symbole est agrandi et affiché sur une pastille pleine à bord clair, y compris parmi plusieurs brouillons sur une même case.
 
 ## V205 — Mémoire des affaires réussies
 
