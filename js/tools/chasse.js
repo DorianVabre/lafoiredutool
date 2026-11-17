@@ -6,7 +6,7 @@
  const autoNext=el('huntAutoNext'),preferenceKey='lafoire-hunt-auto-next-v1';
  if(autoNext){autoNext.checked=true;try{autoNext.checked=localStorage.getItem(preferenceKey)!=='false'}catch{}}
  const minimap=window.DofusMinimap({position:()=>DofusRoutes.parseCoordinates(el('huntPosition').value),direction:()=>direction,selectPosition:position=>{el('huntPosition').value='['+position.x+','+position.y+']';minimap.clearLeg();invalidate()}});
- const normalize=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+ const normalize=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/œ/g,'oe').trim();
  const status=s=>{el('huntStatus').textContent=s};
  function clearResult(){target=null;el('huntDistance').hidden=true;el('huntResult').hidden=true;el('huntCommand').value='';el('huntCopyStatus').textContent=''}
  function invalidate(preserveResult=false){revision++;controller?.abort();choices=[];if(!preserveResult)clearResult();el('huntChoices').replaceChildren();el('huntClue').disabled=true;el('huntNext').disabled=true;el('huntForm').setAttribute('aria-busy','false');status('Choisis une direction pour charger les indices.');minimap.update();}

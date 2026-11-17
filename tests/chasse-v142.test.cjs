@@ -61,3 +61,10 @@ test('V186 : flèche et distance pour les quatre directions, conservées après 
  const a=app(async()=>({ok:true,json:async()=>({total:1,data:[row(x,y,1,'Étoile')]})}));a.el('huntPosition').value='[-16,-24]';await a.arrows.find(b=>Number(b.dataset.huntDirection)===direction).listeners.click();await a.el('huntChoices').children[0].listeners.click();assert.equal(a.el('huntArrow').textContent,arrow);assert.equal(a.el('huntMapCount').textContent,'3 maps');assert.equal(a.el('huntDistance').hidden,false);assert.equal(a.el('huntDistance').attributes['aria-label'],'3 maps vers le '+name);assert.equal(a.el('huntPosition').value,'['+x+','+y+']');a.el('huntClue').listeners.input();assert.equal(a.el('huntDistance').hidden,true);
  }
 });
+
+test('V207 : oe et œ équivalents dans le filtre et la sélection avec Entrée',async()=>{
+ const a=app(async()=>({ok:true,json:async()=>({total:3,data:[row(-15,-24,1,'Œuf'),row(-14,-24,2,'Oeuf décoré'),row(-13,-24,3,'Arbre')]})}));
+ await a.load();
+ for(const query of ['Oeuf','œuf','ŒUF','oeuf']){a.el('huntClue').value=query;a.el('huntClue').listeners.input();assert.equal(a.el('huntChoices').children.length,2);assert.ok(a.el('huntChoices').children.some(b=>b.children[0].textContent==='Œuf'))}
+ a.el('huntClue').value='OEUF';a.el('huntClue').listeners.keydown({key:'Enter',preventDefault(){}});await Promise.resolve();assert.equal(a.copies.at(-1),'/travel -15,-24');
+});

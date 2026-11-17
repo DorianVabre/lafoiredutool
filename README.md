@@ -1,4 +1,8 @@
-# La Foire du Tool — V206
+# La Foire du Tool — V207
+
+## V207 — Recherche des indices avec œ ou oe
+
+Le filtre de chasse au trésor considère « œ » et « oe » comme équivalents, quelle que soit la casse. Taper « Oeuf » trouve aussi « Œuf », y compris pour la sélection avec Entrée.
 
 ## V206 — Brouillons sélectionnés plus visibles
 
