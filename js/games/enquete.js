@@ -46,7 +46,7 @@
    if(who>=0){const label=document.createElement('span');label.className='initial';label.textContent=puzzle.names[who].split(' ')[0];b.append(label)}
    b.setAttribute('aria-label',coord.textContent+' · '+puzzle.rooms[roomAt(r,c)]+(body?' · corps de Ruel':decor?' · '+decor.name+' · case bloquée':who>=0?' · '+puzzle.names[who]: ' · vide')+(excluded.has(r*6+c)?' · case marquée vide (KO)':'')+(cellNotes.length?' · brouillons : '+cellNotes.map(i=>puzzle.names[i]).join(', '):''));b.title=puzzle.rooms[roomAt(r,c)]+(decor?' · '+decor.name+' · case bloquée':'');b.classList.toggle('has-note',Boolean(notes[selected]?.includes(r*6+c)));b.setAttribute('aria-pressed',String(who===selected));
    b.classList.toggle('marked-empty',excluded.has(r*6+c));
-   b.classList.toggle('line-taken',who<0&&placed.some(p=>p&&(p.r===r||p.c===c)));
+   b.classList.toggle('line-taken',!body&&who<0&&placed.some(p=>p&&(p.r===r||p.c===c)));
    b.classList.toggle('conflict',who>=0&&placed.some((p,i)=>i!==who&&p&&(p.r===r||p.c===c)));b.disabled=won||body||Boolean(decor);
   });
   $('suspects').querySelectorAll('button').forEach((b,i)=>{const empty=i===6,active=empty?selected==='ko':i===selected;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));b.title=empty?'Marquer ou retirer une case vide (KO)':puzzle.names[i]+' · '+(placed[i]?'Placé en '+String.fromCharCode(65+placed[i].c)+(placed[i].r+1):'À placer')});

@@ -189,7 +189,7 @@ const EnqueteEngine=(()=>{
    unary(i,name+' est sur la ligne '+(p.r+1)+'.',a=>a.r===p.r,'row');
    unary(i,name+' est dans la colonne '+String.fromCharCode(65+p.c)+'.',a=>a.c===p.c,'column');
    const landmark=base.decor[i],distance=Math.abs(p.r-landmark.r)+Math.abs(p.c-landmark.c);
-   unary(i,name+' est à '+distance+' case'+(distance>1?'s':'')+' de « '+landmark.name+' » à vol de tofu (sans diagonale, obstacles ignorés).',a=>Math.abs(a.r-landmark.r)+Math.abs(a.c-landmark.c)===distance,'decor');
+   unary(i,(distance===1?name+' est au contact du décor « '+landmark.name+' ».':name+' est à '+distance+' PO du décor « '+landmark.name+' ».'),a=>Math.abs(a.r-landmark.r)+Math.abs(a.c-landmark.c)===distance,'decor');
    if(['E7','E8','E9'].includes(edition))for(let a=0;a<base.decor.length;a++)for(let b=a+1;b<base.decor.length;b++){
     const da=contact[a][cell(p)],db=contact[b][cell(p)];if(Number.isFinite(da)&&da===db)unary(i,name+' est à autant de PM du contact de « '+base.decor[a].name+' » que de « '+base.decor[b].name+' ».',q=>Number.isFinite(contact[a][cell(q)])&&contact[a][cell(q)]===contact[b][cell(q)],'equidistant',{landmarks:[base.decor[a],base.decor[b]]});
    }

@@ -1,4 +1,8 @@
-# La Foire du Tool — V203
+# La Foire du Tool — V204
+
+## V204 — Glossaire et lisibilité de l’enquête
+
+Glossaire reformulé. Les témoignages à une case d’un décor indiquent directement le contact ; les éventuelles distances plus grandes sont exprimées en PO. La case du corps reste éclairée lorsqu’un suspect occupe sa ligne ou sa colonne.
 
 ## V203 — Témoignages plus variés
 

@@ -180,3 +180,11 @@ test('V203 : reprise des affaires E6/E7/E8 conservée, Nouvelle affaire en E9 av
  const a=app({hash:E.key(1,'E8')}),p=E.generate(1,'E8'),texts=()=>a.el('clues').children.map(li=>li.children[0].children[1].textContent);assert.deepEqual(texts(),p.clues.filter(c=>!c.fixed).map(c=>c.text));assert.ok(texts().some(text=>/entre \d+ et \d+ PO/.test(text)));
  const b=app({initial:JSON.parse(a.saved.get('corbac-case-v1')),hash:p.key});assert.deepEqual(b.el('clues').children.map(li=>li.children[0].children[1].textContent),texts());
 });
+
+ test('V204 : le corps reste visible dans une ligne ou colonne occupée',()=>{
+ const p=E.generate(42),a=app(),body=a.el('board').children[p.victim.r*6+p.victim.c];
+ for(const axis of ['row','col']){
+ const free=a.el('board').children.find(b=>!b.disabled&&Number(b.dataset[axis])===(axis==='row'?p.victim.r:p.victim.c));
+ assert.ok(free);free.listeners.click();assert.equal(body.classList.values.has('line-taken'),false);assert.ok(a.el('board').children.some(b=>b.classList.values.has('line-taken')));assert.equal(body.disabled,true);a.el('reset').listeners.click();
+ }
+});
