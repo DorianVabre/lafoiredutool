@@ -1,23 +1,23 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 function app(fetch,options={}){
  const elements=new Map(),copies=[];
- const element=(tag='div')=>({tag,value:'',hidden:false,disabled:false,dataset:{},attributes:{},children:[],listeners:{},classList:{toggle(){},remove(){}},setAttribute(k,v){this.attributes[k]=String(v)},addEventListener(t,f){this.listeners[t]=f},replaceChildren(...children){this.children=children},append(...v){this.children.push(...v)},getBoundingClientRect(){return options.rect||{left:0,top:0,width:640,height:360}},focus(){},select(){this.selected=true}});
+ const element=(tag='div')=>({tag,value:'',hidden:false,disabled:false,dataset:{},attributes:{},children:[],listeners:{},classList:{toggle(){},remove(){}},setAttribute(k,v){this.attributes[k]=String(v)},addEventListener(t,f){this.listeners[t]=f},replaceChildren(...children){this.children=children},append(...v){this.children.push(...v)},getBoundingClientRect(){return options.rect||{left:0,top:0,width:640,height:360}},focus(options){this.focusOptions=options},scrollIntoView(options){this.scrollOptions=options},select(){this.selected=true}});
  const el=id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id)};
  const arrows=[0,2,4,6].map(n=>Object.assign(element(),{dataset:{huntDirection:String(n)}}));
  const document={getElementById:el,querySelectorAll:()=>arrows,createElement:element};
  if(options.minimap)document.createElementNS=(_,tag)=>element(tag);
- const window={location:{href:"index.html"}};
+ const window={location:{href:"index.html"},matchMedia:()=>({matches:!!options.stacked})};
  const storage=options.storage||new Map();
  const ctx=vm.createContext({window,document,fetch,URLSearchParams,AbortController,setTimeout,clearTimeout,localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},navigator:{clipboard:{async writeText(v){if(options.writeText)await options.writeText(v);copies.push(v)}}}});
  vm.runInContext(fs.readFileSync('js/tools/trajets-engine.js','utf8'),ctx);vm.runInContext(fs.readFileSync('js/tools/minimap.js','utf8'),ctx);vm.runInContext(fs.readFileSync('js/tools/chasse.js','utf8'),ctx);
  return {el,copies,arrows,window,storage,async load(){el('huntPosition').value='[-16,-24]';await arrows[0].listeners.click()}};
 }
-const row=(x,y,id,name)=>({posX:x,posY:y,pois:[{id,name:{fr:name}}]});
-test('indices : plus proche, filtre direction/distance, accents, copie et étape suivante',async()=>{
- const a=app(async()=>({ok:true,json:async()=>({total:5,data:[row(-14,-24,1,'Étoile'),row(-15,-24,1,'Étoile'),row(-16,-25,2,'Nord'),row(-5,-24,3,'Trop loin'),row(-13,-24,4,'Crâne')]})}));
+const row=(x,y,id,name,distance=Math.abs(x+16)+Math.abs(y+24))=>({posX:x,posY:y,distance,pois:[{id,name:{fr:name}}]});
+test('indices : plus proche, accents, copie et étape suivante',async()=>{
+ const a=app(async()=>({ok:true,json:async()=>({total:3,data:[row(-14,-24,1,'Étoile'),row(-15,-24,1,'Étoile'),row(-13,-24,4,'Crâne')]})}));
  a.el('huntAutoNext').checked=false;
- await a.load();assert.equal(a.el('huntChoices').children.length,2);
- a.el('huntClue').value='etoile';a.el('huntClue').listeners.input();assert.equal(a.el('huntChoices').children.length,1);
+ await a.load();assert.equal(a.el('huntChoices').children.length,3);
+ a.el('huntClue').value='etoile';a.el('huntClue').listeners.input();assert.equal(a.el('huntChoices').children.length,2);
  a.el('huntChoices').children[0].listeners.click();await Promise.resolve();assert.equal(a.copies.at(-1),'/travel -15,-24');
  a.el('huntNext').listeners.click();assert.equal(a.el('huntPosition').value,'[-15,-24]');assert.equal(a.el('huntResult').hidden,true);
 });
@@ -65,6 +65,77 @@ test('V186 : flèche et distance pour les quatre directions, conservées après 
 test('V207 : oe et œ équivalents dans le filtre et la sélection avec Entrée',async()=>{
  const a=app(async()=>({ok:true,json:async()=>({total:3,data:[row(-15,-24,1,'Œuf'),row(-14,-24,2,'Oeuf décoré'),row(-13,-24,3,'Arbre')]})}));
  await a.load();
- for(const query of ['Oeuf','œuf','ŒUF','oeuf']){a.el('huntClue').value=query;a.el('huntClue').listeners.input();assert.equal(a.el('huntChoices').children.length,2);assert.ok(a.el('huntChoices').children.some(b=>b.children[0].textContent==='Œuf'))}
+ for(const query of ['Oeuf','œuf','ŒUF','oeuf']){a.el('huntClue').value=query;a.el('huntClue').listeners.input();assert.equal(a.el('huntChoices').children.length,3);assert.ok(a.el('huntChoices').children.some(b=>b.children[0].textContent==='Œuf'))}
  a.el('huntClue').value='OEUF';a.el('huntClue').listeners.keydown({key:'Enter',preventDefault(){}});await Promise.resolve();assert.equal(a.copies.at(-1),'/travel -15,-24');
+});
+
+test('V208 : la carte décalée de Bonta utilise les coordonnées et la distance DofusDB',async()=>{
+ const rows=[
+  row(-32,-60,1,'Étoile jaune peinte',1),
+  {posX:-29,posY:-61,distance:4,pois:[
+   {id:1,name:{fr:'Étoile jaune peinte'}},
+   {id:2,name:{fr:'Bombe cœur'}},
+   {id:3,name:{fr:'Canard en plastique'}},
+   {id:4,name:{fr:'Rune nimbos'}}
+  ]}
+ ];
+ const a=app(async()=>({ok:true,json:async()=>({total:rows.length,data:rows})}));
+ a.el('huntAutoNext').checked=false;
+ a.el('huntPosition').value='[-33,-60]';
+ await a.arrows[0].listeners.click();
+ const choices=new Map(a.el('huntChoices').children.map(button=>[button.children[0].textContent,button]));
+ for(const name of ['Bombe cœur','Canard en plastique','Rune nimbos']){
+  const button=choices.get(name);
+  assert.equal(button.children[1].textContent,'4 maps');
+  await button.listeners.click();
+  assert.equal(a.copies.at(-1),'/travel -29,-61');
+ }
+ assert.equal(choices.get('Étoile jaune peinte').children[1].textContent,'1 map');
+ await choices.get('Phorreur [adjectif]').listeners.click();
+ assert.equal(a.el('huntCommand').value,'');
+ assert.equal(a.copies.length,3);
+ assert.equal(a.el('huntPosition').value,'[-33,-60]');
+ assert.equal(a.el('huntResult').hidden,false);
+ assert.equal(a.el('huntTravelResult').hidden,true);
+ assert.equal(a.el('huntPhorreurMessage').hidden,false);
+ await choices.get('Rune nimbos').listeners.click();
+ assert.equal(a.el('huntTravelResult').hidden,false);
+ assert.equal(a.el('huntPhorreurMessage').hidden,true);
+});
+
+test('V209 : le Phorreur reste visible après filtrage et après une erreur API',async()=>{
+ const a=app(async()=>({ok:false,status:403}));
+ await a.load();
+ a.el('huntClue').value='introuvable';
+ a.el('huntClue').listeners.input();
+ const [choice]=a.el('huntChoices').children;
+ assert.equal(choice.children[0].textContent,'Phorreur [adjectif]');
+ a.el('huntClue').listeners.keydown({key:'Enter',preventDefault(){}});
+ assert.equal(a.el('huntResult').hidden,true);
+ a.el('huntClue').value='Phorreur sournois';
+ a.el('huntClue').listeners.keydown({key:'Enter',preventDefault(){}});
+ assert.equal(a.el('huntResult').hidden,false);
+ assert.equal(a.el('huntPhorreurMessage').hidden,false);
+});
+
+test('V209 : défilement vers les deux étapes, ou vers le choix quand elles sont empilées',async()=>{
+ for(const [stacked,anchor] of [[false,'huntLayout'],[true,'huntCluePanel']]){
+  const a=app(async()=>({ok:true,json:async()=>({total:0,data:[]})}),{stacked});
+  await a.load();
+  assert.equal(a.el(anchor).scrollOptions.block,'start');
+  assert.equal(a.el('huntClue').focusOptions.preventScroll,true);
+ }
+});
+
+test('V210 : une réponse 404 ou vide affiche uniquement le message à droite',async()=>{
+ for(const response of [{ok:false,status:404},{ok:true,json:async()=>({total:0,data:[]})}]){
+  const a=app(async()=>response);
+  await a.load();
+  const [message]=a.el('huntChoices').children;
+  assert.equal(a.el('huntChoices').children.length,1);
+  assert.equal(message.tag,'p');
+  assert.equal(message.textContent,'Aucun indice trouvé. Vérifiez votre position.');
+  assert.equal(a.el('huntStatus').textContent,'');
+  assert.equal(a.el('huntClue').disabled,true);
+ }
 });

@@ -1,4 +1,16 @@
-# La Foire du Tool — V207
+# La Foire du Tool — V210
+
+## V210 — Recherche de chasse sans résultat
+
+Une recherche vide ou une réponse 404 de DofusDB affiche « Aucun indice trouvé. Vérifiez votre position. » dans le panneau des indices. La mention de la touche Entrée a été retirée de l’aide.
+
+## V209 — Phorreur permanent et accès direct aux indices
+
+« Phorreur [adjectif] » reste visible pendant le filtrage et affiche les consignes dans le panneau de résultat. Le chargement des indices aligne les deux étapes en haut de l’écran, ou ouvre directement la liste lorsque les panneaux sont empilés sur mobile.
+
+## V208 — Indices de chasse alignés sur DofusDB
+
+La chasse utilise les distances fournies par DofusDB, y compris lors des transitions vers une carte décalée. Depuis [-33, -60] vers l’est, Bombe cœur, Canard en plastique et Rune nimbos sont proposés à 4 maps. L’option « Phorreur … » indique de chercher manuellement dans la direction choisie.
 
 ## V207 — Recherche des indices avec œ ou oe
 
