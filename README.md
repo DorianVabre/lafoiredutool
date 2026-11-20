@@ -1,4 +1,47 @@
-# La Foire du Tool — V212
+# La Foire du Tool — V223
+
+## V223 — Boutons de niveau recalculables et noms copiables
+
+Les raccourcis de niveau remplacent maintenant la quantité sélectionnée pour recalculer chaque objectif. Le champ « Nombre » est renommé et les noms des recettes et ingrédients de la liste de courses sont copiables.
+
+
+## V222 — Ratios XP par type et menu métiers
+
+Le ratio d’XP provient des données API lorsqu’il existe, sinon du type d’objet reconnu ; un type inconnu donne 0 XP. Les exceptions par nom sont supprimées. Le bouton « XP Forgemagie » reprend son libellé complet.
+
+## V221 — XP métier, liste de courses et navigation
+
+Les recettes sans XP identifiées sont exclues des estimations. La liste de courses affiche jusqu’à trois ingrédients par ligne, avec noms complets et infobulle au survol. Les catégories de navigation sont réorganisées selon les usages.
+
+## V220 — Catalogue recettes et ratios XP
+
+Le catalogue revient à la sélection de champs acceptée par l’API. Les ratios d’XP restent appliqués selon les données de recette et les types d’objets.
+
+## V219 — XP des recettes et interface compacte
+
+Les ratios d’XP propres aux recettes sont appliqués au calcul (ex. 10 % ou 5 %), les cartes d’XP totale et par niveau sont réordonnées avec l’XP totale sélectionnée par défaut, le filtre prend toute la largeur disponible et la liste de courses passe en grille compacte.
+
+## V218 — Liste de courses intégrée aux recettes
+
+La fenêtre modale est supprimée. Cliquer sur une recette déplie sa liste de courses sous la ligne ; les prix des ingrédients et de revente se saisissent directement dans cette liste, et un nouveau clic replie le détail. Les raccourcis affichent « Atteindre le lvl » avec le nombre de crafts.
+
+## V217 — XP en deux choix et listes de courses par batch
+
+## V216 — Onglet pratique limité aux métiers concernés
+
+L’onglet Pratique n’apparaît que pour les métiers de récolte et l’élevage. Le texte d’élevage est simplifié et le message de chargement des recettes est effacé après réussite.
+
+## V215 — Recettes détaillées, rentabilité et XP pratique
+
+L’onglet Métiers affiche les ingrédients des crafts, ouvre un calculateur unitaire de marge brute avec les prix connus, et propose des raccourcis pour atteindre les deux prochaines dizaines. Les ressources récoltables sont illustrées et l’XP d’élevage est calculée selon la génération ou la capture.
+
+## V214 — Recettes XP complètes et saisie de l’XP totale
+
+La page Métiers charge automatiquement les recettes du métier sélectionné, les trie par XP décroissante et permet de filtrer la liste. L’XP de progression peut maintenant se saisir soit par niveau et XP du niveau, soit en XP totale cumulée.
+
+## V213 — Calculateur XP des métiers
+
+Nouvelle page Métiers : progression d’XP, composition de crafts par recherche d’objets et compte d’actions pour les ressources récoltables. Capture et reproduction d’élevage acceptent un XP par action observé. Les catégories deviennent « Rentabilité » et « Métiers » ; l’historique d’achats rejoint Rentabilité.
 
 ## V212 — Options de chasse sur une ligne
 
