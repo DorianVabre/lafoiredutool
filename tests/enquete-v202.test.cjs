@@ -1,9 +1,10 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),crypto=require('node:crypto'),E=require('../js/games/enquete-engine.js');
 const cell=p=>p.r*6+p.c,point=n=>({r:Math.floor(n/6),c:n%6});
+const legacyDecorText=text=>text.includes(' est au contact du décor « ')?text.replace(' est au contact du décor « ',' est à 1 case de « ').replace(' ».', ' » à vol de tofu (sans diagonale, obstacles ignorés).'):text.includes(' PO du décor « ')?text.replace(' PO du décor « ',' cases de « ').replace(' ».', ' » à vol de tofu (sans diagonale, obstacles ignorés).'):text;
 
 test('V202 : les clés E7 conservent leur plan et tous leurs témoignages',()=>{
  for(const r of require('./fixtures/enquete-e7-v201.json')){
-  const p=E.generate(r.seed,r.version),data={key:p.key,answer:p.answer,victim:p.victim,decor:p.decor,rooms:p.rooms,roomMap:p.roomMap,clues:p.clues.map(c=>({text:c.text,kind:c.kind,axis:c.axis,signature:c.signature}))};
+  const p=E.generate(r.seed,r.version),data={key:p.key,answer:p.answer,victim:p.victim,decor:p.decor,rooms:p.rooms,roomMap:p.roomMap,clues:p.clues.map(c=>({text:c.kind==='decor'?legacyDecorText(c.text):c.text,kind:c.kind,axis:c.axis,signature:c.signature}))};
   assert.equal(crypto.createHash('sha256').update(JSON.stringify(data)).digest('hex'),r.sha256,'E7 '+r.seed);assert.equal(E.parse(p.key),r.seed);
  }
  assert.match(E.key(42,'E8'),/^E8-/);assert.equal(E.parse(E.key(4294967295)),4294967295);assert.equal(E.parse(E.key(0,'E10')),null);

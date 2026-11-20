@@ -1,4 +1,9 @@
-# La Foire du Tool — V223
+# La Foire du Tool — V224
+
+## V224 — Tests de régression XP métier
+
+Les calculs d’XP, les objectifs de niveau, les recettes rentables, la récolte et l’élevage disposent désormais de tests unitaires ciblés. Les attentes des tests de navigation et de chasse suivent aussi les libellés actuels.
+
 
 ## V223 — Boutons de niveau recalculables et noms copiables
 

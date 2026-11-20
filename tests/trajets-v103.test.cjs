@@ -50,8 +50,10 @@ test('les passages interactifs sont signalés et les zaaps absents du graphe ref
  const tiny=api.create({schema:1,nodes:[[1,1,1,0,0,0],[2,1,1,1,0,0]],links:[0,1],interactive:[0,1],zaaps:[{node:0,name:'Zaap'}]});assert.equal(tiny.search(1).route(0).interactions,1);
  assert.throws(()=>api.create({schema:1,nodes:[],links:[],zaaps:[{node:1}]}));
 });
-test('navigation : historique dans Rentabilité, ordre demandé, trajet dans Autres',()=>{
- const html=fs.readFileSync(path.join(root,'index.html'),'utf8'),groups=[...html.matchAll(/<div class="mode-group"><div class="mode-group-title">([^<]+)<\/div><div class="mode-group-links">([\s\S]*?)<\/div><\/div>/g)];
- const ids=name=>[...groups.find(g=>g[1]===name)[2].matchAll(/id="([^"]+)"/g)].map(m=>m[1]);assert.deepEqual(ids('Rentabilité'),['tabFarm','tabLedger','tabBreak']);assert.deepEqual(ids('Autres'),['tabTravel','tabHunt','tabDrop']);
- assert.equal((html.match(/id="tabLedger"/g)||[]).length,1);
+test('navigation : groupes et outils dans l’ordre demandé',()=>{
+ const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+ const groups=html.split('<div class=\"mode-group\">').slice(1).map(block=>{const parts=block.split('</div><div class=\"mode-group-links\">');return[parts[0].slice(parts[0].indexOf('>')+1),parts[1].split('</div>')[0]]});
+ const ids=name=>Array.from(groups.find(g=>g[0]===name)[1].matchAll(new RegExp('id=\"([^\"]+)\"','g'))).map(m=>m[1]);
+ assert.deepEqual(ids('Rentabilité'),['tabSingle','tabMulti','tabBreak']);assert.deepEqual(ids('Métiers'),['tabJobs','tabFm','tabBreeding']);assert.deepEqual(ids('Optimisation fiscale'),['tabFarm','tabScroll','tabLedger']);assert.deepEqual(ids('Autres'),['tabTravel','tabHunt','tabDrop']);
+ assert.equal((html.match(new RegExp('id=\"tabLedger\"','g'))||[]).length,1);
 });
