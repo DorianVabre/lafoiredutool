@@ -1,4 +1,12 @@
-# La Foire du Tool — V210
+# La Foire du Tool — V212
+
+## V212 — Options de chasse sur une ligne
+
+Les réglages de copie automatique et d’étape suivante automatique sont affichés côte à côte.
+
+## V211 — Copie automatique réglable pour la chasse
+
+Ajout d’une option « Copier automatiquement », cochée par défaut et mémorisée, au-dessus de l’étape suivante automatique. Le nombre d’indices n’est plus affiché sous la croix de direction.
 
 ## V210 — Recherche de chasse sans résultat
 

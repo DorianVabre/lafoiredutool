@@ -4,7 +4,8 @@
  const el=id=>document.getElementById(id);if(!el('huntForm'))return;
  let direction=null,controller=null,revision=0,choices=[],target=null,selecting=false;
  const phorreur={name:'Phorreur [adjectif]',phorreur:true};
- const autoNext=el('huntAutoNext'),preferenceKey='lafoire-hunt-auto-next-v1';
+ const autoCopy=el('huntAutoCopy'),autoNext=el('huntAutoNext'),copyPreferenceKey='lafoire-hunt-auto-copy-v1',preferenceKey='lafoire-hunt-auto-next-v1';
+ if(autoCopy){autoCopy.checked=true;try{autoCopy.checked=localStorage.getItem(copyPreferenceKey)!=='false'}catch{}}
  if(autoNext){autoNext.checked=true;try{autoNext.checked=localStorage.getItem(preferenceKey)!=='false'}catch{}}
  const minimap=window.DofusMinimap({position:()=>DofusRoutes.parseCoordinates(el('huntPosition').value),direction:()=>direction,selectPosition:position=>{el('huntPosition').value='['+position.x+','+position.y+']';minimap.clearLeg();invalidate()}});
  const normalize=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/œ/g,'oe').trim();
@@ -29,7 +30,7 @@
    el('huntResult').hidden=false;
    return;
   }
-  selecting=true;revision++;clearResult();target=choice;el('huntPhorreurMessage').hidden=true;el('huntTravelResult').hidden=false;el('huntResult').hidden=false;el('huntDestination').textContent=choice.name+' · ['+choice.x+','+choice.y+']';const heading={0:['→','est'],2:['↓','sud'],4:['←','ouest'],6:['↑','nord']}[direction];el('huntArrow').textContent=heading[0];el('huntMapCount').textContent=choice.distance+' map'+(choice.distance>1?'s':'');el('huntDistance').setAttribute('aria-label',choice.distance+' map'+(choice.distance>1?'s':'')+' vers le '+heading[1]);el('huntDistance').hidden=false;el('huntCommand').value='/travel '+choice.x+','+choice.y;el('huntNext').disabled=false;el('huntNext').hidden=!!autoNext?.checked;const from=DofusRoutes.parseCoordinates(el('huntPosition').value);if(from)minimap.setLeg(from,choice);try{await copy(true)}finally{selecting=false}}
+  selecting=true;revision++;clearResult();target=choice;el('huntPhorreurMessage').hidden=true;el('huntTravelResult').hidden=false;el('huntResult').hidden=false;el('huntDestination').textContent=choice.name+' · ['+choice.x+','+choice.y+']';const heading={0:['→','est'],2:['↓','sud'],4:['←','ouest'],6:['↑','nord']}[direction];el('huntArrow').textContent=heading[0];el('huntMapCount').textContent=choice.distance+' map'+(choice.distance>1?'s':'');el('huntDistance').setAttribute('aria-label',choice.distance+' map'+(choice.distance>1?'s':'')+' vers le '+heading[1]);el('huntDistance').hidden=false;el('huntCommand').value='/travel '+choice.x+','+choice.y;el('huntNext').disabled=false;el('huntNext').hidden=!!autoNext?.checked;const from=DofusRoutes.parseCoordinates(el('huntPosition').value);if(from)minimap.setLeg(from,choice);try{if(autoCopy?.checked)await copy(true)}finally{selecting=false}}
  function render(){
   const query=normalize(el('huntClue').value),list=el('huntChoices');list.replaceChildren();
   if(!choices.length){
@@ -77,7 +78,7 @@
    }
    choices=nearest.size?[...nearest.values(),phorreur].sort((a,b)=>a.name.localeCompare(b.name,'fr')):[];
    loaded=true;
-   status(nearest.size?nearest.size+' indices localisés dans cette direction.':'');
+   status('');
   }catch(error){
    if(id!==revision)return;
    choices=[phorreur];
@@ -120,6 +121,7 @@
  });
  el('huntCopy').addEventListener('click',()=>copy());
  el('huntNext').addEventListener('click',()=>nextStep());
+ autoCopy?.addEventListener('change',()=>{try{localStorage.setItem(copyPreferenceKey,String(autoCopy.checked))}catch{}});
  autoNext?.addEventListener('change',()=>{try{localStorage.setItem(preferenceKey,String(autoNext.checked))}catch{}if(target)el('huntNext').hidden=autoNext.checked});
 
 
