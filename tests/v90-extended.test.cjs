@@ -10,7 +10,7 @@ function app(initial={}){
  const store=new Map(Object.entries(initial));
  const elements=new Map();
  const el=(key)=>{if(!elements.has(key))elements.set(key,{value:'',checked:true,textContent:'',innerHTML:'',dataset:{},classList:{add(){},remove(){},toggle(){}},addEventListener(){},querySelectorAll(){return []},replaceWith(){}});return elements.get(key)};
- const document={querySelector:el,querySelectorAll(){return []},createElement(){return {innerHTML:'',firstElementChild:{}}}};
+ const document={getElementById(id){return id.startsWith('drop')?el('#'+id):null},querySelector:el,querySelectorAll(){return []},createElement(){return {innerHTML:'',firstElementChild:{}}}};
  const localStorage={getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)};
  const context=vm.createContext({document,localStorage,URLSearchParams,AbortController,fetch:async()=>{throw Error('offline fixture')},setTimeout,clearTimeout,console,Date,Math});
  vm.runInContext(script,context,{filename:'v89-app.js'});

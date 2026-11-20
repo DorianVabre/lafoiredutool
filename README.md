@@ -1,4 +1,8 @@
-# La Foire du Tool — V224
+# La Foire du Tool — V225
+
+## V225 — Nettoyage prudent
+
+Suppression des helpers et styles confirmés inutilisés après vérification de leurs références. Les styles produits dynamiquement sont conservés.
 
 ## V224 — Tests de régression XP métier
 

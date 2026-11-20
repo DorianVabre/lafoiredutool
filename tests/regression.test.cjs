@@ -10,7 +10,7 @@ function app(initial={}){
  const store=new Map(Object.entries(initial));
  const elements=new Map();
  function element(key){if(!elements.has(key))elements.set(key,{value:'',textContent:'',innerHTML:'',className:'',dataset:{},classList:{toggle(){},add(){},remove(){}},addEventListener(){},querySelectorAll(){return []},replaceWith(){}});return elements.get(key)}
- const document={querySelector:element,querySelectorAll(){return []},createElement(){return {innerHTML:'',firstElementChild:{}}}};
+ const document={getElementById(id){return id.startsWith('drop')?element('#'+id):null},querySelector:element,querySelectorAll(){return []},createElement(){return {innerHTML:'',firstElementChild:{}}}};
  const context=vm.createContext({document,localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v)},URLSearchParams,AbortController,fetch:async()=>{throw Error('No network in tests')},setTimeout,clearTimeout,console,Date,Math});
  vm.runInContext(script,context,{filename:'dofus-craft.html'});
  return {run:expr=>vm.runInContext(expr,context),element,store};
