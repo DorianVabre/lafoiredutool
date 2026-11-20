@@ -1,4 +1,16 @@
-# La Foire du Tool — V225
+# La Foire du Tool — V228
+
+## V228 — Icône de suppression des sessions
+
+La coche de suppression des sessions est remplacée par une croix rouge pour mieux signaler l’action.
+
+## V227 — XP et actions compactes dans l’historique
+
+L’XP de chaque session s’affiche au-dessus des indicateurs kamas. La suppression passe par une coche compacte dans le coin de la session.
+
+## V226 — Kamas par session
+
+Chaque session de farm affiche désormais ses kamas estimés et son taux horaire, calculés avec les prix HDV actuellement saisis.
 
 ## V225 — Nettoyage prudent
 
