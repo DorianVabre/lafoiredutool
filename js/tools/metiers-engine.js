@@ -36,6 +36,10 @@
   const xp=Math.floor((10+Math.floor(Number(resourceLevel)/5))*(Number(bonus)||100)/100),needed=Math.max(0,Number(neededXp)||0),eligible=Number(professionLevel)>=Number(resourceLevel),actions=!eligible||(!xp&&needed>0)?null:Math.ceil(needed/Math.max(1,xp)),hasMean=meanUnits!==null&&meanUnits!==undefined&&meanUnits!==''&&Number.isFinite(Number(meanUnits));
   return{xp,actions,units:actions!==null&&hasMean?Math.ceil(actions*Number(meanUnits)):null};
  }
+ function gatheringGoals(resourceLevel,startTotal,bonus=100,meanUnits=null){
+  const level=levelFromTotal(startTotal),firstTarget=Math.ceil((level+1)/10)*10;
+  return[firstTarget,firstTarget+10].filter(target=>target<=200).map(target=>({target,...gatheringEstimate(resourceLevel,level,cumulative(target)-startTotal,bonus,meanUnits)}));
+ }
  function breedingEstimate(neededXp,bonus=100){
   const multiplier=(Number(bonus)||100)/100,actions=baseXp=>{const xp=Math.floor(baseXp*multiplier);return xp>0?Math.ceil(Math.max(0,Number(neededXp)||0)/xp):null};
   return{capture:{xp:Math.floor(30*multiplier),actions:actions(30)},generations:Array.from({length:10},(_,index)=>{const generation=index+1,baseXp=30*generation;return{generation,xp:Math.floor(baseXp*multiplier),actions:actions(baseXp)}})};
@@ -63,7 +67,7 @@
   return craftsToTarget(item,target,currentTotal+planned-currentItem,bonus);
  }
 
- const api=Object.freeze({cumulative,levelFromTotal,craftXpAt,craftsToTarget,priceAnalysis,batchValues,gatheringEstimate,breedingEstimate,recipeXpRatio,goalQuantity});
+ const api=Object.freeze({cumulative,levelFromTotal,craftXpAt,craftsToTarget,priceAnalysis,batchValues,gatheringEstimate,gatheringGoals,breedingEstimate,recipeXpRatio,goalQuantity});
  global.JobsXpEngine=api;
  if(typeof module==='object'&&module.exports)module.exports=api;
 })(globalThis);

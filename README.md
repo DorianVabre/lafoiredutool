@@ -1,4 +1,8 @@
-# La Foire du Tool — V228
+# La Foire du Tool — V229
+
+## V229 — Objectifs de dizaines pour la récolte
+
+La pratique de récolte estime désormais les unités et actions nécessaires pour atteindre les deux prochaines dizaines de niveau.
 
 ## V228 — Icône de suppression des sessions
 

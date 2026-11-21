@@ -94,6 +94,19 @@ test('pratique de récolte : XP par action, verrouillage et rendement moyen',()=
  assert.deepEqual(XP.gatheringEstimate(50,50,230,1,10),{xp:0,actions:null,units:null});
 });
 
+test('pratique de récolte : deux objectifs par dizaines avec unités et actions estimées',()=>{
+ const start=XP.cumulative(161)+1000,goals=XP.gatheringGoals(50,start,100,10);
+ assert.deepEqual(goals,[
+  {target:170,xp:20,actions:1435,units:14350},
+  {target:180,xp:20,actions:3180,units:31800}
+ ]);
+ assert.deepEqual(XP.gatheringGoals(170,start,100,10).map(({target,actions,units})=>({target,actions,units})),[
+  {target:170,actions:null,units:null},{target:180,actions:null,units:null}
+ ]);
+ assert.deepEqual(XP.gatheringGoals(50,XP.cumulative(199),100,10).map(goal=>goal.target),[200]);
+ assert.deepEqual(XP.gatheringGoals(50,XP.cumulative(200)),[]);
+});
+
 test('pratique d’élevage : captures fixes et reproductions selon la génération',()=>{
  const estimate=XP.breedingEstimate(1000);
  assert.deepEqual(estimate.capture,{xp:30,actions:34});
@@ -113,6 +126,9 @@ test('interface métier : XP totale par défaut, à gauche, et raccourcis recalc
  assert.doesNotMatch(jobsSource,/selected\[item\.id\]\s*\+=\s*qty/);
  assert.match(jobsSource,/jobs-combine">Nombre<input/);
  assert.match(jobsSource,/JobsXpEngine\.gatheringEstimate\(/);
+ assert.match(jobsSource,/JobsXpEngine\.gatheringGoals\(item\.level,total,bonus,range\?\.mean\)/);
+ assert.match(jobsSource,/Atteindre le lvl '\+goal\.target/);
+ assert.match(jobsSource,/class="jobs-practice-goals"/);
  assert.match(jobsSource,/JobsXpEngine\.breedingEstimate\(/);
  assert.match(jobsSource,/30 XP fixes par capture/);
  assert.match(jobsSource,/30 XP par niveau de génération/);

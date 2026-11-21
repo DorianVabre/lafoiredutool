@@ -467,3 +467,6 @@ button.mode-title-icon{padding:0;border:0;background:transparent;line-height:1.2
 .jobs-batch-list{grid-template-columns:repeat(3,minmax(0,1fr))}.jobs-batch-name{align-items:flex-start;white-space:normal;overflow:visible;overflow-wrap:anywhere}.jobs-batch-name strong{display:block;min-width:0;overflow:visible;text-overflow:clip;white-space:normal;overflow-wrap:anywhere}.jobs-batch-name small{display:block;flex:none;white-space:nowrap}
 @media(max-width:1000px){.jobs-batch-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.jobs-batch-list{grid-template-columns:1fr}}
+
+.jobs-practice-row.jobs-practice-gathering{grid-template-columns:minmax(0,1fr) minmax(190px,240px);gap:10px}.jobs-practice-goals{display:grid;gap:5px;min-width:0}.jobs-practice-goal{display:flex;flex-direction:column;gap:2px;min-width:0;padding:5px 8px;border:1px solid #405743;border-radius:7px;background:#203325}.jobs-practice-goal span{color:#dce9d9;font-size:11px}.jobs-practice-goal strong{color:#d1f7b4;font-size:11px;overflow-wrap:anywhere}.jobs-practice-goal.is-locked{opacity:.6}.jobs-practice-complete{color:#b8eb72;font-size:12px;text-align:right}
+@media(max-width:760px){.jobs-practice-row.jobs-practice-gathering{grid-template-columns:minmax(0,1fr) minmax(150px,200px);gap:8px}}
