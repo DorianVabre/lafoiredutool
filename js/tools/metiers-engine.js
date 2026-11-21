@@ -45,15 +45,18 @@
   return{capture:{xp:Math.floor(30*multiplier),actions:actions(30)},generations:Array.from({length:10},(_,index)=>{const generation=index+1,baseXp=30*generation;return{generation,xp:Math.floor(baseXp*multiplier),actions:actions(baseXp)}})};
  }
  function recipeXpRatio(item){
-  const type=item.type??item.item_fields?.type??item.fields?.type??{};
+  const objectName=String(item.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  if(objectName==='planche hatoufer')return 0;
+  const type=item.type??item.item_fields?.type??item.fields?.type??{},label=typeof type==='string'?type:(type.name?.fr??type.name?.en??type.name??type.name_id??type.nameId??''),typeName=String(label).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  const level=Number(item.level??item.item_level??item.item_fields?.level??item.fields?.level);
+  if(/gravure|engraving/.test(typeName)||/gravure|engraving/.test(objectName)){if(level===20)return.3;if(level>=80)return 1}
   const raw=item.experienceRatio??item.experience_ratio??item.xpRatio??item.xp_ratio??item.item_fields?.experienceRatio??item.item_fields?.experience_ratio??item.item_fields?.xpRatio??item.fields?.experienceRatio??item.fields?.experience_ratio??type.experienceRatio??type.experience_ratio??type.xpRatio;
   if(raw!==undefined&&raw!==null&&Number.isFinite(Number(raw))){const ratio=Number(raw);return ratio>3?ratio/100:ratio}
-  const label=typeof type==='string'?type:(type.name?.fr??type.name?.en??type.name??type.name_id??type.nameId??'');
-  const typeName=String(label).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
   if(/percepteur|conquete/.test(typeName))return.1;
   if(/potion/.test(typeName)&&/teleport|rappel|bonta|brakmar/.test(typeName))return.2;
   if(/trophee|trophy/.test(typeName))return 3;
   if(/clef|cle|key/.test(typeName))return.6;
+  if(/substrat|substrate/.test(typeName))return.2;
   if(/alliage|alloy/.test(typeName))return.3;
   if(/planche|board/.test(typeName))return.2;
   if(/viande|meat|pierre precieuse|gem/.test(typeName))return.1;

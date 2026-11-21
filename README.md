@@ -1,4 +1,16 @@
-# La Foire du Tool — V229
+# La Foire du Tool — V233
+
+## V233 — Boutons métier uniformes
+
+Les boutons des 14 métiers sont présentés en deux rangées de sept, avec des dimensions uniformes.
+
+## V231 — Coefficients XP corrigés
+
+Les substrats utilisent le coefficient de 20 %. Les recettes dont le coefficient exact est inconnu restent visibles sans XP inventée ; la Planche hatoufer est explicitement à 0 XP.
+
+## V230 — Recettes métier complètes
+
+Les recettes sans coefficient d’XP reconnu ne sont plus masquées.
 
 ## V229 — Objectifs de dizaines pour la récolte
 
