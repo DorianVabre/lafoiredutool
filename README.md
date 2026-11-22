@@ -1,4 +1,8 @@
-# La Foire du Tool — V233
+# La Foire du Tool — V234
+
+## V234 — Recettes sélectionnées visibles
+
+Les recettes auxquelles une quantité a été attribuée restent visibles même si elles ne correspondent plus au filtre de recherche, avec un repère explicatif.
 
 ## V233 — Boutons métier uniformes
 
