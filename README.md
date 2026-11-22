@@ -1,4 +1,8 @@
-# La Foire du Tool — V234
+# La Foire du Tool — V235
+
+## V235 — Coefficients XP métier fiables
+
+Les ratios d’XP explicites priment sur les règles déduites du type. Le nom d’une recette ne remplace plus son type : la Planche de Gravure retrouve son coefficient de 20 %.
 
 ## V234 — Recettes sélectionnées visibles
 
