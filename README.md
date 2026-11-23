@@ -1,4 +1,8 @@
-# La Foire du Tool — V235
+# La Foire du Tool — V236
+
+## V236 — Réinitialisation des quantités XP métier
+
+Les compteurs « Nombre » sont remis à zéro quand l’XP du métier change. Un bouton permet aussi de réinitialiser manuellement toutes les quantités à produire.
 
 ## V235 — Coefficients XP métier fiables
 
