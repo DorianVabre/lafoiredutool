@@ -1,4 +1,8 @@
-# La Foire du Tool — V236
+# La Foire du Tool — V237
+
+## V237 — XP des boucliers façonneur
+
+Les recettes de bouclier du métier Façonneur utilisent leur ratio d’XP de 100 % au lieu de tomber à 0 XP.
 
 ## V236 — Réinitialisation des quantités XP métier
 

@@ -54,6 +54,7 @@
   const level=Number(item.level??item.item_level??item.item_fields?.level??item.fields?.level);
   if(/gravure|engraving/.test(typeName)){if(level===20)return.3;if(level>=80)return 1}
   if(/percepteur|conquete/.test(typeName))return.1;
+  if(/bouclier|shield/.test(typeName))return 1;
   if(/potion/.test(typeName)&&/teleport|rappel|bonta|brakmar/.test(typeName))return.2;
   if(/trophee|trophy/.test(typeName))return 3;
   if(/clef|cle|key/.test(typeName))return.6;
